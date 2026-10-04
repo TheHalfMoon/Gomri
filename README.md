@@ -16,4 +16,13 @@ Gomrey combines source ingestion, multimodal document understanding, NotebookLM-
 - **Local/self-hostable paths remain first-class.** Hosted providers may be optional adapters, not hidden correctness dependencies.
 - **Provenance is mandatory.** Copied/adapted code, models, assets, datasets, and source content keep exact source identity, rights, notices, and modification records.
 
-The canonical implementation plan, architecture, donor ledger, agent protocol plan, and Jev build policy are developed under `docs/`.
+## Canonical foundation package
+
+- [Master implementation plan](docs/MASTER_PLAN.md)
+- [Canonical architecture](docs/ARCHITECTURE.md)
+- [Source and donor ledger](docs/SOURCE_LEDGER.md)
+- [Agent platform: MCP, A2A and plugins](docs/AGENT_PLATFORM.md)
+- [Jev build and Decision Fabric policy](docs/JEV_BUILD_POLICY.md)
+- [No-gaps program checklist](docs/NO_GAPS_CHECKLIST.md)
+
+The first implementation phase imports the admitted Presenton base as a working product before replacing or extending subsystems. Gamma source is treated as an authorized selective donor only after an exact source snapshot and provenance boundary are supplied.
