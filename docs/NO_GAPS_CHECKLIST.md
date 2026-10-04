@@ -115,6 +115,9 @@ Every row must eventually resolve to `NOT_APPLICABLE`, `PLANNED`, `IMPLEMENTED`,
 | Privacy | retention, telemetry policy, local/remote boundaries, deletion | P05/P16 |
 | Data residency/compliance | configurable deployment/data-boundary posture where enterprise requirements justify | P14/P16 |
 | Licensing | code/model/data/asset/font notices and redistribution boundaries | P00/P16 |
+| Model artifact rights | weights/tokenizers/processors/runtime licenses, model-data terms, redistribution/commercial-use boundary | P00/P09/P16 |
+| Media/template rights | fonts/icons/images/audio/video/templates/brand assets, attribution, embedding/export/redistribution restrictions | P00/P11/P16 |
+| Generated-output rights | provenance, brand/trademark restrictions, third-party asset lineage and public-publishing/export policy | P11/P14/P16 |
 | Benchmark framework | frozen datasets, reproducible configs, exact model/provider identity | P15 |
 | RAG quality | recall/precision, faithfulness, citation correctness, hallucination | P15 |
 | Visual retrieval | ViDoRe-style tests, charts/screenshots/pages | P15 |
@@ -125,6 +128,28 @@ Every row must eventually resolve to `NOT_APPLICABLE`, `PLANNED`, `IMPLEMENTED`,
 | Upgrade/rollback | DB/schema/artifact/model/plugin compatibility | P16 |
 | Diagnostics/support | safe support bundle, health checks, no secret dump | P16 |
 | Documentation | user, admin, agent, plugin, self-host, security, provenance docs | P00-P16 |
+
+| Identity security | session/token revocation, service principals, MFA/WebAuthn, OIDC/SAML/SCIM where claimed, privileged support/admin separation | P03/P12/P16 |
+| Tenant isolation proof | storage/retrieval/cache/job/audit partitioning, cross-tenant negative tests, no support bypass | P03/P05/P15/P16 |
+| Transport/at-rest encryption | TLS/transport profiles, encrypted sensitive canonical state/blobs, key custody/rotation/recovery | P03/P05/P16 |
+| Data classification/DLP | secrets/credentials/PII/sensitive/confidential labels, taint propagation, egress/export decisions | P05/P16 |
+| Source-content rights | acquisition/robots/terms, rights metadata, redistribution/export/publication restrictions, revocation effects | P05/P07/P14/P16 |
+| Connector auth lifecycle | OAuth/token refresh/revocation, cursor/checkpoint durability, ACL/permission resync, stale-state handling | P07/P16 |
+| Offline/partition semantics | stale markers, resumable sync, conflict/reconciliation, reconnect behavior, no hidden remote correctness dependency | P07/P14/P16 |
+| Model/provider lifecycle | exact provider/model/runtime/prompt/config identity, compatibility, routing/fallback, deprecation, rollback | P03/P09/P16 |
+| Prompt/config governance | versioned prompts/templates/policies/config, review, migration, rollback, no hidden production edits | P03/P09/P16 |
+| Queue/backpressure | admission, priority/fairness, tenant/global quotas, starvation prevention, load shedding, dead-letter/reconciliation | P04/P16 |
+| Content safety/abuse | misuse/abuse policy, unsafe-source/generated-content handling, moderation/override authority | P05/P09/P12/P16 |
+| Data governance | residency, retention schedules, access/export/delete requests, legal hold, derived-index and backup deletion semantics | P05/P16 |
+| Admin operations | tenant lifecycle, account recovery, support access, privileged approval/audit, no silent impersonation | P14/P16 |
+| Client compatibility | supported browsers/desktop OS, responsive/mobile-web claims, DPI/fonts/export fidelity, accessibility matrix | P11/P15/P16 |
+| SRE/SLOs | SLIs/SLOs, alerting, health probes, capacity planning, runbooks, incident response/postmortem evidence | P16 |
+| Availability/failover | profile-specific availability/recovery targets, supervision/restart, failover, single-point-of-failure inventory | P15/P16 |
+| Storage operations | integrity/corruption checks, maintenance/compaction where applicable, backup verification and restore drills | P15/P16 |
+| Usage metering/entitlements | idempotent usage events, quota/plan reconciliation, billing/feature state separate from authorization | P14/P16 |
+| Dependency/provider outages | explicit degraded modes, local fallback/abstain, load shedding, no hidden cloud correctness dependency | P09/P16 |
+| Production evaluation/drift | parser/OCR/retrieval/model drift, benchmark freshness, online/offline evaluation, rollback triggers | P15/P16 |
+| Environment promotion | dev/staging/production config separation, feature-flag lifecycle, promotion/rollback evidence | P02/P16 |
 
 ## Final release rule
 

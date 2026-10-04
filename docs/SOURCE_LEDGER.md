@@ -23,8 +23,11 @@ No donor becomes canonical merely because it is available. Before copied/adapted
 ### Presenton
 
 - Repository: `presenton/presenton`
-- Planning anchor observed: `e158a014cc1e29da0a27fe539db08dcbcea5c69d`
-- Public license observed: Apache-2.0
+- Planning/execution anchor reverified 2026-10-05: `e158a014cc1e29da0a27fe539db08dcbcea5c69d`
+- Commit tree: `dbf6834b8519e25f4dfd936dc8c099ce17b9e96e`
+- Commit timestamp: `2026-10-02T18:49:27Z`
+- Public license observed: Apache-2.0; exact LICENSE blob `5566576249c0c99a84455b2fc8454e03a9b18e20` (11,340 bytes)
+- Required NOTICE boundary: exact NOTICE blob `ba5df534c4549ed7459a34667a506baa5cbd5fea` (1,274,338 bytes); preserve the donor NOTICE through P01 and audit embedded/transitive entries before selective removal or repackaging
 - Mode: `COPY_FULL_BASE`
 - Intended value:
   - Next.js product UI;
@@ -188,7 +191,22 @@ Mode: `MODEL_PACK / BENCHMARK_ONLY` until exact model revision, artifact digest,
 
 Permanent rule: **Gomrey owns decision schemas, policy, calibration requirements, abstention behavior, provenance, and authority. Models are replaceable providers.**
 
-## 7. Founder-owned sibling donors
+## 7. Assets, model artifacts, datasets and generated-output rights
+
+Code permission does not automatically grant rights to bundled or referenced non-code material. Admission treats these as separate identities and rights decisions:
+
+- model weights, tokenizers, processors, calibration artifacts and runtimes;
+- training/evaluation datasets and benchmark fixtures;
+- fonts, icons, illustrations, photos, audio, video, templates, themes and stock assets;
+- logos, trademarks, product names and brand kits;
+- user-supplied source material and connector-acquired content;
+- generated artifacts that embed, transform or redistribute third-party material.
+
+A copied donor module may land while its bundled asset/model remains excluded. Public publishing/export must preserve required attribution and must not silently convert source-access permission into redistribution permission. Generated content does not erase third-party asset provenance, trademark constraints or source-rights restrictions.
+
+MODEL_PACK admission requires exact model artifact digests plus separate code/runtime, weight, tokenizer/processor and model-data/license identities where applicable. Benchmark datasets are never assumed redistributable because their loader code is open source.
+
+## 8. Founder-owned sibling donors
 
 High-value internal sources include:
 
@@ -203,7 +221,7 @@ High-value internal sources include:
 
 Mode: `ADAPT / COPY_BOUNDED / PROCESS_REFERENCE` based on the selected slice.
 
-## 8. Source admission record
+## 9. Source admission record
 
 Every adopted slice must record:
 
@@ -215,6 +233,10 @@ source_paths
 public_license
 separate_permission_basis_if used
 embedded/transitive code/assets/models
+model_weight_tokenizer_runtime_rights
+training_evaluation_dataset_rights
+font_icon_media_template_brand_rights
+generated_output_redistribution_or_publication_restrictions
 notices/attribution
 Gomrey_target_module
 adoption_mode

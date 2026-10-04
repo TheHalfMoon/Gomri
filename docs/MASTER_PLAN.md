@@ -153,13 +153,17 @@ Introduce Gomrey-owned contracts before replacing donor internals.
 - Artifact / ArtifactRevision / NarrativeIR / DesignIR;
 - Plugin / Skill / Connector identity.
 
-## Storage rules
+## Storage and identity rules
 
 - canonical vs rebuildable projection split;
 - content-addressed immutable blobs/assets;
 - migration discipline;
 - deletion/tombstone behavior;
 - exact source/artifact revisions;
+- tenant/organization/workspace identity is carried on every durable record, job, cache/index projection and audit record; authorization is evaluated before retrieval/disclosure, not after ranking;
+- session/token/service-principal contracts support explicit revocation and least privilege; enterprise SSO/MFA/WebAuthn/SCIM are adapters or qualification profiles rather than hidden assumptions;
+- supported server profiles require encrypted transport; sensitive canonical metadata/blobs require a qualified encryption-at-rest/key-custody profile, with keys separated from content and logs;
+- no privileged support/admin identity silently bypasses tenant scope or audit;
 - no vector/graph server mandatory by architecture.
 
 ## Exit
@@ -221,9 +225,11 @@ Make source acquisition safe before broadening format/connectors.
 - active-content denial;
 - connector credential isolation;
 - source ACL model;
+- data classification hooks for secrets, credentials, PII/sensitive/confidential content and DLP/egress decisions where applicable;
 - prompt-injection/taint metadata;
 - plugin/worker capability restrictions;
-- source rights/access metadata;
+- source rights/access metadata plus acquisition/robots/terms policy and explicit redistribution/export restrictions where source rights require them;
+- source revocation/deletion invalidates dependent caches, indexes, embeddings and derived evidence projections without erasing audit history;
 - quarantine and explicit rejection states.
 
 ## Exit
@@ -290,7 +296,7 @@ Prioritize reuse from SurfSense/Onyx CE/Open Notebook as permitted:
 - web/RSS;
 - additional connectors by demand.
 
-Every connector supports incremental sync, tombstones, revision identity, rate-limit/backoff, credential isolation and ACL mapping where available.
+Every connector supports incremental sync, tombstones, revision identity, rate-limit/backoff, credential isolation, OAuth/token refresh and revocation where applicable, and ACL/permission resynchronization where available. Network loss or partial sync never silently upgrades stale data to fresh truth: checkpoints, stale markers, resumable cursors and conflict/reconciliation states are explicit.
 
 ## Exit
 
@@ -564,16 +570,31 @@ Ship a maintainable product rather than a research demo.
 
 ## Work
 
-- reproducible release builds;
+- reproducible release builds and dev/staging/production promotion rules;
 - migrations/backup/restore;
 - crash recovery;
 - upgrade/rollback;
 - plugin/model-pack update path;
-- observability/redaction;
+- provider/model/prompt/config registry with exact runtime identity, compatibility, deprecation and rollback;
+- production evaluation and drift detection for parser/OCR/retrieval/reranking/decision/generation defaults, with benchmark-freshness and rollback triggers;
+- durable queue admission, tenant/global quotas, priority, fairness, backpressure, starvation prevention, dead-letter/reconciliation paths and load shedding;
+- observability/redaction with defined SLIs/SLOs, alerting, health probes and actionable dashboards;
+- incident response, security escalation, on-call/runbook ownership and post-incident evidence preservation;
+- capacity planning and graceful degraded modes for provider outage, accelerator loss, storage pressure and dependency failure;
+- profile-specific availability/recovery targets, process supervision, restart/failover strategy and explicit single-point-of-failure inventory for any server/hosted deployment claim;
+- storage operations: database/blob integrity checks, backup verification/restore drills, corruption/partial-write recovery, WAL/compaction/vacuum or equivalent maintenance where applicable;
+- usage metering and entitlement accounting, when monetized: idempotent usage events, quota reconciliation, plan/feature enforcement and billing state kept separate from security authorization;
 - support diagnostics;
+- administrator operations: tenant lifecycle, account recovery, support access, privileged-action approval/audit and no silent impersonation;
 - deployment profiles: local desktop/self-hosted/server as selected;
-- secrets/key management;
+- supported client matrix: browser versions, Windows/macOS/Linux desktop profiles, responsive/mobile-web behavior where claimed, DPI/font/export compatibility and accessibility qualification;
+- secrets/key management plus TLS/transport-security qualification and encryption-at-rest/key-custody tests for supported deployment profiles;
+- authentication/identity qualification for the declared product profile: session revocation, service principals, MFA/WebAuthn and enterprise OIDC/SAML/SCIM only where claimed, with negative tenant-isolation tests;
+- content-safety and abuse controls with explicit policy boundaries, unsafe-source handling, generated-artifact checks and appeal/override authority where product policy requires it;
 - privacy/retention/deletion controls;
+- data governance: classification/PII boundaries, residency policy, retention schedules, access/export/delete requests, legal-hold behavior, derived-index deletion and backup/tombstone semantics;
+- offline/network-partition qualification for each claimed local/sync profile: stale-state visibility, reconnect reconciliation, conflict behavior and no hidden remote correctness dependency;
+- source-content rights/terms and redistribution/export controls verified through acquisition, derived artifacts, sharing and public publishing;
 - SBOM/notices/license bundle;
 - disaster recovery and data portability;
 - performance/cost/resource envelopes;
@@ -582,7 +603,7 @@ Ship a maintainable product rather than a research demo.
 
 ## Exit
 
-Fresh-install -> migrate/restore -> ingest -> research -> create -> agent/API -> export/publish -> upgrade/rollback paths are all proven on supported profiles.
+Fresh-install -> migrate/restore -> ingest -> research -> create -> agent/API -> export/publish -> upgrade/rollback paths are all proven on supported profiles. Release qualification also proves the declared client matrix, queue overload/backpressure behavior, SLO/alert/incident paths, provider/model rollback, data-governance lifecycle, privileged admin boundaries, safety/abuse policy, and drift-triggered rollback on frozen fixtures.
 
 ---
 
