@@ -23,6 +23,7 @@ Gomrey combines source ingestion, multimodal document understanding, NotebookLM-
 - [Source and donor ledger](docs/SOURCE_LEDGER.md)
 - [Agent platform: MCP, A2A and plugins](docs/AGENT_PLATFORM.md)
 - [Jev build and Decision Fabric policy](docs/JEV_BUILD_POLICY.md)
+- [Mandatory review and evidence policy](docs/REVIEW_POLICY.md)
 - [No-gaps program checklist](docs/NO_GAPS_CHECKLIST.md)
 
 The first implementation phase imports the admitted Presenton base as a working product before replacing or extending subsystems. Gamma source is treated as an authorized selective donor only after an exact source snapshot and provenance boundary are supplied.
