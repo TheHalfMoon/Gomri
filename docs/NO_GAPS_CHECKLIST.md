@@ -13,6 +13,7 @@ Every row must eventually resolve to `NOT_APPLICABLE`, `PLANNED`, `IMPLEMENTED`,
 | Gamma donor | exact authorized archive, selective module admission, third-party boundary | P11 |
 | Product identity | naming, packages, containers, docs, legal notices, branding separation | P02 |
 | Identity/auth | users, agents, service principals, sessions/tokens, OAuth | P03/P12/P14 |
+| Tenant isolation | organization/workspace isolation in storage, retrieval, jobs, caches and audit | P03/P05/P14 |
 | Workspace/org | workspace ownership, roles, sharing, quotas/policies | P03/P14 |
 | Authorization | scopes, ACLs, connector inheritance, plugin permissions, approvals | P05/P12/P13 |
 | Secrets | encrypted storage/handles, redaction, rotation/revocation, no prompt exposure | P05/P16 |
@@ -24,10 +25,13 @@ Every row must eventually resolve to `NOT_APPLICABLE`, `PLANNED`, `IMPLEMENTED`,
 | Idempotency | tool/API/job mutation keys, duplicate suppression | P04/P12 |
 | Concurrency | optimistic revisions, artifact/source conflicts, agent retries | P04/P12 |
 | Resource budgets | CPU/RAM/GPU/time/network/token/source limits | P04/P05/P12 |
+| Rate limits/abuse | per-principal/workspace/tool limits, burst handling, denial without data loss | P05/P12/P16 |
+| Feature flags | safe rollout/rollback, workspace targeting, no hidden authority changes | P02/P16 |
 | Source gateway | MIME, hostile input, archive bombs, active content, quarantine | P05 |
 | Network security | SSRF, DNS rebinding, redirects, egress policy, proxies | P05 |
 | Filesystem security | path traversal, bounded mounts, temp cleanup, permissions | P05 |
 | Prompt injection/taint | untrusted source marking, propagation, no trust laundering | P05/P08/P12 |
+| Source revocation | deletion/access loss invalidates dependent caches/indexes/evidence availability | P05/P07/P08 |
 | PDF/document parsing | native/scanned/mixed, page accounting, structure/provenance | P06 |
 | Office formats | DOCX/PPTX/XLSX and legacy formats where qualified | P06 |
 | OCR | multilingual, Arabic/English, rotation, poor scans, confidence/uncertainty | P06 |
@@ -45,6 +49,7 @@ Every row must eventually resolve to `NOT_APPLICABLE`, `PLANNED`, `IMPLEMENTED`,
 | Drive/Docs | initial + incremental sync, revisions, ACL mapping | P07 |
 | Enterprise connectors | Notion/SharePoint/Dropbox/etc. by demand and admission | P07/P14 |
 | Connector lifecycle | credentials, cursors, rate limits, tombstones, stale state | P07 |
+| Notifications | source sync failures, approvals, completed tasks and collaboration without spam/leakage | P07/P12/P14 |
 | Exact retrieval | IDs, page/time/range/source locators | P08 |
 | Lexical retrieval | FTS/BM25/grep-style, language/tokenization behavior | P08 |
 | Dense retrieval | embedding abstraction, model packs, rebuildability | P08 |
@@ -61,6 +66,7 @@ Every row must eventually resolve to `NOT_APPLICABLE`, `PLANNED`, `IMPLEMENTED`,
 | Calibration | workload/model-specific profile, ECE/Brier/NLL/risk coverage | P09 |
 | Abstention | unsupported/OOD/missing evidence, explicit user/agent state | P09 |
 | Claim verification | support states, deterministic numeric/date/unit checks | P09 |
+| Provider outages | timeout/circuit-breaker/degraded/offline behavior, no silent cloud fallback | P09/P16 |
 | Notebook UX | source list/viewer, cited chat, research, saved findings | P10 |
 | Deep research | multi-step search/acquisition with bounded source admission | P10 |
 | Studio outputs | report, deck, doc, infographic, audio/podcast, etc. | P10/P11 |
@@ -76,12 +82,15 @@ Every row must eventually resolve to `NOT_APPLICABLE`, `PLANNED`, `IMPLEMENTED`,
 | Brand system | logos/fonts/colors/themes, rights, brand extraction/skills | P11/P13 |
 | Layout QA | overflow, clipping, contrast, density, missing fonts/assets | P11/P15 |
 | Accessibility | alt text, contrast, reading order, keyboard/UI where applicable | P11/P14/P15 |
+| Localization/i18n | locale-safe formatting, translation boundaries, RTL UI/content, Arabic first-class | P02/P10/P15 |
 | MCP server | tools/resources/tasks/apps where selected | P12 |
 | MCP client | authorized external MCP use, taint/provenance, credential isolation | P12 |
 | MCP auth | OAuth/current spec conformance, scopes, negative tests | P12 |
 | MCP Tasks | durable job mapping, polling/update/cancel/result | P12 |
 | A2A | Agent Card, delegated task lifecycle, auth/scope | P12 |
 | REST/SDK | stable schemas, auth, parity with core tool surface | P12 |
+| API versioning | compatibility, deprecation policy, schema migrations, client capability negotiation | P12/P16 |
+| Webhooks/events | signed delivery, retries/idempotency, event versioning, secret rotation | P12/P14 |
 | Structured errors | retryability, policy denial, stale revision, unknown outcome | P12 |
 | Agent discoverability | tools, skills, limits, policies, supported artifacts | P12 |
 | Agent concurrency | expected revisions, idempotency, branch/diff/merge | P12 |
@@ -95,6 +104,7 @@ Every row must eventually resolve to `NOT_APPLICABLE`, `PLANNED`, `IMPLEMENTED`,
 | Realtime | explicit necessity gate, consistency/reconnect behavior if adopted | P14 |
 | Publishing | public/private links, custom domains, revoke/unpublish | P14 |
 | Analytics | viewer engagement, privacy, retention, permissions | P14 |
+| Billing/entitlements | plan/feature/quota enforcement if monetized, separate from authorization truth | P14/P16 |
 | Audit | source/agent/plugin/publish/approval events with redaction | P05/P12/P14 |
 | Observability | metrics/traces/logs, secret/content redaction, health | P16 |
 | Performance | cold/warm latency, throughput, resource profiles, large jobs | P15/P16 |
@@ -103,6 +113,7 @@ Every row must eventually resolve to `NOT_APPLICABLE`, `PLANNED`, `IMPLEMENTED`,
 | Security testing | SAST/dependencies/SBOM/hostile fixtures/authz/plugin attacks | P02/P05/P13/P15 |
 | Supply chain | pinned artifacts, hashes/signatures, model/plugin provenance | P00/P13/P16 |
 | Privacy | retention, telemetry policy, local/remote boundaries, deletion | P05/P16 |
+| Data residency/compliance | configurable deployment/data-boundary posture where enterprise requirements justify | P14/P16 |
 | Licensing | code/model/data/asset/font notices and redistribution boundaries | P00/P16 |
 | Benchmark framework | frozen datasets, reproducible configs, exact model/provider identity | P15 |
 | RAG quality | recall/precision, faithfulness, citation correctness, hallucination | P15 |
