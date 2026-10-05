@@ -24,3 +24,11 @@ These event/runtime identifiers are process-local ephemeral implementation detai
 ## Qualification
 
 No CI or review PASS is claimed here until the exact candidate is tested and reviewed.
+
+## G2b-2 persisted protocol migration
+
+New clipboard writes use Gomrey MIME, text prefix, local-storage key and payload format. Presenton MIME/prefix/storage/format values remain readable and are normalized to the Gomrey payload format before paste. ClipboardEvent copy also emits a legacy MIME payload for bounded transition compatibility.
+
+New chart HTML/config writes use Gomrey chart globals, canvas markers and configuration extension keys. Renderers accept legacy Presenton globals/attributes/extension keys. The legacy chart-state global aliases the same state object as the canonical Gomrey global during the compatibility window.
+
+This is a read-compatibility migration, not a claim that historical artifacts have been rewritten.

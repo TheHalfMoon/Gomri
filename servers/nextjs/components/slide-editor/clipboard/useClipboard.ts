@@ -2,10 +2,18 @@
 
 import { useEffect } from "react";
 import type { TemplateV2ClipboardPayload } from "@/components/slide-editor/clipboard/clipboard";
-
-const CLIPBOARD_MIME = "application/x-presenton-template-v2";
-const CLIPBOARD_PREFIX = "PRESENTON_TEMPLATE_V2:";
-const CLIPBOARD_STORAGE_KEY = "presenton:template-v2-clipboard";
+import {
+  GOMREY_TEMPLATE_V2_CLIPBOARD_FORMAT,
+  GOMREY_TEMPLATE_V2_CLIPBOARD_MIME,
+  GOMREY_TEMPLATE_V2_CLIPBOARD_PREFIX,
+  GOMREY_TEMPLATE_V2_CLIPBOARD_STORAGE_KEY,
+  LEGACY_PRESENTON_TEMPLATE_V2_CLIPBOARD_FORMAT,
+  LEGACY_PRESENTON_TEMPLATE_V2_CLIPBOARD_MIME,
+  LEGACY_PRESENTON_TEMPLATE_V2_CLIPBOARD_STORAGE_KEY,
+  isSupportedTemplateV2ClipboardFormat,
+  serializedTemplateV2PayloadFromClipboardData,
+  serializedTemplateV2PayloadFromText,
+} from "@/components/slide-editor/clipboard/protocol";
 const PASTE_OFFSET = 16;
 let pasteSequence = 0;
 let cachedSerializedPayload: string | null = null;
@@ -33,10 +41,17 @@ export function useTemplateV2Clipboard({
       const payload = onCopy();
       if (!payload) return;
       const serialized = cacheCopiedPayload(payload);
-      event.clipboardData?.setData(CLIPBOARD_MIME, serialized);
+      event.clipboardData?.setData(
+        GOMREY_TEMPLATE_V2_CLIPBOARD_MIME,
+        serialized,
+      );
+      event.clipboardData?.setData(
+        LEGACY_PRESENTON_TEMPLATE_V2_CLIPBOARD_MIME,
+        serializeLegacyPayload(payload),
+      );
       event.clipboardData?.setData(
         "text/plain",
-        `${CLIPBOARD_PREFIX}${serialized}`,
+        `${GOMREY_TEMPLATE_V2_CLIPBOARD_PREFIX}${serialized}`,
       );
       event.preventDefault();
       event.stopPropagation();
@@ -97,11 +112,21 @@ function cacheCopiedPayload(payload: TemplateV2ClipboardPayload) {
   return serialized;
 }
 
+function serializeLegacyPayload(payload: TemplateV2ClipboardPayload): string {
+  return JSON.stringify({
+    ...payload,
+    format: LEGACY_PRESENTON_TEMPLATE_V2_CLIPBOARD_FORMAT,
+  });
+}
+
 function writeStoredPayload(serialized: string) {
   cachedSerializedPayload = serialized;
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.setItem(CLIPBOARD_STORAGE_KEY, serialized);
+    window.localStorage.setItem(
+      GOMREY_TEMPLATE_V2_CLIPBOARD_STORAGE_KEY,
+      serialized,
+    );
   } catch {
     // Native clipboard data remains available when storage is unavailable.
   }
@@ -116,7 +141,7 @@ function writeNavigatorClipboard(serialized: string) {
   }
   try {
     void navigator.clipboard
-      .writeText(`${CLIPBOARD_PREFIX}${serialized}`)
+      .writeText(`${GOMREY_TEMPLATE_V2_CLIPBOARD_PREFIX}${serialized}`)
       .catch(() => undefined);
   } catch {
     // The in-app clipboard cache still supports paste when browser clipboard
@@ -149,11 +174,11 @@ async function readNavigatorClipboardPayload() {
 }
 
 function readPayload(event: ClipboardEvent): TemplateV2ClipboardPayload | null {
-  const direct = event.clipboardData?.getData(CLIPBOARD_MIME) ?? "";
+  const direct = serializedTemplateV2PayloadFromClipboardData(
+    event.clipboardData,
+  );
   const plain = event.clipboardData?.getData("text/plain") ?? "";
-  const serialized =
-    direct ||
-    serializedPayloadFromPlainText(plain);
+  const serialized = direct || serializedTemplateV2PayloadFromText(plain);
   if (serialized) return parsePayload(serialized);
 
   if (event.clipboardData && event.clipboardData.types.length > 0) return null;
@@ -161,14 +186,8 @@ function readPayload(event: ClipboardEvent): TemplateV2ClipboardPayload | null {
 }
 
 function readSerializedPayload(text: string) {
-  const serialized = serializedPayloadFromPlainText(text);
+  const serialized = serializedTemplateV2PayloadFromText(text);
   return serialized ? parsePayload(serialized) : null;
-}
-
-function serializedPayloadFromPlainText(text: string) {
-  return text.startsWith(CLIPBOARD_PREFIX)
-    ? text.slice(CLIPBOARD_PREFIX.length)
-    : "";
 }
 
 function readCachedPayload(): TemplateV2ClipboardPayload | null {
@@ -178,8 +197,30 @@ function readCachedPayload(): TemplateV2ClipboardPayload | null {
   }
   if (typeof window === "undefined") return null;
   try {
-    const stored = window.localStorage.getItem(CLIPBOARD_STORAGE_KEY);
-    return stored ? parsePayload(stored) : null;
+    const stored = window.localStorage.getItem(
+      GOMREY_TEMPLATE_V2_CLIPBOARD_STORAGE_KEY,
+    );
+    if (stored !== null) {
+      return stored ? parsePayload(stored) : null;
+    }
+
+    const legacyStored = window.localStorage.getItem(
+      LEGACY_PRESENTON_TEMPLATE_V2_CLIPBOARD_STORAGE_KEY,
+    );
+    if (!legacyStored) return null;
+
+    const migrated = parsePayload(legacyStored);
+    if (migrated) {
+      try {
+        window.localStorage.setItem(
+          GOMREY_TEMPLATE_V2_CLIPBOARD_STORAGE_KEY,
+          JSON.stringify(migrated),
+        );
+      } catch {
+        // Legacy payload remains readable even when migration persistence fails.
+      }
+    }
+    return migrated;
   } catch {
     return null;
   }
@@ -216,14 +257,17 @@ function parsePayload(serialized: string): TemplateV2ClipboardPayload | null {
           isValidBox(item.absoluteBox),
       );
     if (
-      parsed.format !== "presenton/template-v2" ||
+      !isSupportedTemplateV2ClipboardFormat(parsed.format) ||
       parsed.version !== 1 ||
       !isValidBox(box) ||
       (!hasLegacySingleComponent && !hasComponents)
     ) {
       return null;
     }
-    return parsed as TemplateV2ClipboardPayload;
+    return {
+      ...parsed,
+      format: GOMREY_TEMPLATE_V2_CLIPBOARD_FORMAT,
+    } as TemplateV2ClipboardPayload;
   } catch {
     return null;
   }

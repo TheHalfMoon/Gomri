@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "clipboard": {
+    "canonical": {
+      "format": "gomrey/template-v2",
+      "mime": "application/x-gomrey-template-v2",
+      "text_prefix": "GOMREY_TEMPLATE_V2:",
+      "storage_key": "gomrey:template-v2-clipboard"
+    },
+    "legacy_read": {
+      "format": "presenton/template-v2",
+      "mime": "application/x-presenton-template-v2",
+      "text_prefix": "PRESENTON_TEMPLATE_V2:",
+      "storage_key": "presenton:template-v2-clipboard"
+    },
+    "policy": "canonical writes; legacy reads normalize to canonical; ClipboardEvent dual-MIME transition"
+  },
+  "charts": {
+    "canonical_global": "__GOMREY_JSON_CHARTS__",
+    "legacy_global_alias": "__PRESENTON_JSON_CHARTS__",
+    "canonical_canvas_attribute": "data-gomrey-chart",
+    "legacy_canvas_attribute_read": "data-presenton-chart",
+    "canonical_extension_keys": [
+      "gomreyFormat",
+      "gomreyBarRadius",
+      "gomreyOutsideColor",
+      "gomreyPosition"
+    ],
+    "legacy_extension_keys_read": [
+      "presentonFormat",
+      "presentonBarRadius",
+      "presentonOutsideColor",
+      "presentonPosition"
+    ],
+    "policy": "new artifacts write Gomrey keys; renderers accept legacy Presenton keys"
+  },
+  "ephemeral": {
+    "blank_slide_event": "gomrey:blank-slide-prompt",
+    "chart_runtime_global": "__GOMREY_CHART_BROWSER_RUNTIME__",
+    "splash_source_identity": "Gomrey"
+  },
+  "deferred_binary_artwork": "/Presenton_Splash.png -> P02-G3"
+}
