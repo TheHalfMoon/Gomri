@@ -17,9 +17,9 @@ both are absent                -> use the existing documented default
 
 The machine-readable registry is `config/compatibility-aliases.json`.
 
-## Stage 1
+## Implemented surfaces
 
-This commit covers FastAPI/MCP boundaries: public URL, community enablement, Electron runtime mode, FastEmbed cache, MCP request marker, and export-task Electron detection.
+G2a covers FastAPI/MCP boundaries plus the runtime/build seams that feed them: public URL, community enablement, Electron runtime mode, FastEmbed cache, MCP request marker, export-task Electron detection, app root, Electron build/platform, Chromium cache recovery, Docker platform/ports, and startup banner host-port resolution.
 
 Outbound MCP traffic uses `X-Gomrey-MCP-Request`. Inbound handling accepts `X-Presenton-MCP-Request` only when the canonical header is absent.
 

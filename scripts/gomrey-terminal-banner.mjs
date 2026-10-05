@@ -94,9 +94,12 @@ export function printGomreyStartupBanner(opts = {}) {
   const version = opts.version ?? loadPackageVersion();
   const hostHttpPort =
     opts.hostHttpPort ??
-    process.env.PRESENTON_HTTP_HOST_PORT ??
-    process.env.PRESENTON_HOST_HTTP_PORT ??
-    process.env.PRESENTON_PUBLIC_PORT ??
+    (process.env.GOMREY_HTTP_HOST_PORT ??
+      process.env.PRESENTON_HTTP_HOST_PORT) ??
+    (process.env.GOMREY_HOST_HTTP_PORT ??
+      process.env.PRESENTON_HOST_HTTP_PORT) ??
+    (process.env.GOMREY_PUBLIC_PORT ??
+      process.env.PRESENTON_PUBLIC_PORT) ??
     "5001";
 
   const nextUrl = `http://127.0.0.1:${nextPort}`;

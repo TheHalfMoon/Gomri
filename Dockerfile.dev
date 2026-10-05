@@ -14,8 +14,10 @@ ENV APP_DATA_DIRECTORY=/app_data \
     UV_LINK_MODE=copy \
     PATH="/root/.local/bin:${PATH}" \
     EXPORT_PACKAGE_ROOT=/app/presentation-export \
+    GOMREY_APP_ROOT=/app \
     PRESENTON_APP_ROOT=/app \
     HF_HOME=/root/.cache/huggingface \
+    GOMREY_FASTEMBED_ICON_CACHE_DIR=/root/.cache/presenton/fastembed-icons \
     PRESENTON_FASTEMBED_ICON_CACHE_DIR=/root/.cache/presenton/fastembed-icons \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 

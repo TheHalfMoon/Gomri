@@ -373,6 +373,7 @@ async function startServers(fastApiPort: number, nextjsPort: number) {
         USER_CONFIG_PATH: userConfigPath,
         MIGRATE_DATABASE_ON_STARTUP: "True",
         DISABLE_AUTH: disableAuthForElectron,
+        GOMREY_ELECTRON: "true",
         PRESENTON_ELECTRON: "true",
         ...buildImageMagickEnv(imageMagickRuntime),
         LITEPARSE_RUNNER_PATH: getLiteParseRunnerPath(),
@@ -404,6 +405,7 @@ async function startServers(fastApiPort: number, nextjsPort: number) {
         APP_DATA_DIRECTORY: appDataDir,
         DISABLE_AUTH: disableAuthForElectron,
         EXPORT_PACKAGE_ROOT: exportPackageRoot,
+        GOMREY_APP_ROOT: resourceBaseDir,
         PRESENTON_APP_ROOT: resourceBaseDir,
         PUPPETEER_CACHE_DIR: puppeteerCacheDir,
         PUPPETEER_TMP_DIR: puppeteerTempDir,
@@ -456,6 +458,7 @@ app.whenReady().then(async () => {
   const disableAuthForElectron = resolveElectronDisableAuth();
   process.env.DISABLE_AUTH = disableAuthForElectron;
   process.env.ELECTRON_DISABLE_AUTH = disableAuthForElectron;
+  process.env.GOMREY_ELECTRON = "true";
   process.env.PRESENTON_ELECTRON = "true";
 
   // Ensure all required directories exist before starting

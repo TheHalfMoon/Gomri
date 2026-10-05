@@ -20,7 +20,12 @@ const RECOVERY_KEY = "shared-dictionary-cache-v1";
 const SENTINEL_FILE = "chromium-cache-recovery.json";
 
 function getRecoveryMode(): ChromiumCacheRecoveryStatus["mode"] {
-  const raw = process.env.PRESENTON_CHROMIUM_CACHE_RECOVERY?.trim().toLowerCase();
+  const raw = (
+    process.env.GOMREY_CHROMIUM_CACHE_RECOVERY ??
+    process.env.PRESENTON_CHROMIUM_CACHE_RECOVERY
+  )
+    ?.trim()
+    .toLowerCase();
   if (["0", "false", "no", "off"].includes(raw ?? "")) {
     return "off";
   }

@@ -25,6 +25,54 @@
       "legacy": "PRESENTON_FASTEMBED_ICON_CACHE_DIR",
       "scope": "runtime",
       "status": "active"
+    },
+    {
+      "canonical": "GOMREY_APP_ROOT",
+      "legacy": "PRESENTON_APP_ROOT",
+      "scope": "runtime",
+      "status": "active"
+    },
+    {
+      "canonical": "GOMREY_ELECTRON_BUILD",
+      "legacy": "PRESENTON_ELECTRON_BUILD",
+      "scope": "build",
+      "status": "active"
+    },
+    {
+      "canonical": "NEXT_PUBLIC_GOMREY_ELECTRON_PLATFORM",
+      "legacy": "NEXT_PUBLIC_PRESENTON_ELECTRON_PLATFORM",
+      "scope": "web-build",
+      "status": "active"
+    },
+    {
+      "canonical": "GOMREY_CHROMIUM_CACHE_RECOVERY",
+      "legacy": "PRESENTON_CHROMIUM_CACHE_RECOVERY",
+      "scope": "desktop-runtime",
+      "status": "active"
+    },
+    {
+      "canonical": "GOMREY_DOCKER_PLATFORM",
+      "legacy": "PRESENTON_DOCKER_PLATFORM",
+      "scope": "compose",
+      "status": "active"
+    },
+    {
+      "canonical": "GOMREY_HTTP_HOST_PORT",
+      "legacy": "PRESENTON_HTTP_HOST_PORT",
+      "scope": "compose",
+      "status": "active"
+    },
+    {
+      "canonical": "GOMREY_HOST_HTTP_PORT",
+      "legacy": "PRESENTON_HOST_HTTP_PORT",
+      "scope": "container-runtime",
+      "status": "active"
+    },
+    {
+      "canonical": "GOMREY_PUBLIC_PORT",
+      "legacy": "PRESENTON_PUBLIC_PORT",
+      "scope": "startup-banner",
+      "status": "active"
     }
   ],
   "protocol_aliases": [
@@ -34,40 +82,6 @@
       "direction": "canonical-outbound; canonical-precedence inbound; legacy fallback inbound",
       "status": "active"
     }
-  ],
-  "planned_g2a_runtime_aliases": [
-    [
-      "GOMREY_APP_ROOT",
-      "PRESENTON_APP_ROOT"
-    ],
-    [
-      "GOMREY_ELECTRON_BUILD",
-      "PRESENTON_ELECTRON_BUILD"
-    ],
-    [
-      "NEXT_PUBLIC_GOMREY_ELECTRON_PLATFORM",
-      "NEXT_PUBLIC_PRESENTON_ELECTRON_PLATFORM"
-    ],
-    [
-      "GOMREY_CHROMIUM_CACHE_RECOVERY",
-      "PRESENTON_CHROMIUM_CACHE_RECOVERY"
-    ],
-    [
-      "GOMREY_DOCKER_PLATFORM",
-      "PRESENTON_DOCKER_PLATFORM"
-    ],
-    [
-      "GOMREY_HTTP_HOST_PORT",
-      "PRESENTON_HTTP_HOST_PORT"
-    ],
-    [
-      "GOMREY_HOST_HTTP_PORT",
-      "PRESENTON_HOST_HTTP_PORT"
-    ],
-    [
-      "GOMREY_PUBLIC_PORT",
-      "PRESENTON_PUBLIC_PORT"
-    ]
   ],
   "donor_specific_contracts": [
     {
