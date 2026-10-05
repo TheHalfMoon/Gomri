@@ -41,6 +41,7 @@
     "desktopAppId": "P02-G3",
     "signingAndStoreIdentity": "P02-G3",
     "binaryIconsAndInstallerArtwork": "P02-G3",
-    "releaseVersionReset": "P02-G4"
+    "releaseVersionReset": "P02-G4",
+    "splashArtworkAsset": "P02-G3: /Presenton_Splash.png donor binary remains unchanged until Gomrey artwork is admitted"
   }
 }

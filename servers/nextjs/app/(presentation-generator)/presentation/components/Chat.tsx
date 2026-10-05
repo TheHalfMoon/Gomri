@@ -34,7 +34,7 @@ import MarkdownRenderer from "@/components/MarkDownRender";
 import { ImagesApi } from "../../services/api/images";
 import { PresentationGenerationApi } from "../../services/api/presentation-generation";
 import {
-  PRESENTON_BLANK_SLIDE_PROMPT_EVENT,
+  GOMREY_BLANK_SLIDE_PROMPT_EVENT,
   type BlankSlidePromptEventDetail,
 } from "../../_shared/blank-slide-prompt-event";
 import type {
@@ -2021,12 +2021,12 @@ const Chat = ({
     };
 
     window.addEventListener(
-      PRESENTON_BLANK_SLIDE_PROMPT_EVENT,
+      GOMREY_BLANK_SLIDE_PROMPT_EVENT,
       handleBlankSlidePrompt,
     );
     return () => {
       window.removeEventListener(
-        PRESENTON_BLANK_SLIDE_PROMPT_EVENT,
+        GOMREY_BLANK_SLIDE_PROMPT_EVENT,
         handleBlankSlidePrompt,
       );
     };

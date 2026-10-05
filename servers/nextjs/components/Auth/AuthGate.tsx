@@ -6,9 +6,9 @@ import { getApiUrl } from "@/utils/api";
 import { isAuthDisabled } from "@/utils/auth";
 import { formatFastApiDetail, UNAUTHORIZED_DETAIL } from "@/utils/authErrors";
 import {
-  PRESENTON_SPLASH_MIN_DURATION_MS,
-  PresentonSplashLoader,
-} from "@/components/ui/presenton-splash-loader";
+  GOMREY_SPLASH_MIN_DURATION_MS,
+  GomreySplashLoader,
+} from "@/components/ui/gomrey-splash-loader";
 import { notify } from "@/components/ui/sonner";
 import { sanitizeAnalyticsError } from "@/utils/analytics";
 import { MixpanelEvent, trackEvent } from "@/utils/mixpanel";
@@ -41,7 +41,7 @@ export default function AuthGate() {
   useEffect(() => {
     const timeout = window.setTimeout(() => {
       setHasMetSplashDuration(true);
-    }, PRESENTON_SPLASH_MIN_DURATION_MS);
+    }, GOMREY_SPLASH_MIN_DURATION_MS);
 
     return () => window.clearTimeout(timeout);
   }, []);
@@ -328,7 +328,7 @@ export default function AuthGate() {
     status.authenticated ||
     !hasMetSplashDuration
   ) {
-    return <PresentonSplashLoader message="Preparing your workspace..." />;
+    return <GomreySplashLoader message="Preparing your workspace..." />;
   }
 
   return (

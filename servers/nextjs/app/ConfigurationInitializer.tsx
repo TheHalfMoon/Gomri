@@ -14,7 +14,7 @@ import {
   isBackendConnectionError,
 } from '@/utils/api';
 import { notify } from '@/components/ui/sonner';
-import { PRESENTON_SPLASH_MIN_DURATION_MS } from '@/components/ui/presenton-splash-loader';
+import { GOMREY_SPLASH_MIN_DURATION_MS } from '@/components/ui/gomrey-splash-loader';
 
 function ConfigurationLoadingScreen() {
   return (
@@ -26,7 +26,7 @@ function ConfigurationLoadingScreen() {
       <div className="flex flex-col items-center gap-7 whitespace-nowrap text-center">
         <div aria-hidden="true" className="configuration-loader" />
         <p className="font-syne text-[18px] font-normal leading-normal tracking-[-0.54px] text-[#191919]">
-          Loading Presenton...
+          Loading Gomrey...
         </p>
       </div>
 
@@ -68,7 +68,7 @@ export function ConfigurationInitializer({ children }: { children: React.ReactNo
   // Fetch user config state
   useEffect(() => {
     fetchUserConfigState();
-    // Configuration bootstrap runs once. Presenton is revalidated separately
+    // Configuration bootstrap runs once. Gomrey is revalidated separately
     // below whenever the user navigates to another application route.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -181,7 +181,7 @@ export function ConfigurationInitializer({ children }: { children: React.ReactNo
 
     const timeout = window.setTimeout(() => {
       setHasMetSplashDuration(true);
-    }, PRESENTON_SPLASH_MIN_DURATION_MS);
+    }, GOMREY_SPLASH_MIN_DURATION_MS);
 
     return () => window.clearTimeout(timeout);
   }, [shouldShowStartupSplash]);
