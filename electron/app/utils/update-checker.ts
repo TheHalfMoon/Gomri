@@ -3,16 +3,31 @@ import { app, BrowserWindow } from "electron";
 import { isDev } from "./constants";
 import { safeStderrWrite } from "./safe-console";
 
+function normalizeHttpUrl(value: string | undefined): string {
+  const raw = value?.trim();
+  if (!raw) return "";
+  try {
+    const parsed = new URL(raw);
+    return parsed.protocol === "http:" || parsed.protocol === "https:"
+      ? parsed.toString()
+      : "";
+  } catch {
+    return "";
+  }
+}
+
 /**
- * Version check URL — GitHub raw version.json (no API required).
- * Override with UPDATE_SERVER_URL for local testing.
+ * Gomrey update checks are opt-in until a Gomrey-owned release feed is qualified.
+ * UPDATE_SERVER_URL remains a generic legacy development override.
  */
-const VERSION_JSON_URL =
-  process.env.UPDATE_SERVER_URL ||
-  "https://raw.githubusercontent.com/presenton/presenton/refs/heads/main/electron/version.json";
+const VERSION_JSON_URL = normalizeHttpUrl(
+  process.env.GOMREY_UPDATE_SERVER_URL || process.env.UPDATE_SERVER_URL,
+);
 
 const CURRENT_VERSION = app.getVersion();
-const WEBSITE_DOWNLOAD_URL = "https://presenton.ai/download";
+const WEBSITE_DOWNLOAD_URL =
+  normalizeHttpUrl(process.env.GOMREY_DOWNLOAD_URL) ||
+  "https://github.com/TheHalfMoon/Gomrey/releases";
 
 /** Maximum number of fetch attempts (polls). */
 const MAX_ATTEMPTS = 3;
@@ -66,11 +81,12 @@ function isNewerVersion(current: string, remote: string): boolean {
 }
 
 async function fetchVersionInfo(): Promise<VersionResponse | null> {
+  if (!VERSION_JSON_URL) return null;
   try {
     log(`Fetching ${VERSION_JSON_URL}...`);
     const response = await net.fetch(VERSION_JSON_URL, {
       method: "GET",
-      headers: { "User-Agent": `Presenton/${CURRENT_VERSION}` },
+      headers: { "User-Agent": `Gomrey/${CURRENT_VERSION}` },
     });
     if (!response.ok) {
       log(`Fetch failed: HTTP ${response.status}`);
@@ -171,16 +187,6 @@ function scheduleBannerInjection(
   }, INJECT_DELAY_MS);
 }
 
-/** Escape HTML to prevent XSS; preserve newlines for display. */
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/\n/g, "<br>");
-}
-
 /**
  * Injects an update banner at the bottom, aligned with the app UI.
  * Includes a "View details" overlay for changelog/message.
@@ -195,21 +201,20 @@ function injectUpdateBanner(
     return;
   }
 
-  const hasMessage = Boolean(message && message.trim());
-  const safeMessage = hasMessage ? escapeHtml(message!.trim()) : "";
-  const safeMessageJson = JSON.stringify(safeMessage);
-  const viewDetailsBtnHtml = hasMessage
-    ? '<button id="__presenton_view_details_btn__" style="color:#64748b;background:none;border:none;cursor:pointer;font-size:12px;padding:4px 8px;text-decoration:underline;text-underline-offset:2px;">View details</button>'
-    : "";
+  const dataJson = JSON.stringify({
+    latest,
+    currentVersion: CURRENT_VERSION,
+    downloadUrl,
+    message: message?.trim() || "",
+  });
 
   const script = /* js */ `
     (function () {
-      if (document.getElementById('__presenton_update_banner__')) return;
+      if (document.getElementById('__gomrey_update_banner__')) return;
 
-      const msgHtml = ${safeMessageJson};
-
+      const data = ${dataJson};
       const banner = document.createElement('div');
-      banner.id = '__presenton_update_banner__';
+      banner.id = '__gomrey_update_banner__';
       banner.style.cssText = [
         'position:fixed',
         'bottom:16px',
@@ -234,43 +239,87 @@ function injectUpdateBanner(
         'gap:12px',
       ].join(';');
 
-      banner.innerHTML = \`
-        <span style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
-          <span style="font-size:18px;">✨</span>
-          <span>
-            Presenton&nbsp;<strong style="color:#5141e5">${latest}</strong>&nbsp;is available
-            &mdash;&nbsp;you have&nbsp;<strong>${CURRENT_VERSION}</strong>
-          </span>
-        </span>
-        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
-          ${viewDetailsBtnHtml}
-          <a href="${downloadUrl}" target="_blank" style="color:#fff;text-decoration:none;background:#5141e5;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:500;white-space:nowrap;">Download update</a>
-          <button onclick="document.getElementById('__presenton_update_banner__').remove();var o=document.getElementById('__presenton_update_overlay__');if(o)o.remove();" title="Dismiss" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:20px;line-height:1;padding:0 2px;">&times;</button>
-        </div>
-      \`;
+      const summary = document.createElement('span');
+      summary.style.cssText = 'display:flex;align-items:center;gap:8px;flex:1;min-width:0;';
+      const sparkle = document.createElement('span');
+      sparkle.style.fontSize = '18px';
+      sparkle.textContent = '✨';
+      const summaryText = document.createElement('span');
+      summaryText.append(document.createTextNode('Gomrey '));
+      const latestStrong = document.createElement('strong');
+      latestStrong.style.color = '#5141e5';
+      latestStrong.textContent = data.latest;
+      summaryText.append(latestStrong);
+      summaryText.append(document.createTextNode(' is available — you have '));
+      const currentStrong = document.createElement('strong');
+      currentStrong.textContent = data.currentVersion;
+      summaryText.append(currentStrong);
+      summary.append(sparkle, summaryText);
 
-      document.body.appendChild(banner);
+      const actions = document.createElement('div');
+      actions.style.cssText = 'display:flex;gap:8px;align-items:center;flex-shrink:0;';
 
-      if (msgHtml) {
-        const overlay = document.createElement('div');
-        overlay.id = '__presenton_update_overlay__';
+      let overlay = null;
+      if (data.message) {
+        const details = document.createElement('button');
+        details.id = '__gomrey_view_details_btn__';
+        details.type = 'button';
+        details.textContent = 'View details';
+        details.style.cssText = 'color:#64748b;background:none;border:none;cursor:pointer;font-size:12px;padding:4px 8px;text-decoration:underline;text-underline-offset:2px;';
+        actions.append(details);
+
+        overlay = document.createElement('div');
+        overlay.id = '__gomrey_update_overlay__';
         overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;z-index:2147483647;padding:24px;';
-        overlay.onclick = function(e) { if (e.target === overlay) overlay.style.display = 'none'; };
-        overlay.innerHTML = \`
-          <div style="background:#fff;border-radius:16px;max-width:420px;width:100%;max-height:80vh;overflow:auto;box-shadow:0 24px 48px rgba(0,0,0,0.15);padding:24px;" onclick="event.stopPropagation()">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-              <h3 style="margin:0;font-size:18px;font-weight:600;color:#191919;">What's new in ${latest}</h3>
-              <button onclick="document.getElementById('__presenton_update_overlay__').style.display='none'" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:24px;line-height:1;padding:0;">&times;</button>
-            </div>
-            <div style="color:#475569;font-size:14px;line-height:1.6;" id="__presenton_overlay_content__"></div>
-          </div>
-        \`;
+        overlay.addEventListener('click', (event) => {
+          if (event.target === overlay) overlay.style.display = 'none';
+        });
+
+        const panel = document.createElement('div');
+        panel.style.cssText = 'background:#fff;border-radius:16px;max-width:420px;width:100%;max-height:80vh;overflow:auto;box-shadow:0 24px 48px rgba(0,0,0,0.15);padding:24px;';
+        panel.addEventListener('click', (event) => event.stopPropagation());
+        const headingRow = document.createElement('div');
+        headingRow.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;';
+        const heading = document.createElement('h3');
+        heading.style.cssText = 'margin:0;font-size:18px;font-weight:600;color:#191919;';
+        heading.textContent = "What's new in " + data.latest;
+        const closeOverlay = document.createElement('button');
+        closeOverlay.type = 'button';
+        closeOverlay.textContent = '×';
+        closeOverlay.style.cssText = 'background:none;border:none;color:#94a3b8;cursor:pointer;font-size:24px;line-height:1;padding:0;';
+        closeOverlay.addEventListener('click', () => { overlay.style.display = 'none'; });
+        headingRow.append(heading, closeOverlay);
+        const content = document.createElement('div');
+        content.id = '__gomrey_overlay_content__';
+        content.style.cssText = 'color:#475569;font-size:14px;line-height:1.6;white-space:pre-wrap;';
+        content.textContent = data.message;
+        panel.append(headingRow, content);
+        overlay.append(panel);
         document.body.appendChild(overlay);
-        document.getElementById('__presenton_overlay_content__').innerHTML = msgHtml;
-        document.getElementById('__presenton_view_details_btn__').onclick = function() {
-          document.getElementById('__presenton_update_overlay__').style.display = 'flex';
-        };
+        details.addEventListener('click', () => { overlay.style.display = 'flex'; });
       }
+
+      const download = document.createElement('a');
+      download.href = data.downloadUrl;
+      download.target = '_blank';
+      download.rel = 'noopener noreferrer';
+      download.textContent = 'Download update';
+      download.style.cssText = 'color:#fff;text-decoration:none;background:#5141e5;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:500;white-space:nowrap;';
+      actions.append(download);
+
+      const dismiss = document.createElement('button');
+      dismiss.type = 'button';
+      dismiss.title = 'Dismiss';
+      dismiss.textContent = '×';
+      dismiss.style.cssText = 'background:none;border:none;color:#94a3b8;cursor:pointer;font-size:20px;line-height:1;padding:0 2px;';
+      dismiss.addEventListener('click', () => {
+        banner.remove();
+        if (overlay) overlay.remove();
+      });
+      actions.append(dismiss);
+
+      banner.append(summary, actions);
+      document.body.appendChild(banner);
     })();
   `;
 
@@ -328,6 +377,10 @@ async function checkForUpdatesWithRetry(win: BrowserWindow): Promise<void> {
  */
 export function startUpdateChecker(win: BrowserWindow): void {
   stopUpdateChecker();
+  if (!VERSION_JSON_URL) {
+    log("Automatic update checks are disabled until a Gomrey update endpoint is configured");
+    return;
+  }
   updateCheckerStopped = false;
   if (!hasLiveWebContents(win)) {
     updateCheckerStopped = true;

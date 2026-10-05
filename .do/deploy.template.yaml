@@ -1,13 +1,14 @@
 spec:
-  name: presenton
+  name: gomrey
   region: nyc
   services:
-    - name: presenton
+    - name: gomrey
       image:
         registry_type: GHCR
         registry: ghcr.io
-        repository: presenton/presenton
-        tag: latest
+        repository: thehalfmoon/gomrey
+        # P02-G4 replaces this placeholder only after a Gomrey image is qualified.
+        tag: replace-with-qualified-release
       http_port: 80
       instance_count: 1
       instance_size_slug: apps-s-1vcpu-2gb

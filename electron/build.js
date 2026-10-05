@@ -873,14 +873,14 @@ function findDirectoriesNamed(root, name) {
 
 const config = {
   appId: APP_ID,
-  productName: "Presenton",
+  productName: "Gomrey",
   asar: true,
   asarUnpack: [
     "resources/**",
     // LiteParse runs from FastAPI via Electron-as-Node and needs real package dirs.
     "node_modules/**",
   ],
-  copyright: "Copyright © 2026 Presenton",
+  copyright: "Copyright 2026 TheHalfMoon",
   directories: {
     output: "dist",
     buildResources: "build",

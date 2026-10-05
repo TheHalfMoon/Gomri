@@ -1,5 +1,5 @@
 /**
- * Docker / startup terminal banner for Presenton.
+ * Docker / startup terminal banner for Gomrey.
  * Renders a compact brand logo + startup status.
  */
 
@@ -47,7 +47,7 @@ function styleAsciiArt(rawAscii) {
 
 function loadAsciiBanner() {
   const thisDir = path.dirname(fileURLToPath(import.meta.url));
-  const asciiPath = path.join(thisDir, "presenton-ascii.txt");
+  const asciiPath = path.join(thisDir, "gomrey-ascii.txt");
 
   try {
     const raw = fs.readFileSync(asciiPath, "utf8").trimEnd();
@@ -87,7 +87,7 @@ function padVis(styled, width) {
  * @param {number} [opts.fastapiPort]
  * @param {string} [opts.hostHttpPort] — host-published HTTP port (docker -p HOST:80). Default from env or "5001".
  */
-export function printPresentonStartupBanner(opts = {}) {
+export function printGomreyStartupBanner(opts = {}) {
   const mode = opts.mode === "development" ? "development" : "production";
   const nextPort = opts.nextPort ?? 3000;
   const fastapiPort = opts.fastapiPort ?? 8000;
@@ -117,7 +117,7 @@ export function printPresentonStartupBanner(opts = {}) {
             accent("Love the Project?  ") +
             brand("Star us on github: ") +
             BOLD +
-            fgRgb(224, 218, 255, "https://github.com/presenton/presenton"),
+            fgRgb(224, 218, 255, "https://github.com/TheHalfMoon/Gomrey"),
         ]
       : []),
     muted("   ─────────────────────────────────────────────────────────"),
@@ -170,7 +170,7 @@ export function printPresentonStartupBanner(opts = {}) {
           pipe(
             padVis(
               "  " +
-                muted("Open Presenton:     ") +
+                muted("Open Gomrey:     ") +
                 BOLD +
                 fgRgb(255, 255, 255, publicUrl),
               W,
@@ -183,7 +183,7 @@ export function printPresentonStartupBanner(opts = {}) {
     ...summaryLines,
     boxBottom,
     "",
-    "   " + muted("Made with ❤️  by the Presenton team"),
+    "   " + muted("Gomrey ? agent-first creation and knowledge"),
   ].join("\n");
 
   const bannerHeader = iconBlock ? `${iconBlock}\n` : "";

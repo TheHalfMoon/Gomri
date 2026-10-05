@@ -31,7 +31,7 @@ def test_create_mcp_auth_provider_enabled_for_server_auth(monkeypatch):
     monkeypatch.setattr(mcp_server, "is_disable_auth_enabled", lambda: False)
 
     provider = mcp_server.create_mcp_auth_provider()
-    assert isinstance(provider, mcp_server.PresentonTokenVerifier)
+    assert isinstance(provider, mcp_server.GomreyTokenVerifier)
 
 
 def _mock_api_key_verifier(monkeypatch, token: str | None):
@@ -65,7 +65,7 @@ def _mock_api_key_verifier(monkeypatch, token: str | None):
 def test_presenton_token_verifier_accepts_normal_user_api_key(monkeypatch):
     token = "sk-presenton-0123456789abcdef." + "s" * 40
     user = _mock_api_key_verifier(monkeypatch, token)
-    verifier = mcp_server.PresentonTokenVerifier()
+    verifier = mcp_server.GomreyTokenVerifier()
 
     access_token = asyncio.run(verifier.verify_token(token))
 
@@ -92,7 +92,7 @@ def test_presenton_token_verifier_uses_generation_length_internal_session(monkey
 
     monkeypatch.setattr(mcp_server, "get_jwt_strategy", strategy)
 
-    access_token = asyncio.run(mcp_server.PresentonTokenVerifier().verify_token(token))
+    access_token = asyncio.run(mcp_server.GomreyTokenVerifier().verify_token(token))
 
     assert access_token is not None
     assert access_token.claims["internal_session_token"] == "internal-session"
@@ -101,7 +101,7 @@ def test_presenton_token_verifier_uses_generation_length_internal_session(monkey
 
 def test_presenton_token_verifier_rejects_invalid_token(monkeypatch):
     _mock_api_key_verifier(monkeypatch, None)
-    verifier = mcp_server.PresentonTokenVerifier()
+    verifier = mcp_server.GomreyTokenVerifier()
 
     access_token = asyncio.run(
         verifier.verify_token("sk-presenton-invalid-token")

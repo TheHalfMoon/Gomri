@@ -195,7 +195,7 @@ const chromiumCacheRecovery = prepareChromiumCacheRecovery(
   electronAppPaths.cacheDir,
   electronAppPaths.userDataDir,
 );
-safeLog("[Presenton] Electron paths initialized:", electronAppPaths);
+safeLog("[Gomrey] Electron paths initialized:", electronAppPaths);
 
 initMainSentry();
 updateSentryRuntimeContext(chromiumCacheRecovery);
@@ -205,7 +205,7 @@ app.on("child-process-gone", (_event, details) => {
 });
 
 addMainBreadcrumb("memory", "electron.main.startup", memorySnapshotMb());
-safeLog("[Presenton] Startup memory:", {
+safeLog("[Gomrey] Startup memory:", {
   memory: memorySnapshotMb(),
 });
 
@@ -220,7 +220,7 @@ function isAllowedMainWindowUrl(url: string, appOrigin: string): boolean {
 
 function openUrlOutsideApp(mainWindow: BrowserWindow, url: string): void {
   if (!isSupportedExternalUrl(url)) {
-    safeWarn("[Presenton] Blocked unsupported external URL.");
+    safeWarn("[Gomrey] Blocked unsupported external URL.");
     return;
   }
 
@@ -230,16 +230,16 @@ function openUrlOutsideApp(mainWindow: BrowserWindow, url: string): void {
         return;
       }
 
-      safeWarn(`[Presenton] Failed to open external URL: ${result.message || "Unknown error"}`);
+      safeWarn(`[Gomrey] Failed to open external URL: ${result.message || "Unknown error"}`);
       await showOpenTargetErrorDialog({
         parent: mainWindow,
         title: "Could Not Open Link",
-        message: "Presenton could not open this link in your browser.",
+        message: "Gomrey could not open this link in your browser.",
         detail: `${result.message || "No application is registered to open this link."}\n\n${url}`,
       });
     })
     .catch((error) => {
-      safeWarn("[Presenton] Failed to handle external URL open:", error);
+      safeWarn("[Gomrey] Failed to handle external URL open:", error);
     });
 }
 
@@ -260,10 +260,10 @@ const createWindow = (appOrigin: string) => {
           const p = path.join(__dirname, 'preloads/index.js');
           try {
             if (!fs.existsSync(p)) {
-              safeWarn(`[Presenton] Preload not found at ${p}`);
+              safeWarn(`[Gomrey] Preload not found at ${p}`);
             }
           } catch (e) {
-            safeWarn('[Presenton] Failed to stat preload path', e);
+            safeWarn('[Gomrey] Failed to stat preload path', e);
           }
           return p;
         })(),
@@ -345,20 +345,20 @@ async function startServers(fastApiPort: number, nextjsPort: number) {
       fs.promises.mkdir(puppeteerTempDir, { recursive: true }),
     ]);
     if (exportChromiumPath) {
-      safeLog("[Presenton] Export Chromium runtime resolved:", exportChromiumPath);
+      safeLog("[Gomrey] Export Chromium runtime resolved:", exportChromiumPath);
     } else {
       safeWarn(
-        "[Presenton] Export Chromium runtime was not found; Template Studio slide previews will fail until Chromium is installed."
+        "[Gomrey] Export Chromium runtime was not found; Template Studio slide previews will fail until Chromium is installed."
       );
     }
     if (imageMagickRuntime) {
-      safeLog("[Presenton] ImageMagick runtime resolved:", {
+      safeLog("[Gomrey] ImageMagick runtime resolved:", {
         source: imageMagickRuntime.source,
         binaryPath: imageMagickRuntime.binaryPath,
         homeDir: imageMagickRuntime.homeDir,
       });
     } else {
-      safeWarn("[Presenton] ImageMagick runtime was not found; LiteParse image conversion will fail until it is bundled or installed.");
+      safeWarn("[Gomrey] ImageMagick runtime was not found; LiteParse image conversion will fail until it is bundled or installed.");
     }
     const fastApi = await startFastApiServer(
       fastapiDir,
@@ -484,7 +484,7 @@ app.whenReady().then(async () => {
       syncUserConfigFromEnv();
     }
   } catch (error) {
-    safeWarn("[Presenton] Failed to persist startup user config", error);
+    safeWarn("[Gomrey] Failed to persist startup user config", error);
   }
 
   try {
@@ -492,7 +492,7 @@ app.whenReady().then(async () => {
   } catch (error) {
     const detail = error instanceof Error ? error.message : String(error);
     dialog.showErrorBox(
-      "Presenton Could Not Start",
+      "Gomrey Could Not Start",
       `The local application servers failed to start.\n\n${detail}`,
     );
     await forceQuitApp(1);
@@ -515,14 +515,14 @@ app.whenReady().then(async () => {
     if (mainWindow.isDestroyed()) {
       return;
     }
-    safeWarn("[Presenton] Failed to load application URL", error);
+    safeWarn("[Gomrey] Failed to load application URL", error);
     return;
   }
 
   // Begin polling the version server for available updates
   const updateWindow = getLiveMainWindow();
   if (updateWindow && !updateWindow.webContents.isDestroyed()) {
-    safeStderrWrite("[Presenton] Starting update checker...\n");
+    safeStderrWrite("[Gomrey] Starting update checker...\n");
     startUpdateChecker(updateWindow);
   }
 });
