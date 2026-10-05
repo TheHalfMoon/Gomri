@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "product": {
+    "name": "Gomrey",
+    "slug": "gomrey",
+    "repository": "https://github.com/TheHalfMoon/Gomrey"
+  },
+  "packages": {
+    "root": "gomrey",
+    "web": "gomrey-web",
+    "backend": "gomrey-backend",
+    "desktop": "gomrey"
+  },
+  "compatibility": {
+    "canonicalEnvPrefix": "GOMREY_",
+    "legacyEnvPrefix": "PRESENTON_",
+    "legacyEnvPolicy": "preserve-as-compatibility-alias-until-a-versioned-removal-policy-is-canonical",
+    "canonicalMcpRequestHeader": "X-Gomrey-MCP-Request",
+    "legacyMcpRequestHeader": "X-Presenton-MCP-Request",
+    "mcpRequestHeaderMigration": "P02-G2"
+  },
+  "provenance": {
+    "primaryDonorName": "Presenton",
+    "primaryDonorRepository": "presenton/presenton",
+    "preservePaths": [
+      "LICENSE",
+      "NOTICE",
+      "servers/fastapi/NOTICE",
+      "docs/donors",
+      "docs/SOURCE_LEDGER.md",
+      "docs/evidence/P01_PRESENTON_IMPORT.md"
+    ]
+  },
+  "thirdPartyContracts": [
+    {
+      "name": "@presenton/export-core",
+      "policy": "preserve-until-a-separately-admitted-replacement-or-authorized-copy-is-qualified"
+    }
+  ],
+  "deferredIdentity": {
+    "desktopAppId": "P02-G3",
+    "signingAndStoreIdentity": "P02-G3",
+    "binaryIconsAndInstallerArtwork": "P02-G3",
+    "releaseVersionReset": "P02-G4"
+  }
+}

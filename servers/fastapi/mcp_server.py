@@ -151,9 +151,9 @@ def get_mcp_instructions(generation_mode: PresentationGenerationMode) -> str:
         "standard": "start_standard_presentation",
         "smart": "start_smart_presentation",
     }[generation_mode]
-    instructions = f"""# Presenton MCP
+    instructions = f"""# Gomrey MCP
 
-Create and export presentations with Presenton. Enabled workflows: {enabled_workflows}.
+Create and export presentations with Gomrey. Enabled workflows: {enabled_workflows}.
 Follow the workflows below exactly. Tool results from the current run are the only
 source of truth for IDs, paths, URLs, job state, and generated assets.
 
@@ -163,13 +163,13 @@ source of truth for IDs, paths, URLs, job state, and generated assets.
 2. Never invent, shorten, edit, decode, or reconstruct an ID, path, or URL returned by
    a tool. Copy returned values exactly into the next tool call.
 3. A client attachment ID, OpenWebUI UUID, filename, browser blob URL, and local client
-   path are not uploaded Presenton files. If binary bytes are unavailable, stop and
+   path are not uploaded Gomrey files. If binary bytes are unavailable, stop and
    explain that the attachment cannot be uploaded.
 4. For every upload, send standard base64 of the raw file bytes only. Do not send a
    data-URI prefix, Markdown, a filename in place of bytes, or base64 of an attachment ID.
 5. Start one asynchronous job for one requested result. Do not start a duplicate job
    merely because the first job is still pending.
-6. Never ask the user to paste a Presenton API key into chat.
+6. Never ask the user to paste a Gomrey API key into chat.
 
 # Choose the workflow
 
@@ -282,7 +282,7 @@ with OPENAPI_SPEC_PATH.open("r", encoding="utf-8") as f:
     openapi_spec = json.load(f)
 
 
-class PresentonTokenVerifier(TokenVerifier):
+class GomreyTokenVerifier(TokenVerifier):
     """Validate the same user-scoped API keys accepted by the REST API."""
 
     async def verify_token(self, token: str) -> AccessToken | None:
@@ -325,7 +325,7 @@ def create_mcp_auth_provider() -> TokenVerifier | None:
     """Require user-scoped bearer auth whenever server auth is enabled."""
     if is_disable_auth_enabled():
         return None
-    return PresentonTokenVerifier()
+    return GomreyTokenVerifier()
 
 
 def get_mcp_api_timeout() -> httpx2.Timeout:
@@ -346,7 +346,7 @@ def create_openapi_api_client() -> httpx2.AsyncClient:
 def create_mcp_server(
     api_client: httpx.AsyncClient | httpx2.AsyncClient,
     *,
-    name: str = "Presenton",
+    name: str = "Gomrey",
     auth: TokenVerifier | None = None,
 ) -> FastMCP:
     """Create the MCP server with only the public presentation workflow exposed."""
@@ -404,7 +404,7 @@ async def attach_request_auth_header(request: httpx.Request | httpx2.Request) ->
             return
         if claims.get("user_id"):
             raise RuntimeError(
-                "Unable to create an internal Presenton session for the MCP request"
+                "Unable to create an internal Gomrey session for the MCP request"
             )
         request.headers["Authorization"] = f"Bearer {access_token.token}"
         return
@@ -418,7 +418,7 @@ async def main():
     try:
         if not is_mcp_server_enabled():
             print(
-                "INFO: MCP server is disabled in the Presenton Electron desktop app "
+                "INFO: MCP server is disabled in the Gomrey Electron desktop app "
                 "(PRESENTON_ELECTRON=true)."
             )
             return
@@ -434,7 +434,7 @@ async def main():
         parser.add_argument(
             "--name",
             type=str,
-            default="Presenton API (OpenAPI)",
+            default="Gomrey API (OpenAPI)",
             help="Display name for the generated MCP server",
         )
         args = parser.parse_args()
