@@ -14,15 +14,27 @@ def _is_truthy(value: str | None) -> bool:
     return value.strip().lower() in {"1", "true", "yes", "on"}
 
 
+def _get_compat_env(canonical: str, legacy: str) -> str | None:
+    """Return canonical config when present; otherwise fall back to the legacy name."""
+    if canonical in os.environ:
+        return os.environ[canonical]
+    return os.getenv(legacy)
+
+
 def get_can_change_keys_env():
     return os.getenv("CAN_CHANGE_KEYS")
 
 
-def get_presenton_public_url() -> str | None:
-    value = (os.getenv("PRESENTON_PUBLIC_URL") or "").strip().rstrip("/")
+def get_gomrey_public_url() -> str | None:
+    value = (_get_compat_env("GOMREY_PUBLIC_URL", "PRESENTON_PUBLIC_URL") or "").strip().rstrip("/")
     if value.startswith(("http://", "https://")):
         return value
     return None
+
+
+def get_presenton_public_url() -> str | None:
+    """Legacy internal alias for callers not yet migrated to Gomrey naming."""
+    return get_gomrey_public_url()
 
 
 def get_presentation_generation_mode() -> PresentationGenerationMode:
@@ -35,7 +47,10 @@ def get_presentation_generation_mode() -> PresentationGenerationMode:
 
 def is_community_enabled() -> bool:
     """Return whether cloud-backed community features are available."""
-    value = (os.getenv("PRESENTON_COMMUNITY_ENABLED") or "").strip().lower()
+    value = (
+        _get_compat_env("GOMREY_COMMUNITY_ENABLED", "PRESENTON_COMMUNITY_ENABLED")
+        or ""
+    ).strip().lower()
     if not value:
         return True
     return value not in {"0", "false", "no", "off"}
@@ -84,9 +99,21 @@ def is_disable_auth_enabled():
     return _is_truthy(get_disable_auth_env())
 
 
+def is_gomrey_electron_desktop():
+    """True when running inside the Gomrey Electron desktop app."""
+    return _is_truthy(_get_compat_env("GOMREY_ELECTRON", "PRESENTON_ELECTRON"))
+
+
 def is_presenton_electron_desktop():
-    """True when running inside the Presenton Electron desktop app."""
-    return _is_truthy(os.getenv("PRESENTON_ELECTRON"))
+    """Legacy internal alias for callers not yet migrated to Gomrey naming."""
+    return is_gomrey_electron_desktop()
+
+
+def get_fastembed_icon_cache_directory_env() -> str | None:
+    return _get_compat_env(
+        "GOMREY_FASTEMBED_ICON_CACHE_DIR",
+        "PRESENTON_FASTEMBED_ICON_CACHE_DIR",
+    )
 
 
 def get_llm_provider_env():

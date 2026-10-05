@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "precedence": "canonical variable presence -> legacy alias -> documented default",
+  "environment_aliases": [
+    {
+      "canonical": "GOMREY_PUBLIC_URL",
+      "legacy": "PRESENTON_PUBLIC_URL",
+      "scope": "server-runtime",
+      "status": "active"
+    },
+    {
+      "canonical": "GOMREY_COMMUNITY_ENABLED",
+      "legacy": "PRESENTON_COMMUNITY_ENABLED",
+      "scope": "server-runtime",
+      "status": "active"
+    },
+    {
+      "canonical": "GOMREY_ELECTRON",
+      "legacy": "PRESENTON_ELECTRON",
+      "scope": "runtime",
+      "status": "active"
+    },
+    {
+      "canonical": "GOMREY_FASTEMBED_ICON_CACHE_DIR",
+      "legacy": "PRESENTON_FASTEMBED_ICON_CACHE_DIR",
+      "scope": "runtime",
+      "status": "active"
+    }
+  ],
+  "protocol_aliases": [
+    {
+      "canonical": "X-Gomrey-MCP-Request",
+      "legacy": "X-Presenton-MCP-Request",
+      "direction": "canonical-outbound; canonical-precedence inbound; legacy fallback inbound",
+      "status": "active"
+    }
+  ],
+  "planned_g2a_runtime_aliases": [
+    [
+      "GOMREY_APP_ROOT",
+      "PRESENTON_APP_ROOT"
+    ],
+    [
+      "GOMREY_ELECTRON_BUILD",
+      "PRESENTON_ELECTRON_BUILD"
+    ],
+    [
+      "NEXT_PUBLIC_GOMREY_ELECTRON_PLATFORM",
+      "NEXT_PUBLIC_PRESENTON_ELECTRON_PLATFORM"
+    ],
+    [
+      "GOMREY_CHROMIUM_CACHE_RECOVERY",
+      "PRESENTON_CHROMIUM_CACHE_RECOVERY"
+    ],
+    [
+      "GOMREY_DOCKER_PLATFORM",
+      "PRESENTON_DOCKER_PLATFORM"
+    ],
+    [
+      "GOMREY_HTTP_HOST_PORT",
+      "PRESENTON_HTTP_HOST_PORT"
+    ],
+    [
+      "GOMREY_HOST_HTTP_PORT",
+      "PRESENTON_HOST_HTTP_PORT"
+    ],
+    [
+      "GOMREY_PUBLIC_PORT",
+      "PRESENTON_PUBLIC_PORT"
+    ]
+  ],
+  "donor_specific_contracts": [
+    {
+      "name": "PRESENTON_COMMUNITY_API_URL",
+      "reason": "Presenton donor community endpoint"
+    },
+    {
+      "name": "DEFAULT_PRESENTON_OAUTH_ISSUER",
+      "reason": "Presenton donor OAuth service identity"
+    },
+    {
+      "name": "DEFAULT_PRESENTON_OAUTH_CLIENT_ID",
+      "reason": "Presenton donor OAuth client identity"
+    }
+  ],
+  "deferred_g3": [
+    "PRESENTON_MAC_*",
+    "PRESENTON_MAS_*",
+    "com.presenton.presenton",
+    "PresentonAI.Presenton",
+    "Presenton installer/executable/artifact names"
+  ]
+}

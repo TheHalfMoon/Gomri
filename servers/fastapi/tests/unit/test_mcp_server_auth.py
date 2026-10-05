@@ -10,13 +10,13 @@ from models.sql.user import User
 
 
 def test_is_mcp_server_enabled_in_server_deployments(monkeypatch):
-    monkeypatch.setattr(mcp_server, "is_presenton_electron_desktop", lambda: False)
+    monkeypatch.setattr(mcp_server, "is_gomrey_electron_desktop", lambda: False)
 
     assert mcp_server.is_mcp_server_enabled() is True
 
 
 def test_is_mcp_server_disabled_in_electron_desktop(monkeypatch):
-    monkeypatch.setattr(mcp_server, "is_presenton_electron_desktop", lambda: True)
+    monkeypatch.setattr(mcp_server, "is_gomrey_electron_desktop", lambda: True)
 
     assert mcp_server.is_mcp_server_enabled() is False
 
@@ -207,7 +207,8 @@ def test_attach_request_auth_header_forwards_public_origin(monkeypatch):
 
     assert request.headers["X-Forwarded-Host"] == "presenton.example.com"
     assert request.headers["X-Forwarded-Proto"] == "https"
-    assert request.headers["X-Presenton-MCP-Request"] == "1"
+    assert request.headers["X-Gomrey-MCP-Request"] == "1"
+    assert "X-Presenton-MCP-Request" not in request.headers
 
 
 def test_get_mcp_api_timeout_supports_long_running_requests():
