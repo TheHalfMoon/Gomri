@@ -1,6 +1,6 @@
 # P02-G2a Compatibility Aliases
 
-**Parent:** #8  
+**Parent:** #8
 **Canonical base:** `1f325340dd7f4e1e8b5e61c480c595447165481c`
 
 ## Scope
