@@ -132,8 +132,9 @@ const readUserConfig = () =>
 const copyUserConfigBackup = () => {
   try {
     if (readJsonConfig(userConfigPath)) {
+      chmodBestEffort(userConfigPath, 0o600);
       copyFileSync(userConfigPath, userConfigBackupPath);
-      chmodBestEffort(userConfigBackupPath, 0o644);
+      chmodBestEffort(userConfigBackupPath, 0o600);
     }
   } catch (error) {
     console.warn("Failed to update user config backup:", error);
@@ -145,7 +146,7 @@ const writeUserConfig = (config) => {
   copyUserConfigBackup();
 
   const tempPath = `${userConfigPath}.${process.pid}.${Date.now()}.${randomUUID()}.tmp`;
-  const fd = openSync(tempPath, "w");
+  const fd = openSync(tempPath, "wx", 0o600);
   try {
     writeFileSync(fd, JSON.stringify(config), "utf8");
     fsyncSync(fd);
@@ -164,7 +165,7 @@ const writeUserConfig = (config) => {
     throw error;
   }
 
-  chmodBestEffort(userConfigPath, 0o644);
+  chmodBestEffort(userConfigPath, 0o600);
   if (!existsSync(userConfigBackupPath)) {
     copyUserConfigBackup();
   }
