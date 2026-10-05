@@ -18,7 +18,7 @@ export function getExportPackageRoot(): string {
 
 export function getPresentonAppRoot(): string {
   return (
-    process.env.PRESENTON_APP_ROOT?.trim() ||
+    (process.env.GOMREY_APP_ROOT ?? process.env.PRESENTON_APP_ROOT)?.trim() ||
     path.join(process.cwd(), "..", "..")
   );
 }

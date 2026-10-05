@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "precedence": "canonical variable presence -> legacy alias -> documented default",
+  "environment_aliases": [
+    {
+      "canonical": "GOMREY_PUBLIC_URL",
+      "legacy": "PRESENTON_PUBLIC_URL",
+      "scope": "server-runtime",
+      "status": "active"
+    },
+    {
+      "canonical": "GOMREY_COMMUNITY_ENABLED",
+      "legacy": "PRESENTON_COMMUNITY_ENABLED",
+      "scope": "server-runtime",
+      "status": "active"
+    },
+    {
+      "canonical": "GOMREY_ELECTRON",
+      "legacy": "PRESENTON_ELECTRON",
+      "scope": "runtime",
+      "status": "active"
+    },
+    {
+      "canonical": "GOMREY_FASTEMBED_ICON_CACHE_DIR",
+      "legacy": "PRESENTON_FASTEMBED_ICON_CACHE_DIR",
+      "scope": "runtime",
+      "status": "active"
+    },
+    {
+      "canonical": "GOMREY_APP_ROOT",
+      "legacy": "PRESENTON_APP_ROOT",
+      "scope": "runtime",
+      "status": "active"
+    },
+    {
+      "canonical": "GOMREY_ELECTRON_BUILD",
+      "legacy": "PRESENTON_ELECTRON_BUILD",
+      "scope": "build",
+      "status": "active"
+    },
+    {
+      "canonical": "NEXT_PUBLIC_GOMREY_ELECTRON_PLATFORM",
+      "legacy": "NEXT_PUBLIC_PRESENTON_ELECTRON_PLATFORM",
+      "scope": "web-build",
+      "status": "active"
+    },
+    {
+      "canonical": "GOMREY_CHROMIUM_CACHE_RECOVERY",
+      "legacy": "PRESENTON_CHROMIUM_CACHE_RECOVERY",
+      "scope": "desktop-runtime",
+      "status": "active"
+    },
+    {
+      "canonical": "GOMREY_DOCKER_PLATFORM",
+      "legacy": "PRESENTON_DOCKER_PLATFORM",
+      "scope": "compose",
+      "status": "active"
+    },
+    {
+      "canonical": "GOMREY_HTTP_HOST_PORT",
+      "legacy": "PRESENTON_HTTP_HOST_PORT",
+      "scope": "compose",
+      "status": "active"
+    },
+    {
+      "canonical": "GOMREY_HOST_HTTP_PORT",
+      "legacy": "PRESENTON_HOST_HTTP_PORT",
+      "scope": "container-runtime",
+      "status": "active"
+    },
+    {
+      "canonical": "GOMREY_PUBLIC_PORT",
+      "legacy": "PRESENTON_PUBLIC_PORT",
+      "scope": "startup-banner",
+      "status": "active"
+    }
+  ],
+  "protocol_aliases": [
+    {
+      "canonical": "X-Gomrey-MCP-Request",
+      "legacy": "X-Presenton-MCP-Request",
+      "direction": "canonical-outbound; canonical-precedence inbound; legacy fallback inbound",
+      "status": "active"
+    }
+  ],
+  "donor_specific_contracts": [
+    {
+      "name": "PRESENTON_COMMUNITY_API_URL",
+      "reason": "Presenton donor community endpoint"
+    },
+    {
+      "name": "DEFAULT_PRESENTON_OAUTH_ISSUER",
+      "reason": "Presenton donor OAuth service identity"
+    },
+    {
+      "name": "DEFAULT_PRESENTON_OAUTH_CLIENT_ID",
+      "reason": "Presenton donor OAuth client identity"
+    }
+  ],
+  "deferred_g3": [
+    "PRESENTON_MAC_*",
+    "PRESENTON_MAS_*",
+    "com.presenton.presenton",
+    "PresentonAI.Presenton",
+    "Presenton installer/executable/artifact names"
+  ]
+}

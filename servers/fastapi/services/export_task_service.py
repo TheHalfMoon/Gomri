@@ -183,7 +183,12 @@ class ExportTaskService:
         os.makedirs(puppeteer_cache_directory, exist_ok=True)
         env["PUPPETEER_CACHE_DIR"] = puppeteer_cache_directory
 
-        if env.get("PRESENTON_ELECTRON", "").lower() == "true":
+        electron_mode = (
+            env.get("GOMREY_ELECTRON")
+            if "GOMREY_ELECTRON" in env
+            else env.get("PRESENTON_ELECTRON", "")
+        )
+        if electron_mode.lower() == "true":
             chromium_executable = (env.get("PUPPETEER_EXECUTABLE_PATH") or "").strip()
             if not chromium_executable or not os.path.isfile(chromium_executable):
                 raise HTTPException(

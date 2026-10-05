@@ -17,8 +17,10 @@ import { useSmartChartInjection } from "./useSmartChartInjection";
 
 const SLIDE_WIDTH = 1280;
 const SLIDE_HEIGHT = 720;
-const USE_LINUX_IN_PAGE_RENDERER =
-  process.env.NEXT_PUBLIC_PRESENTON_ELECTRON_PLATFORM === "linux";
+const ELECTRON_PLATFORM =
+  process.env.NEXT_PUBLIC_GOMREY_ELECTRON_PLATFORM ??
+  process.env.NEXT_PUBLIC_PRESENTON_ELECTRON_PLATFORM;
+const USE_LINUX_IN_PAGE_RENDERER = ELECTRON_PLATFORM === "linux";
 
 const SANITIZE_CONFIG: DOMPurifyConfig = {
   USE_PROFILES: { html: true, svg: true, svgFilters: true },

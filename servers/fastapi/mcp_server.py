@@ -17,9 +17,9 @@ from fastmcp.server.providers.openapi import MCPType, RouteMap
 from utils.get_env import (
     PresentationGenerationMode,
     get_presentation_generation_mode,
-    get_presenton_public_url,
+    get_gomrey_public_url,
     is_disable_auth_enabled,
-    is_presenton_electron_desktop,
+    is_gomrey_electron_desktop,
 )
 from services.database import async_session_maker
 from services.api_keys import API_KEY_PREFIX, verify_api_key
@@ -128,7 +128,7 @@ def get_mcp_route_maps(
 def get_mcp_allowed_origins() -> list[str]:
     """Return browser origins trusted by the MCP DNS-rebinding guard."""
     origins = list(MCP_LOCAL_ALLOWED_ORIGINS)
-    public_url = get_presenton_public_url()
+    public_url = get_gomrey_public_url()
     if not public_url:
         return origins
 
@@ -318,7 +318,7 @@ class GomreyTokenVerifier(TokenVerifier):
 
 def is_mcp_server_enabled() -> bool:
     """MCP is only supported in server/Docker deployments, not the Electron app."""
-    return not is_presenton_electron_desktop()
+    return not is_gomrey_electron_desktop()
 
 
 def create_mcp_auth_provider() -> TokenVerifier | None:
@@ -419,7 +419,7 @@ async def main():
         if not is_mcp_server_enabled():
             print(
                 "INFO: MCP server is disabled in the Gomrey Electron desktop app "
-                "(PRESENTON_ELECTRON=true)."
+                "(GOMREY_ELECTRON=true; PRESENTON_ELECTRON remains a legacy alias)."
             )
             return
 

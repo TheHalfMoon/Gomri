@@ -2,7 +2,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const nextjsRoot = path.dirname(fileURLToPath(import.meta.url));
-const isElectronBuild = process.env.PRESENTON_ELECTRON_BUILD === "true";
+const isElectronBuild =
+  (process.env.GOMREY_ELECTRON_BUILD ??
+    process.env.PRESENTON_ELECTRON_BUILD) === "true";
 
 const nextConfig = {
   reactStrictMode: false,

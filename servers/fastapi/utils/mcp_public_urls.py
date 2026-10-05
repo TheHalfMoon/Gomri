@@ -3,15 +3,19 @@ from typing import Any
 
 from fastapi import Request
 
-from utils.get_env import get_presenton_public_url
+from utils.get_env import get_gomrey_public_url
 
 
-MCP_REQUEST_HEADER = "X-Presenton-MCP-Request"
+MCP_REQUEST_HEADER = "X-Gomrey-MCP-Request"
+LEGACY_MCP_REQUEST_HEADER = "X-Presenton-MCP-Request"
 MCP_LINK_FIELDS = frozenset({"path", "edit_path", "preview_url"})
 
 
 def is_mcp_request(request: Request) -> bool:
-    return request.headers.get(MCP_REQUEST_HEADER, "").strip() == "1"
+    canonical = request.headers.get(MCP_REQUEST_HEADER)
+    if canonical is not None:
+        return canonical.strip() == "1"
+    return request.headers.get(LEGACY_MCP_REQUEST_HEADER, "").strip() == "1"
 
 
 def absolute_mcp_url(request: Request, value: str) -> str:
@@ -19,7 +23,7 @@ def absolute_mcp_url(request: Request, value: str) -> str:
     if not is_mcp_request(request) or not value.startswith("/"):
         return value
 
-    configured_origin = get_presenton_public_url()
+    configured_origin = get_gomrey_public_url()
     if configured_origin:
         return f"{configured_origin}{value}"
 

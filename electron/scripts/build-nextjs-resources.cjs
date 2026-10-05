@@ -27,7 +27,9 @@ const build = spawnSync(npmCmd, ["run", "build"], {
   cwd: nextjsDir,
   env: {
     ...process.env,
+    GOMREY_ELECTRON_BUILD: "true",
     PRESENTON_ELECTRON_BUILD: "true",
+    NEXT_PUBLIC_GOMREY_ELECTRON_PLATFORM: process.platform,
     NEXT_PUBLIC_PRESENTON_ELECTRON_PLATFORM: process.platform,
   },
   stdio: "inherit",

@@ -24,6 +24,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install --python /opt/venv/bin/python \
     "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl"
 ENV HF_HOME=/root/.cache/huggingface \
+    GOMREY_FASTEMBED_ICON_CACHE_DIR=/root/.cache/presenton/fastembed-icons \
     PRESENTON_FASTEMBED_ICON_CACHE_DIR=/root/.cache/presenton/fastembed-icons
 # Warm FastEmbed caches into the image (not a BuildKit cache mount, or HF weights would be missing).
 RUN /opt/venv/bin/python scripts/warm_fastembed_cache.py
@@ -78,8 +79,10 @@ ARG CHROMIUM_SNAPSHOT=20260625T180000Z
 ENV APP_DATA_DIRECTORY=/app_data \
     TEMP_DIRECTORY=/tmp/presenton \
     EXPORT_PACKAGE_ROOT=/app/presentation-export \
+    GOMREY_APP_ROOT=/app \
     PRESENTON_APP_ROOT=/app \
     HF_HOME=/root/.cache/huggingface \
+    GOMREY_FASTEMBED_ICON_CACHE_DIR=/root/.cache/presenton/fastembed-icons \
     PRESENTON_FASTEMBED_ICON_CACHE_DIR=/root/.cache/presenton/fastembed-icons \
     PATH="/opt/venv/bin:${PATH}" \
     NODE_ENV=production \

@@ -1,13 +1,13 @@
 services:
   production:
-    platform: ${PRESENTON_DOCKER_PLATFORM:-linux/amd64}
+    platform: ${GOMREY_DOCKER_PLATFORM-${PRESENTON_DOCKER_PLATFORM-linux/amd64}}
     # image: ghcr.io/thehalfmoon/gomrey:<qualified-release>
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      # Set PRESENTON_HTTP_HOST_PORT to change the host port.
-      - "${PRESENTON_HTTP_HOST_PORT:-5001}:80"
+      # Set GOMREY_HTTP_HOST_PORT to change the host port; PRESENTON_HTTP_HOST_PORT remains a legacy alias.
+      - "${GOMREY_HTTP_HOST_PORT-${PRESENTON_HTTP_HOST_PORT-5001}}:80"
       # Required for Codex OAuth callback (OpenAI redirects browser directly to localhost:1455)
       - "1455:1455"
     volumes:
@@ -15,12 +15,15 @@ services:
       - ./servers/fastapi/templates:/app/servers/fastapi/templates:ro
     environment:
       - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
-      - PRESENTON_HOST_HTTP_PORT=${PRESENTON_HOST_HTTP_PORT:-5001}
-      - PRESENTON_PUBLIC_URL=${PRESENTON_PUBLIC_URL:-}
+      - GOMREY_HOST_HTTP_PORT=${GOMREY_HOST_HTTP_PORT-${PRESENTON_HOST_HTTP_PORT-5001}}
+      - PRESENTON_HOST_HTTP_PORT=${GOMREY_HOST_HTTP_PORT-${PRESENTON_HOST_HTTP_PORT-5001}}
+      - GOMREY_PUBLIC_URL=${GOMREY_PUBLIC_URL-${PRESENTON_PUBLIC_URL-}}
+      - PRESENTON_PUBLIC_URL=${GOMREY_PUBLIC_URL-${PRESENTON_PUBLIC_URL-}}
       - MIGRATE_DATABASE_ON_STARTUP=true
       - CAN_CHANGE_KEYS=${CAN_CHANGE_KEYS:-}
       - PRESENTATION_GENERATION_MODE=${PRESENTATION_GENERATION_MODE:-both}
-      - PRESENTON_COMMUNITY_ENABLED=${PRESENTON_COMMUNITY_ENABLED:-true}
+      - GOMREY_COMMUNITY_ENABLED=${GOMREY_COMMUNITY_ENABLED-${PRESENTON_COMMUNITY_ENABLED-true}}
+      - PRESENTON_COMMUNITY_ENABLED=${GOMREY_COMMUNITY_ENABLED-${PRESENTON_COMMUNITY_ENABLED-true}}
       - LLM=${LLM:-}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - OPENAI_MODEL=${OPENAI_MODEL:-}
@@ -129,7 +132,7 @@ services:
       - RESET_AUTH=${RESET_AUTH:-}
 
   production-gpu:
-    platform: ${PRESENTON_DOCKER_PLATFORM:-linux/amd64}
+    platform: ${GOMREY_DOCKER_PLATFORM-${PRESENTON_DOCKER_PLATFORM-linux/amd64}}
     # image: ghcr.io/thehalfmoon/gomrey:<qualified-release>
     build:
       context: .
@@ -142,20 +145,23 @@ services:
               count: 1
               capabilities: [gpu]
     ports:
-      # Set PRESENTON_HTTP_HOST_PORT to change the host port.
-      - "${PRESENTON_HTTP_HOST_PORT:-5001}:80"
+      # Set GOMREY_HTTP_HOST_PORT to change the host port; PRESENTON_HTTP_HOST_PORT remains a legacy alias.
+      - "${GOMREY_HTTP_HOST_PORT-${PRESENTON_HTTP_HOST_PORT-5001}}:80"
       # Required for Codex OAuth callback (OpenAI redirects browser directly to localhost:1455)
       - "1455:1455"
     volumes:
       - ./app_data:/app_data
     environment:
       - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
-      - PRESENTON_HOST_HTTP_PORT=${PRESENTON_HOST_HTTP_PORT:-5000}
-      - PRESENTON_PUBLIC_URL=${PRESENTON_PUBLIC_URL:-}
+      - GOMREY_HOST_HTTP_PORT=${GOMREY_HOST_HTTP_PORT-${PRESENTON_HOST_HTTP_PORT-5000}}
+      - PRESENTON_HOST_HTTP_PORT=${GOMREY_HOST_HTTP_PORT-${PRESENTON_HOST_HTTP_PORT-5000}}
+      - GOMREY_PUBLIC_URL=${GOMREY_PUBLIC_URL-${PRESENTON_PUBLIC_URL-}}
+      - PRESENTON_PUBLIC_URL=${GOMREY_PUBLIC_URL-${PRESENTON_PUBLIC_URL-}}
       - MIGRATE_DATABASE_ON_STARTUP=true
       - CAN_CHANGE_KEYS=${CAN_CHANGE_KEYS:-}
       - PRESENTATION_GENERATION_MODE=${PRESENTATION_GENERATION_MODE:-both}
-      - PRESENTON_COMMUNITY_ENABLED=${PRESENTON_COMMUNITY_ENABLED:-true}
+      - GOMREY_COMMUNITY_ENABLED=${GOMREY_COMMUNITY_ENABLED-${PRESENTON_COMMUNITY_ENABLED-true}}
+      - PRESENTON_COMMUNITY_ENABLED=${GOMREY_COMMUNITY_ENABLED-${PRESENTON_COMMUNITY_ENABLED-true}}
       - LLM=${LLM:-}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - OPENAI_MODEL=${OPENAI_MODEL:-}
@@ -264,12 +270,12 @@ services:
       - RESET_AUTH=${RESET_AUTH:-}
 
   development:
-    platform: ${PRESENTON_DOCKER_PLATFORM:-linux/amd64}
+    platform: ${GOMREY_DOCKER_PLATFORM-${PRESENTON_DOCKER_PLATFORM-linux/amd64}}
     build:
       context: .
       dockerfile: Dockerfile.dev
     ports:
-      - "${PRESENTON_HTTP_HOST_PORT:-5001}:80"
+      - "${GOMREY_HTTP_HOST_PORT-${PRESENTON_HTTP_HOST_PORT-5001}}:80"
       # Required for Codex OAuth callback (OpenAI redirects browser directly to localhost:1455)
       - "1455:1455"
     volumes:
@@ -281,14 +287,17 @@ services:
     environment:
       # Bundled PPTX/PDF export (Puppeteer); matches CI and production image.
       - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
-      - PRESENTON_HOST_HTTP_PORT=${PRESENTON_HOST_HTTP_PORT:-5001}
-      - PRESENTON_PUBLIC_URL=${PRESENTON_PUBLIC_URL:-}
+      - GOMREY_HOST_HTTP_PORT=${GOMREY_HOST_HTTP_PORT-${PRESENTON_HOST_HTTP_PORT-5001}}
+      - PRESENTON_HOST_HTTP_PORT=${GOMREY_HOST_HTTP_PORT-${PRESENTON_HOST_HTTP_PORT-5001}}
+      - GOMREY_PUBLIC_URL=${GOMREY_PUBLIC_URL-${PRESENTON_PUBLIC_URL-}}
+      - PRESENTON_PUBLIC_URL=${GOMREY_PUBLIC_URL-${PRESENTON_PUBLIC_URL-}}
       # Ollama is not baked into the image; set START_OLLAMA=true for runtime install, or use OLLAMA_URL.
       - START_OLLAMA=${START_OLLAMA:-false}
       - MIGRATE_DATABASE_ON_STARTUP=true
       - CAN_CHANGE_KEYS=${CAN_CHANGE_KEYS:-}
       - PRESENTATION_GENERATION_MODE=${PRESENTATION_GENERATION_MODE:-both}
-      - PRESENTON_COMMUNITY_ENABLED=${PRESENTON_COMMUNITY_ENABLED:-true}
+      - GOMREY_COMMUNITY_ENABLED=${GOMREY_COMMUNITY_ENABLED-${PRESENTON_COMMUNITY_ENABLED-true}}
+      - PRESENTON_COMMUNITY_ENABLED=${GOMREY_COMMUNITY_ENABLED-${PRESENTON_COMMUNITY_ENABLED-true}}
       - LLM=${LLM:-}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - OPENAI_MODEL=${OPENAI_MODEL:-}
@@ -396,7 +405,7 @@ services:
       - RESET_AUTH=${RESET_AUTH:-}
 
   development-gpu:
-    platform: ${PRESENTON_DOCKER_PLATFORM:-linux/amd64}
+    platform: ${GOMREY_DOCKER_PLATFORM-${PRESENTON_DOCKER_PLATFORM-linux/amd64}}
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -408,7 +417,7 @@ services:
               count: 1
               capabilities: [gpu]
     ports:
-      - "${PRESENTON_HTTP_HOST_PORT:-5001}:80"
+      - "${GOMREY_HTTP_HOST_PORT-${PRESENTON_HTTP_HOST_PORT-5001}}:80"
       # Required for Codex OAuth callback (OpenAI redirects browser directly to localhost:1455)
       - "1455:1455"
     volumes:
@@ -419,13 +428,16 @@ services:
       - ./app_data:/app_data
     environment:
       - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
-      - PRESENTON_HOST_HTTP_PORT=${PRESENTON_HOST_HTTP_PORT:-5000}
-      - PRESENTON_PUBLIC_URL=${PRESENTON_PUBLIC_URL:-}
+      - GOMREY_HOST_HTTP_PORT=${GOMREY_HOST_HTTP_PORT-${PRESENTON_HOST_HTTP_PORT-5000}}
+      - PRESENTON_HOST_HTTP_PORT=${GOMREY_HOST_HTTP_PORT-${PRESENTON_HOST_HTTP_PORT-5000}}
+      - GOMREY_PUBLIC_URL=${GOMREY_PUBLIC_URL-${PRESENTON_PUBLIC_URL-}}
+      - PRESENTON_PUBLIC_URL=${GOMREY_PUBLIC_URL-${PRESENTON_PUBLIC_URL-}}
       - START_OLLAMA=${START_OLLAMA:-false}
       - MIGRATE_DATABASE_ON_STARTUP=true
       - CAN_CHANGE_KEYS=${CAN_CHANGE_KEYS:-}
       - PRESENTATION_GENERATION_MODE=${PRESENTATION_GENERATION_MODE:-both}
-      - PRESENTON_COMMUNITY_ENABLED=${PRESENTON_COMMUNITY_ENABLED:-true}
+      - GOMREY_COMMUNITY_ENABLED=${GOMREY_COMMUNITY_ENABLED-${PRESENTON_COMMUNITY_ENABLED-true}}
+      - PRESENTON_COMMUNITY_ENABLED=${GOMREY_COMMUNITY_ENABLED-${PRESENTON_COMMUNITY_ENABLED-true}}
       - LLM=${LLM:-}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - OPENAI_MODEL=${OPENAI_MODEL:-}
