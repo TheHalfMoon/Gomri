@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "canonical": {
+    "app_directory": "Gomrey",
+    "temp_directory": "gomrey",
+    "override_env": "GOMREY_USER_DATA_DIRECTORY"
+  },
+  "legacy": {
+    "app_directory": "Presenton Open Source",
+    "temp_directory": "presenton"
+  },
+  "persisted_state_markers": {
+    "strong_files": [
+      "fastapi.db"
+    ],
+    "strong_directories": [
+      "app_data",
+      "images",
+      "exports",
+      "uploads",
+      "templates",
+      "fonts",
+      "pptx-to-html",
+      "pptx-to-json",
+      "mem0"
+    ],
+    "config_files": [
+      "userConfig.json"
+    ]
+  },
+  "resolution": [
+    "explicit override",
+    "fail closed when canonical and legacy have equally authoritative persisted state",
+    "prefer the side with strong app state over config-only state",
+    "reuse legacy state in place when it is the only authoritative state",
+    "use canonical Gomrey state for fresh installs"
+  ],
+  "mutation_policy": "G3a does not copy, merge, rename, or delete persisted user state."
+}

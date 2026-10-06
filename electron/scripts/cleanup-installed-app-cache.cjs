@@ -5,7 +5,10 @@ const path = require("path");
 
 const packageJson = require("../package.json");
 
-const APP_DIRECTORY_NAME = packageJson.productName || "Presenton Open Source";
+const APP_DIRECTORY_NAMES = [
+  packageJson.productName || "Gomrey",
+  "Presenton Open Source",
+];
 const args = new Set(process.argv.slice(2));
 const dryRun = args.has("--dry-run");
 const includePuppeteer = args.has("--include-puppeteer");
@@ -77,12 +80,19 @@ function tempRootDirs() {
 }
 
 function appUserDataDirs() {
-  return unique(appDataBaseDirs().map((baseDir) => path.join(baseDir, APP_DIRECTORY_NAME)));
+  return unique(
+    appDataBaseDirs().flatMap((baseDir) =>
+      APP_DIRECTORY_NAMES.map((name) => path.join(baseDir, name)),
+    ),
+  );
 }
 
 function appTempDirs(userDataDirs) {
   return unique([
-    ...tempRootDirs().map((tempRoot) => path.join(tempRoot, "presenton")),
+    ...tempRootDirs().flatMap((tempRoot) => [
+      path.join(tempRoot, "gomrey"),
+      path.join(tempRoot, "presenton"),
+    ]),
     ...userDataDirs.map((userDataDir) => path.join(userDataDir, "temp")),
   ]);
 }
@@ -132,7 +142,7 @@ function main() {
   if (args.has("--help") || args.has("-h")) {
     console.log(`Usage: node scripts/cleanup-installed-app-cache.cjs [--dry-run] [--include-puppeteer] [--verbose]
 
-Removes Presenton installed-app cache leftovers without touching user settings or exports.
+Removes Gomrey and legacy Presenton installed-app cache leftovers without touching user settings, databases, or exports.
 
 Options:
   --dry-run             Show what would be removed without deleting anything
@@ -174,4 +184,8 @@ Options:
   log(`${action} ${removedCount} path${removedCount === 1 ? '' : 's'}.`);
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = { candidateCleanupPaths };
