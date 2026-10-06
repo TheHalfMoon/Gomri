@@ -11,11 +11,8 @@
     "sentry_release_prefix": "gomrey-electron"
   },
   "legacy_store_contracts": {
-    "mac_app_store_app_id": "com.presenton.presenton",
-    "microsoft_store_identity_name": "PresentonAI.Presenton",
-    "microsoft_store_application_id": "PresentonAI.Presenton",
-    "policy": "Preserve until G3c has verified Gomrey-owned store identities and credentials.",
-    "microsoft_store_default_build": "disabled-until-g3c"
+    "status": "retired-by-P02-G3c",
+    "policy": "No donor Store identity is accepted as a Gomrey fallback. MAS requires explicit Gomrey-owned inputs; AppX remains disabled."
   },
   "telemetry": {
     "default": "disabled",

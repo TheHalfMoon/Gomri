@@ -1,20 +1,19 @@
-Replace this marker with the real MAS distribution provisioning profile.
+﻿Gomrey Mac App Store provisioning profile placeholder
 
-Required final file name:
+Real provisioning profiles are local secrets and must not be committed.
 
-MacAppStore.provisionprofile
+For MAS development:
+- Register the App ID in your Apple Developer account.
+- Set GOMREY_MAS_APP_ID to that exact App ID.
+- Set GOMREY_TEAM_ID to your Apple Developer Team ID.
+- Create a development provisioning profile and set
+  GOMREY_MAS_DEV_PROVISIONING_PROFILE to its absolute path, or place it at
+  electron/build/GomreyMASDev.provisionprofile.
 
-Where it should live:
+For App Store distribution:
+- Create a distribution provisioning profile for the same App ID.
+- Set GOMREY_MAS_PROVISIONING_PROFILE to its absolute path, or place it at
+  electron/build/GomreyMAS.provisionprofile.
 
-electron/build/MacAppStore.provisionprofile
-
-How to create it:
-
-1. Go to Apple Developer > Certificates, Identifiers & Profiles > Profiles.
-2. Create a Mac App Store Connect distribution provisioning profile.
-3. Select the explicit App ID: com.presenton.presenton.
-4. Select the Apple Distribution certificate installed on the Mac.
-5. Download the profile.
-6. Rename or copy it to MacAppStore.provisionprofile in this folder.
-
-Do not commit the real .provisionprofile file. It is ignored by git.
+Gomrey does not accept donor Presenton App IDs, Team IDs, profiles, or signing
+variables as fallbacks.

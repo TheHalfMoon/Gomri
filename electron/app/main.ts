@@ -249,7 +249,6 @@ const createWindow = (appOrigin: string) => {
     height: 720,
     show: false, // Reveal once the app URL is ready to avoid a blank flash.
     backgroundColor: "#f3f5ff",
-    icon: path.join(resourceBaseDir, "resources/ui/assets/images/presenton_short_filled.png"),
     webPreferences: {
         // Ensure a known preload path and explicit isolation settings so
         // the `contextBridge` API is exposed reliably to renderer pages.

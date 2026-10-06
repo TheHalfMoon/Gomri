@@ -11,11 +11,9 @@ interface GomreySplashLoaderProps {
 export const GOMREY_SPLASH_MIN_DURATION_MS = 3000;
 
 const SPLASH_ANIMATION_MS = 2600;
-// Donor binary artwork is preserved until the P02-G3 asset migration.
-const SPLASH_MASK_SRC = "/Presenton_Splash.png";
+const GOMREY_WORDMARK = "GOMREY";
 
 let splashSessionStartedAt: number | null = null;
-let splashMaskReadyPromise: Promise<void> | null = null;
 
 function markSplashSessionStart(): number {
   if (splashSessionStartedAt === null) {
@@ -29,48 +27,14 @@ function getSplashAnimationDelayMs(): number {
   return -Math.min(elapsed, SPLASH_ANIMATION_MS);
 }
 
-function ensureSplashMaskReady(): Promise<void> {
-  if (typeof window === "undefined") {
-    return Promise.resolve();
-  }
-
-  if (!splashMaskReadyPromise) {
-    splashMaskReadyPromise = new Promise((resolve) => {
-      const img = new Image();
-      img.decoding = "async";
-      const finish = () => resolve();
-      img.onload = finish;
-      img.onerror = finish;
-      img.src = SPLASH_MASK_SRC;
-      if (img.complete) {
-        finish();
-      }
-    });
-  }
-
-  return splashMaskReadyPromise;
-}
-
 export function GomreySplashLoader({
   message = "Preparing your workspace",
   className,
 }: GomreySplashLoaderProps) {
-  const [isWordmarkReady, setIsWordmarkReady] = useState(false);
   const [animationDelayMs, setAnimationDelayMs] = useState(0);
 
   useLayoutEffect(() => {
     setAnimationDelayMs(getSplashAnimationDelayMs());
-
-    let cancelled = false;
-    void ensureSplashMaskReady().then(() => {
-      if (!cancelled) {
-        setIsWordmarkReady(true);
-      }
-    });
-
-    return () => {
-      cancelled = true;
-    };
   }, []);
 
   const containerStyle: CSSProperties = {
@@ -102,23 +66,24 @@ export function GomreySplashLoader({
   const wordmarkStyle: CSSProperties = {
     position: "relative",
     zIndex: 1,
+    width: "min(72vw, 620px)",
+    height: "clamp(64px, 11vw, 118px)",
     transform: "translateZ(0)",
-    width: "min(56vw, 511.5px)",
-    aspectRatio: "1023 / 342",
-    visibility: isWordmarkReady ? "visible" : "hidden",
+    fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif",
+    fontSize: "clamp(42px, 8vw, 92px)",
+    fontWeight: 700,
+    letterSpacing: "0.12em",
+    lineHeight: 1,
+    textAlign: "center",
   };
 
   const wordmarkLayerStyle: CSSProperties = {
     position: "absolute",
     inset: 0,
-    maskImage: `url('${SPLASH_MASK_SRC}')`,
-    maskRepeat: "no-repeat",
-    maskPosition: "center",
-    maskSize: "contain",
-    WebkitMaskImage: `url('${SPLASH_MASK_SRC}')`,
-    WebkitMaskRepeat: "no-repeat",
-    WebkitMaskPosition: "center",
-    WebkitMaskSize: "contain",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    whiteSpace: "nowrap",
   };
 
   return (
@@ -143,19 +108,23 @@ export function GomreySplashLoader({
           className="gomrey-splash-wordmark-layer gomrey-splash-wordmark-base"
           style={{
             ...wordmarkLayerStyle,
-            background: "#7a5af8",
+            color: "#7a5af8",
           }}
-        />
+        >
+          {GOMREY_WORDMARK}
+        </span>
         <span
           className="gomrey-splash-wordmark-layer gomrey-splash-wordmark-reveal"
           style={{
             ...wordmarkLayerStyle,
-            background: "#ffffff",
+            color: "#ffffff",
             clipPath: "circle(0 at 50% 50%)",
             animation: `gomrey-splash-text-reveal ${SPLASH_ANIMATION_MS}ms linear ${animationDelayMs}ms both`,
             willChange: "clip-path",
           }}
-        />
+        >
+          {GOMREY_WORDMARK}
+        </span>
       </div>
     </main>
   );

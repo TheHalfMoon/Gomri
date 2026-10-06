@@ -39,5 +39,5 @@
     "chart_runtime_global": "__GOMREY_CHART_BROWSER_RUNTIME__",
     "splash_source_identity": "Gomrey"
   },
-  "deferred_binary_artwork": "/Presenton_Splash.png -> P02-G3"
+  "deferred_binary_artwork": "P02-G3c resolved: donor splash removed; Gomrey splash is code-rendered and default desktop package uses neutral artwork defaults until a Gomrey-owned binary asset is admitted"
 }
