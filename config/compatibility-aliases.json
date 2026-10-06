@@ -97,11 +97,10 @@
       "reason": "Presenton donor OAuth client identity"
     }
   ],
-  "deferred_g3": [
-    "PRESENTON_MAC_*",
-    "PRESENTON_MAS_*",
-    "com.presenton.presenton",
-    "PresentonAI.Presenton",
-    "Presenton installer/executable/artifact names"
-  ]
+  "g3_resolution": {
+    "signing_environment": "GOMREY_* canonical only for signing/Store activation; PRESENTON_* signing aliases are intentionally not accepted",
+    "mas": "fail-closed unless Gomrey-owned App ID, Team ID, provisioning profile, and signing identity are supplied",
+    "appx": "disabled until a verified Gomrey-owned Microsoft Store identity and publisher certificate are admitted",
+    "artwork": "donor package/runtime artwork removed from defaults; provider-specific Presenton artwork remains provider provenance"
+  }
 }

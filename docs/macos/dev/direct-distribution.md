@@ -1,6 +1,6 @@
 # macOS Direct Distribution
 
-Use this guide to ship Presenton as a signed and notarized macOS app outside the Mac App Store. This is the correct path for a downloadable DMG from GitHub Releases or presenton.ai.
+Use this guide to ship Gomrey as a signed and notarized macOS app outside the Mac App Store. This is the correct path for a downloadable DMG from GitHub Releases or the Gomrey release channel.
 
 This is not a Mac App Store build. Do not use MAS provisioning profiles, App Store Connect upload, or App Review for this flow.
 
@@ -12,10 +12,10 @@ The signed release build creates:
 
 ```text
 electron/dist/
-  Presenton-<version>.dmg
+  Gomrey-<version>.dmg
 ```
 
-Users should be able to open the DMG and launch Presenton without macOS warning that the app is from an unidentified developer.
+Users should be able to open the DMG and launch Gomrey without macOS warning that the app is from an unidentified developer.
 
 ## How This Differs From MAS
 
@@ -36,7 +36,7 @@ Direct macOS distribution is configured in `electron/build.js`:
 - `mac.hardenedRuntime` is enabled for non-MAS macOS builds.
 - `mac.entitlements` uses `electron/build/entitlements.mac.plist`.
 - `mac.entitlementsInherit` uses `electron/build/entitlements.mac.inherit.plist`.
-- `mac.notarize` is enabled unless `PRESENTON_SKIP_NOTARIZATION=1`.
+- `mac.notarize` is enabled unless `GOMREY_SKIP_NOTARIZATION=1`.
 - `dmg.sign` is disabled because the app bundle is signed and notarized; signing the DMG itself is not required.
 
 Use the full release build in `electron/package.json`:
@@ -47,7 +47,7 @@ npm run build:all:mac:signed
 
 `build:electron:mac:signed` and `dist:mac:signed` are packaging-only reruns. Use them only after `resources/fastapi`, `resources/nextjs`, and `app_dist/` are already current. The packager checks for those generated resources before signing so it cannot produce a notarized app with missing bundled servers.
 
-The `:mac:signed` scripts set `PRESENTON_REQUIRE_MAC_SIGNING=1`, so they fail before packaging if a Developer ID certificate or notarization credentials are missing.
+The `:mac:signed` scripts set `GOMREY_REQUIRE_MAC_SIGNING=1`, so they fail before packaging if a Developer ID certificate or notarization credentials are missing.
 
 ## Exact Setup For A Release Mac
 
@@ -89,7 +89,7 @@ Developer ID Application: Your Company Name (TEAMID)
 Most release Macs only have one Developer ID Application certificate, so you usually do not need to export a signing identity. If multiple Developer ID certificates are installed, set the exact identity before building:
 
 ```bash
-export PRESENTON_MAC_SIGN_IDENTITY="Developer ID Application: Your Company Name (TEAMID)"
+export GOMREY_MAC_SIGN_IDENTITY="Developer ID Application: Your Company Name (TEAMID)"
 ```
 
 ### 3. Store Notarization Credentials Once
@@ -163,9 +163,9 @@ For public direct distribution, you do not need:
 
 - A registered test device.
 - A `.provisionprofile` file.
-- `PRESENTON_MAS_DEV_IDENTITY`.
-- `PRESENTON_MAS_DISTRIBUTION_IDENTITY`.
-- `PRESENTON_APP_STORE_VERSION`.
+- `GOMREY_MAS_DEV_IDENTITY`.
+- `GOMREY_MAS_DISTRIBUTION_IDENTITY`.
+- `GOMREY_APP_STORE_VERSION`.
 - App Store Connect upload.
 - App Review approval.
 
@@ -200,20 +200,20 @@ Run these checks before publishing the DMG.
 Replace the app path if the architecture-specific output folder differs.
 
 ```bash
-codesign --verify --deep --strict --verbose=2 "dist/mac/Presenton.app"
-codesign -dv --verbose=4 "dist/mac/Presenton.app" 2>&1 | grep -E "Authority|TeamIdentifier|Runtime"
+codesign --verify --deep --strict --verbose=2 "dist/mac/Gomrey.app"
+codesign -dv --verbose=4 "dist/mac/Gomrey.app" 2>&1 | grep -E "Authority|TeamIdentifier|Runtime"
 ```
 
 Expected:
 
 - `Authority=Developer ID Application: ...`
-- `TeamIdentifier=S6W5C54KL6`
+- `TeamIdentifier=<YOUR_TEAM_ID>`
 - Hardened Runtime is present.
 
 ### 2. Check Notarization Stapling
 
 ```bash
-xcrun stapler validate "dist/mac/Presenton.app"
+xcrun stapler validate "dist/mac/Gomrey.app"
 ```
 
 Expected:
@@ -225,8 +225,8 @@ The validate action worked!
 ### 3. Check Gatekeeper
 
 ```bash
-spctl --assess --type execute --verbose=4 "dist/mac/Presenton.app"
-spctl --assess --type open --verbose=4 "dist/Presenton-0.8.8-beta.dmg"
+spctl --assess --type execute --verbose=4 "dist/mac/Gomrey.app"
+spctl --assess --type open --verbose=4 "dist/Gomrey-0.8.8-beta.dmg"
 ```
 
 Expected shape:
@@ -238,7 +238,7 @@ source=Notarized Developer ID
 
 ### 4. Test On Another Mac
 
-Download the DMG on a Mac that did not build it, mount it, drag Presenton to `/Applications`, and launch it normally. This catches quarantine and Gatekeeper behavior that local build machines can hide.
+Download the DMG on a Mac that did not build it, mount it, drag Gomrey to `/Applications`, and launch it normally. This catches quarantine and Gatekeeper behavior that local build machines can hide.
 
 ## Troubleshooting
 
@@ -247,7 +247,7 @@ Download the DMG on a Mac that did not build it, mount it, drag Presenton to `/A
 Install a Developer ID Application certificate in Keychain Access, or set:
 
 ```bash
-export PRESENTON_MAC_SIGN_IDENTITY="Developer ID Application: Your Company Name (TEAMID)"
+export GOMREY_MAC_SIGN_IDENTITY="Developer ID Application: Your Company Name (TEAMID)"
 ```
 
 **The build says notarization credentials are missing**

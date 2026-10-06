@@ -11,32 +11,31 @@ const {
 } = require("../scripts/sync-presentation-export.cjs")
 
 const GOMREY_APP_ID = "io.github.thehalfmoon.gomrey"
-const LEGACY_PRESENTON_APP_ID = "com.presenton.presenton"
-const TEAM_ID = "S6W5C54KL6"
-const macTarget = process.env.PRESENTON_MAC_TARGET
+const macTarget = process.env.GOMREY_MAC_TARGET
 const isMasBuild = macTarget === "mas" || macTarget === "mas-dev"
-const APP_ID = isMasBuild ? LEGACY_PRESENTON_APP_ID : GOMREY_APP_ID
+const APP_ID = GOMREY_APP_ID
+const masAppId = isMasBuild ? requireStoreEnv("GOMREY_MAS_APP_ID") : undefined
+const gomreyTeamId = isMasBuild ? requireStoreEnv("GOMREY_TEAM_ID") : undefined
 const isDirectMacBuild = !isMasBuild && (process.platform === "darwin" || !!macTarget)
-const requireDirectMacSigning = process.env.PRESENTON_REQUIRE_MAC_SIGNING === "1"
+const requireDirectMacSigning = process.env.GOMREY_REQUIRE_MAC_SIGNING === "1"
 const masDevProvisioningProfile = resolveProvisioningProfileForTarget({
   target: "mas-dev",
   label: "MAS development",
   candidates: [
-    "build/AppleDevelopment.provisionprofile",
-    "build/AppleDev.provisionprofile",
-    "build/AppDev.provisionprofile",
-  ],
+    process.env.GOMREY_MAS_DEV_PROVISIONING_PROFILE,
+    "build/GomreyMASDev.provisionprofile",
+  ].filter(Boolean),
 })
 const masProvisioningProfile = resolveProvisioningProfileForTarget({
   target: "mas",
   label: "Mac App Store distribution",
   candidates: [
-    "build/MacAppStore.provisionprofile",
-    "build/AppDistri.provisionprofile",
-  ],
+    process.env.GOMREY_MAS_PROVISIONING_PROFILE,
+    "build/GomreyMAS.provisionprofile",
+  ].filter(Boolean),
 })
 const masDevIdentity =
-  process.env.PRESENTON_MAS_DEV_IDENTITY || process.env.CSC_NAME || ""
+  process.env.GOMREY_MAS_DEV_IDENTITY || process.env.CSC_NAME || ""
 const masSigningIdentities = resolveMasSigningIdentitiesForTarget()
 const masIdentityQualifier = masSigningIdentities.qualifier
 const masAppSigningIdentity = masSigningIdentities.appIdentity
@@ -48,16 +47,16 @@ const appStoreBundleVersion =
     ? getAppStoreBundleVersion(appStoreBundleShortVersion)
     : undefined
 const macDistributionIdentity =
-  process.env.PRESENTON_MAC_SIGN_IDENTITY ||
+  process.env.GOMREY_MAC_SIGN_IDENTITY ||
   process.env.CSC_NAME ||
   undefined
 const shouldNotarizeDirectMacBuild =
-  isDirectMacBuild && process.env.PRESENTON_SKIP_NOTARIZATION !== "1"
+  isDirectMacBuild && process.env.GOMREY_SKIP_NOTARIZATION !== "1"
 const shouldSignDirectMacDmg = isDirectMacBuild && requireDirectMacSigning
 const masSigningExtraArgs =
-  process.env.PRESENTON_CODESIGN_TIMESTAMP === "1" ? [] : ["--timestamp=none"]
+  process.env.GOMREY_CODESIGN_TIMESTAMP === "1" ? [] : ["--timestamp=none"]
 const codesignTimestampRetries = Number.parseInt(
-  process.env.PRESENTON_CODESIGN_TIMESTAMP_RETRIES || "4",
+  process.env.GOMREY_CODESIGN_TIMESTAMP_RETRIES || "4",
   10
 )
 const untimestampedNestedResourceExtensions = new Set([
@@ -95,26 +94,34 @@ const untimestampedNestedResourceExtensions = new Set([
   ".woff2",
   ".zip",
 ])
+function requireStoreEnv(name) {
+  const value = process.env[name]?.trim()
+  if (!value) {
+    throw new Error(`${name} is required for Gomrey ${macTarget || "Store"} builds. Donor Store identities are not accepted.`)
+  }
+  return value
+}
+
 function getAppStoreBundleShortVersion() {
-  const configuredVersion = process.env.PRESENTON_APP_STORE_VERSION
+  const configuredVersion = process.env.GOMREY_APP_STORE_VERSION
   if (configuredVersion) {
-    validateAppStoreVersion(configuredVersion, "PRESENTON_APP_STORE_VERSION")
+    validateAppStoreVersion(configuredVersion, "GOMREY_APP_STORE_VERSION")
     return configuredVersion
   }
 
   const match = /^(\d+)\.(\d+)\.(\d+)/.exec(packageMetadata.version)
   if (!match) {
     throw new Error(
-      `Cannot derive an App Store version from package version "${packageMetadata.version}". Set PRESENTON_APP_STORE_VERSION to three period-separated integers, for example 1.0.0.`
+      `Cannot derive an App Store version from package version "${packageMetadata.version}". Set GOMREY_APP_STORE_VERSION to three period-separated integers, for example 1.0.0.`
     )
   }
   return `${match[1]}.${match[2]}.${match[3]}`
 }
 
 function getAppStoreBundleVersion(bundleShortVersion) {
-  const configuredBuild = process.env.PRESENTON_APP_STORE_BUILD
+  const configuredBuild = process.env.GOMREY_APP_STORE_BUILD
   if (configuredBuild) {
-    validateAppStoreBuild(configuredBuild, "PRESENTON_APP_STORE_BUILD")
+    validateAppStoreBuild(configuredBuild, "GOMREY_APP_STORE_BUILD")
     return configuredBuild
   }
   return bundleShortVersion
@@ -159,13 +166,15 @@ function resolveProvisioningProfile({ target, label, candidates }) {
   const undecodableProfiles = []
 
   for (const candidate of candidates) {
-    const candidatePath = path.join(__dirname, candidate)
+    const candidatePath = path.isAbsolute(candidate)
+      ? candidate
+      : path.join(__dirname, candidate)
     if (!fs.existsSync(candidatePath)) {
       continue
     }
 
     if (canDecodeProvisioningProfile(candidatePath)) {
-      return candidate
+      return candidatePath
     }
 
     undecodableProfiles.push(candidate)
@@ -241,7 +250,7 @@ async function signDirectMacApp(signOptions) {
 
 function installCodesignTimestampRetry() {
   const osxSignUtil = require("@electron/osx-sign/dist/cjs/util.js")
-  if (osxSignUtil.execFileAsync.__presentonTimestampRetryInstalled) {
+  if (osxSignUtil.execFileAsync.__gomreyTimestampRetryInstalled) {
     return
   }
 
@@ -272,7 +281,7 @@ function installCodesignTimestampRetry() {
     }
   }
 
-  execFileAsyncWithTimestampRetry.__presentonTimestampRetryInstalled = true
+  execFileAsyncWithTimestampRetry.__gomreyTimestampRetryInstalled = true
   osxSignUtil.execFileAsync = execFileAsyncWithTimestampRetry
 }
 
@@ -328,13 +337,13 @@ function resolveMasSigningIdentitiesForTarget() {
 function resolveMasSigningIdentities() {
   const identities = getAppleSigningIdentities()
   const explicitIdentity =
-    process.env.PRESENTON_MAS_DISTRIBUTION_IDENTITY ||
-    process.env.PRESENTON_MAS_IDENTITY
+    process.env.GOMREY_MAS_DISTRIBUTION_IDENTITY ||
+    process.env.GOMREY_MAS_IDENTITY
 
   const qualifier = explicitIdentity
     ? validateMasIdentityQualifier(
       explicitIdentity,
-      "PRESENTON_MAS_DISTRIBUTION_IDENTITY/PRESENTON_MAS_IDENTITY",
+      "GOMREY_MAS_DISTRIBUTION_IDENTITY/GOMREY_MAS_IDENTITY",
       identities
     )
     : process.env.CSC_NAME
@@ -574,7 +583,7 @@ function resolveDeveloperIdApplicationIdentity() {
     throw new Error(
       [
         "Missing Developer ID Application signing identity.",
-        "Install the certificate in Keychain Access or set PRESENTON_MAC_SIGN_IDENTITY to its exact name.",
+        "Install the certificate in Keychain Access or set GOMREY_MAC_SIGN_IDENTITY to its exact name.",
         "",
         buildAvailableDeveloperIdIdentityList(identities),
       ].join("\n")
@@ -595,7 +604,7 @@ function buildAvailableDeveloperIdIdentityList(identities) {
 function assertDirectMacNotarizationCredentials() {
   if (!shouldNotarizeDirectMacBuild) {
     throw new Error(
-      "PRESENTON_SKIP_NOTARIZATION=1 is not allowed when PRESENTON_REQUIRE_MAC_SIGNING=1."
+      "GOMREY_SKIP_NOTARIZATION=1 is not allowed when GOMREY_REQUIRE_MAC_SIGNING=1."
     )
   }
 
@@ -913,15 +922,12 @@ const config = {
         : macDistributionIdentity,
     notarize: isMasBuild || !shouldNotarizeDirectMacBuild ? false : true,
     sign: isMasBuild ? undefined : signDirectMacApp,
-    icon: "build/icon.icns",
     bundleShortVersion: appStoreBundleShortVersion,
     bundleVersion: appStoreBundleVersion,
-    extendInfo: {
-      ElectronTeamID: TEAM_ID,
-    },
+    extendInfo: gomreyTeamId ? { ElectronTeamID: gomreyTeamId } : {},
   },
   masDev: {
-    appId: LEGACY_PRESENTON_APP_ID,
+    appId: masAppId,
     type: "development",
     identity: masDevIdentity || undefined,
     provisioningProfile: masDevProvisioningProfile,
@@ -931,7 +937,7 @@ const config = {
     additionalArguments: ["--timestamp=none"],
   },
   mas: {
-    appId: LEGACY_PRESENTON_APP_ID,
+    appId: masAppId,
     type: "distribution",
     identity: masIdentityQualifier || undefined,
     provisioningProfile: masProvisioningProfile,
@@ -943,7 +949,6 @@ const config = {
   linux: {
     artifactName: "Gomrey-${version}.${ext}",
     target: ["AppImage", "deb"],
-    icon: "build/icons",
     category: "Office",
   },
   deb: {
@@ -952,7 +957,6 @@ const config = {
   win: {
     // AppX remains disabled until G3c owns the Microsoft Store identity.
     target: ["nsis"],
-    icon: "build/icon.ico",
     artifactName: "Gomrey-${version}.${ext}",
     executableName: "Gomrey",
   },
@@ -961,9 +965,6 @@ const config = {
     perMachine: false,
     allowToChangeInstallationDirectory: true,
     allowElevation: true,
-    installerIcon: "build/icon.ico",
-    uninstallerIcon: "build/icon.ico",
-    installerHeaderIcon: "build/icon.ico",
     createDesktopShortcut: true,
     createStartMenuShortcut: true,
     shortcutName: "Gomrey",
@@ -972,15 +973,6 @@ const config = {
   dmg: {
     sign: shouldSignDirectMacDmg,
     size: "2300m",
-  },
-  appx: {
-    // G3c must replace this only with a verified Gomrey-owned Store identity.
-    identityName: "PresentonAI.Presenton",
-    publisher: "CN=8A2C57B5-F1C6-473A-93EE-2E9B72134341",
-    displayName: "Presenton",
-    publisherDisplayName: "Presenton Inc.",
-    applicationId: "PresentonAI.Presenton",
-    
   },
 }
 
@@ -992,7 +984,7 @@ const targets =
 
 assertSourceBundleResourcesReady()
 
-if (macTarget === "mas" && process.env.PRESENTON_SKIP_CODESIGN_PREFLIGHT !== "1") {
+if (macTarget === "mas" && process.env.GOMREY_SKIP_CODESIGN_PREFLIGHT !== "1") {
   assertCodesignCanUseIdentity(masAppSigningIdentity)
 }
 

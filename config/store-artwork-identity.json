@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "canonical": {
+    "non_store_app_id": "io.github.thehalfmoon.gomrey",
+    "signing_env_prefix": "GOMREY_",
+    "mas_activation": {
+      "required": [
+        "GOMREY_MAS_APP_ID",
+        "GOMREY_TEAM_ID",
+        "GOMREY_MAS_DEV_PROVISIONING_PROFILE or GOMREY_MAS_PROVISIONING_PROFILE"
+      ],
+      "policy": "fail-closed; no Presenton fallback"
+    },
+    "direct_mac_activation": {
+      "target": "GOMREY_MAC_TARGET=dmg",
+      "signing_required": "GOMREY_REQUIRE_MAC_SIGNING=1",
+      "identity": "GOMREY_MAC_SIGN_IDENTITY or explicit CSC_NAME"
+    }
+  },
+  "microsoft_store": {
+    "status": "disabled",
+    "reason": "No verified Gomrey-owned Microsoft Store identity/publisher certificate is canonical yet.",
+    "reenable_requirements": [
+      "verified identityName",
+      "publisher matching certificate Subject",
+      "applicationId",
+      "Gomrey-owned Store artwork"
+    ]
+  },
+  "artwork": {
+    "default_packaging": "neutral electron-builder/Electron defaults until Gomrey-owned binary artwork is admitted",
+    "splash": "code-rendered GOMREY wordmark; no donor binary splash",
+    "donor_binary_policy": "removed from default runtime/package paths; Presenton provider icons remain only where they identify the Presenton provider"
+  }
+}

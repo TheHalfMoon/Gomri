@@ -1,201 +1,125 @@
-# Mac App Store Setup
+# Gomrey Mac App Store Setup
 
-Presenton’s Electron app is configured for Mac App Store (MAS) distribution with App Sandbox. MAS builds must be produced on macOS because Apple’s signing tools are required.
+Gomrey Mac App Store (MAS) builds are **fail-closed**. The repository does not
+contain or fall back to Presenton App IDs, Team IDs, provisioning profiles, or
+Store signing identities.
 
-This guide covers Apple Developer setup, local provisioning files, and the npm scripts in `electron/package.json` on `main`.
+MAS builds must run on macOS with Apple signing tools available.
 
-## Overview
+## Required Apple-owned inputs
 
-| Target | Purpose | npm script |
-|--------|---------|------------|
-| `dmg` | Direct download outside the App Store | `npm run build:all:mac:signed` |
-| `mas-dev` | Sandbox testing on registered Macs | `npm run build:all:mas-dev` |
-| `mas` | App Store submission | `npm run build:all:mas` |
+Before building, create these resources in the Apple Developer account that will
+own Gomrey:
 
-Build configuration lives in `electron/build.js`. Key identifiers:
+1. A macOS App ID for Gomrey.
+2. An Apple Development certificate for `mas-dev`.
+3. An Apple Distribution certificate for App Store distribution.
+4. A development provisioning profile for the Gomrey App ID.
+5. A Mac App Store distribution provisioning profile for the same App ID.
 
-- **Bundle ID:** `com.presenton.presenton`
-- **Team ID:** `S6W5C54KL6` (set in `extendInfo.ElectronTeamID`)
+Real provisioning profiles are local secrets and are ignored by Git.
 
-## MAS files in the repo
+## Canonical environment variables
 
-These are checked in under `electron/build/`:
+| Variable | Required for | Meaning |
+| --- | --- | --- |
+| `GOMREY_MAC_TARGET` | scripts | `mas-dev`, `mas`, or `dmg` |
+| `GOMREY_MAS_APP_ID` | MAS | Exact App ID registered for Gomrey |
+| `GOMREY_TEAM_ID` | MAS | Apple Developer Team ID that owns the App ID |
+| `GOMREY_MAS_DEV_PROVISIONING_PROFILE` | `mas-dev` | Absolute path to the development profile |
+| `GOMREY_MAS_PROVISIONING_PROFILE` | `mas` | Absolute path to the distribution profile |
+| `GOMREY_MAS_DEV_IDENTITY` | `mas-dev` | Apple Development signing identity; `CSC_NAME` is also accepted when explicitly set |
+| `GOMREY_MAS_DISTRIBUTION_IDENTITY` | `mas` | Apple Distribution identity/qualifier |
+| `GOMREY_MAS_IDENTITY` | `mas` | Alias for the distribution identity |
+| `GOMREY_APP_STORE_VERSION` | `mas` | App Store version in `x.y.z` form |
+| `GOMREY_APP_STORE_BUILD` | `mas` | Optional App Store build number |
 
-| File | Role |
-|------|------|
-| `entitlements.mas.plist` | Main app entitlements (sandbox, network, JIT, user-selected files) |
-| `entitlements.mas.inherit.plist` | Inherited entitlements for helper processes and bundled binaries |
-| `MacAppStore.provisionprofile.replace_me` | Placeholder — replace with your real App Store profile (see below) |
+No `PRESENTON_*` signing variable is accepted.
 
-`build.js` validates provisioning profiles with `security cms -D` before building. Invalid or placeholder files will fail the build with a clear error.
+## Provisioning profiles
 
-## What you need from Apple
+You may either set the absolute profile paths above or use these local filenames:
 
-### 1. Apple Development certificate
+- `electron/build/GomreyMASDev.provisionprofile`
+- `electron/build/GomreyMAS.provisionprofile`
 
-Xcode → **Settings** → **Accounts** → your team → **Manage Certificates** → **+** → **Apple Development**.
-
-Used for `mas-dev` builds and local sandbox testing.
-
-### 2. Apple Distribution certificate
-
-Same path as above, but choose **Apple Distribution**.
-
-Used for `mas` (App Store submission) builds.
-
-### 3. App ID (Bundle ID)
-
-[Apple Developer Portal](https://developer.apple.com/account) → **Certificates, Identifiers & Profiles** → **Identifiers** → **App IDs**.
-
-Create a macOS App ID that matches `com.presenton.presenton` (or update `APP_ID` in `electron/build.js` if you use a different ID).
-
-### 4. Provisioning profiles
-
-Create **two** macOS profiles and download each `.provisionprofile` file into `electron/build/`:
-
-#### AppleDevelopment (MAS development)
-
-- Portal → **Profiles** → **+**
-- Type: **macOS App Development**
-- App ID: your Presenton app ID
-- Certificate: **Apple Development**
-- Save as `electron/build/AppleDevelopment.provisionprofile`
-
-`build.js` also accepts `AppleDev.provisionprofile` or `AppDev.provisionprofile` as fallbacks.
-
-#### MacAppStore (MAS distribution)
-
-- Portal → **Profiles** → **+**
-- Type: **Mac App Store**
-- App ID: your Presenton app ID
-- Certificate: **Apple Distribution**
-- Save as `electron/build/MacAppStore.provisionprofile`
-
-Verify profiles decode correctly:
+Verify a profile on macOS:
 
 ```bash
+security cms -D -i electron/build/GomreyMASDev.provisionprofile
+security cms -D -i electron/build/GomreyMAS.provisionprofile
+```
+
+The build validates that the selected profile is decodable before packaging.
+
+## Example: MAS development
+
+```bash
+export GOMREY_MAS_APP_ID="your.registered.gomrey.appid"
+export GOMREY_TEAM_ID="YOUR_TEAM_ID"
+export GOMREY_MAS_DEV_PROVISIONING_PROFILE="/absolute/path/GomreyMASDev.provisionprofile"
+export GOMREY_MAS_DEV_IDENTITY="Apple Development: Your Name (YOUR_TEAM_ID)"
+
 cd electron
-security cms -D -i build/AppleDevelopment.provisionprofile
-security cms -D -i build/MacAppStore.provisionprofile
+npm run build:all:mas-dev
 ```
 
-Provisioning profiles expire (typically yearly). Regenerate and replace the local files when they do.
-
-## Environment variables
-
-| Variable | Used for | Description |
-|----------|----------|-------------|
-| `PRESENTON_MAC_TARGET` | Set by npm scripts | `mas-dev` or `mas` (do not set manually when using the scripts below) |
-| `PRESENTON_MAS_DEV_IDENTITY` | `mas-dev` | Signing identity, e.g. `Apple Development: Your Name (TEAMID)` |
-| `PRESENTON_MAS_DISTRIBUTION_IDENTITY` | `mas` | Distribution identity, e.g. `Apple Distribution: Your Org (TEAMID)` |
-| `PRESENTON_MAS_IDENTITY` | `mas` | Alias for distribution identity |
-| `CSC_NAME` | Either target | Fallback if the target-specific identity vars are unset |
-| `PRESENTON_APP_STORE_VERSION` | `mas` | App Store **version** (`x.y.z`). Required when `package.json` version contains a suffix like `-beta` |
-| `PRESENTON_APP_STORE_BUILD` | `mas` | App Store **build** number. Defaults to the short version if unset |
-
-Example for a beta package version:
+## Example: App Store distribution
 
 ```bash
-export PRESENTON_APP_STORE_VERSION=1.0.0
-export PRESENTON_APP_STORE_BUILD=42
+export GOMREY_MAS_APP_ID="your.registered.gomrey.appid"
+export GOMREY_TEAM_ID="YOUR_TEAM_ID"
+export GOMREY_MAS_PROVISIONING_PROFILE="/absolute/path/GomreyMAS.provisionprofile"
+export GOMREY_MAS_DISTRIBUTION_IDENTITY="Apple Distribution: Your Org (YOUR_TEAM_ID)"
+export GOMREY_APP_STORE_VERSION="1.0.0"
+export GOMREY_APP_STORE_BUILD="42"
+
+cd electron
+npm run build:all:mas
 ```
 
-## Build commands
+## Entitlements
 
-Run from `electron/` after `npm run setup:env` (first time only).
+`electron/build/entitlements.mas.plist` contains Gomrey's sandbox/runtime
+capabilities only. P02-G3c removed the imported donor application-group
+entitlement and donor Team/App identifiers.
 
-### Full build (recommended)
+The inherited helper entitlements remain in
+`electron/build/entitlements.mas.inherit.plist`.
 
-Rebuilds Next.js, FastAPI, export runtime, and packages the app:
+## Artwork
 
-```bash
-# MAS development — runs on Macs in your dev provisioning profile
-PRESENTON_MAS_DEV_IDENTITY="Apple Development: Your Name (TEAMID)" \
-  npm run build:all:mas-dev
+P02-G3c removed imported donor package artwork. Gomrey currently relies on
+neutral Electron/electron-builder defaults until a Gomrey-owned binary icon set
+is explicitly admitted. Do not rename or reuse donor artwork as Gomrey artwork.
 
-# MAS distribution — for App Store Connect upload
-PRESENTON_MAS_DISTRIBUTION_IDENTITY="Apple Distribution: Your Org (TEAMID)" \
-  PRESENTON_APP_STORE_VERSION=1.0.0 \
-  npm run build:all:mas
-```
+## Microsoft Store
 
-### Package only (resources already built)
-
-If you already ran `build:all` and only need to re-run the Electron packager:
-
-```bash
-PRESENTON_MAS_DEV_IDENTITY="Apple Development: Your Name (TEAMID)" \
-  npm run dist:mac:mas-dev
-
-PRESENTON_MAS_DISTRIBUTION_IDENTITY="Apple Distribution: Your Org (TEAMID)" \
-  PRESENTON_APP_STORE_VERSION=1.0.0 \
-  npm run dist:mac:mas
-```
-
-### Direct DMG (not App Store)
-
-For a signed and notarized macOS disk image that does not go through App Store approval:
-
-```bash
-npm run build:all:mac:signed
-```
-
-See [Direct distribution](./direct-distribution.md) for the Developer ID certificate, notarization, and verification flow.
-
-Artifacts land in `electron/dist/`.
-
-## Output locations
-
-Exact paths depend on architecture (`arm64` vs `x64`). Typical layouts:
-
-```text
-electron/dist/
-  mas-dev-arm64/          # unsigned or dev-signed .app (mas-dev)
-  mas-arm64/              # distribution-signed .app (mas)
-  Presenton-<version>.pkg # MAS installer for upload
-  Presenton-<version>.dmg # signed and notarized direct distribution DMG
-```
-
-Upload the `.pkg` from the `mas` build to [App Store Connect](https://appstoreconnect.apple.com).
-
-## Icons
-
-The default macOS icon is `electron/resources/ui/assets/images/presenton_short_filled.png`.
-
-For App Store packaging you can provide a proper `.icns` at `electron/build/icon.icns` and update the `mac.icon` field in `electron/build.js` if you want a custom store icon.
-
-Source PNGs for generating an icon set are in `electron/build/icon.iconset/`.
-
-## Testing notes
-
-- **MAS-signed apps** require the MAS Electron build (`mas` or `mas-dev` targets). A normal DMG build is not sandbox-compatible in the same way.
-- **`mas-dev` builds** run only on Macs registered in your development provisioning profile.
-- **`mas` (distribution) builds** usually do not launch locally; they are meant for App Store Connect processing and release.
-- **`mas-dev` signing** uses `--timestamp=none` in `build.js` so local signing works without a network timestamp server.
+AppX packaging is disabled. Re-enable it only after a Gomrey-owned Microsoft
+Store identity and signing certificate are available. The configured publisher
+must exactly match the certificate Subject.
 
 ## Troubleshooting
 
-**“Missing MAS development/distribution provisioning profile”**
+**Missing `GOMREY_MAS_APP_ID` or `GOMREY_TEAM_ID`**
 
-Place the correct `.provisionprofile` in `electron/build/` (see [Provisioning profiles](#4-provisioning-profiles)).
+Create/verify the Gomrey App ID in Apple Developer, then set the canonical
+variables. Do not substitute donor values.
 
-**“macOS could not decode” a profile**
+**Missing provisioning profile**
 
-Re-download the profile from the Developer Portal. Do not commit real profiles to git.
+Set the appropriate absolute-path environment variable or place the profile at
+one of the canonical local filenames above.
 
-**“Cannot derive an App Store version from package version”**
+**Profile cannot be decoded**
 
-Set `PRESENTON_APP_STORE_VERSION` to three integers, e.g. `1.0.0`.
+Re-download the profile from Apple Developer. Do not commit the real profile.
 
-**“MAS builds must be run on macOS”**
+**MAS build on a non-macOS host**
 
-Run the build on a Mac with Xcode command-line tools installed (`xcode-select --install`).
-
-**FastAPI or export binary not executable inside the .app**
-
-`build.js` runs an `afterPack` hook that sets executable permissions on bundled binaries. If signing fails afterward, check that entitlements allow the sandboxed app to execute helpers in `Contents/Resources/app/resources/`.
+MAS packaging requires macOS signing tools and intentionally fails closed.
 
 ## See also
 
-- [macOS dev README](./README.md) — quick reference for all macOS build targets
-- [Electron dependency strategy](../../electron-dependency-strategy.md) — what gets bundled in the app
+- [Direct macOS distribution](./direct-distribution.md)
+- [Signed DMG build steps](./signed-dmg-build-steps.md)

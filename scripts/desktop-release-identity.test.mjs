@@ -22,10 +22,7 @@ test("Gomrey non-store desktop identity is canonical", async () => {
 
   assert.equal(identity.canonical.app_id, "io.github.thehalfmoon.gomrey");
   assert.match(build, /const GOMREY_APP_ID = "io\.github\.thehalfmoon\.gomrey"/);
-  assert.match(
-    build,
-    /const APP_ID = isMasBuild \? LEGACY_PRESENTON_APP_ID : GOMREY_APP_ID/,
-  );
+  assert.match(build, /const APP_ID = GOMREY_APP_ID/);
   assert.match(build, /artifactName: "Gomrey-\$\{version\}\.\$\{ext\}"/);
   assert.match(build, /executableName: "Gomrey"/);
   assert.match(build, /shortcutName: "Gomrey"/);
@@ -33,22 +30,20 @@ test("Gomrey non-store desktop identity is canonical", async () => {
   assert.match(build, /target: \["nsis"\]/);
 });
 
-test("legacy store identities stay bounded to G3c", async () => {
+test("donor store identities are retired by G3c", async () => {
   const [identity, build] = await Promise.all([
     readJson("config/desktop-release-identity.json"),
     read("electron/build.js"),
   ]);
 
-  assert.equal(
-    identity.legacy_store_contracts.mac_app_store_app_id,
-    "com.presenton.presenton",
-  );
-  assert.match(build, /masDev: \{[\s\S]*?appId: LEGACY_PRESENTON_APP_ID/);
-  assert.match(build, /mas: \{[\s\S]*?appId: LEGACY_PRESENTON_APP_ID/);
-  assert.match(build, /identityName: "PresentonAI\.Presenton"/);
-  assert.match(build, /applicationId: "PresentonAI\.Presenton"/);
+  assert.equal(identity.legacy_store_contracts.status, "retired-by-P02-G3c");
+  assert.doesNotMatch(build, /com\.presenton\.presenton/);
+  assert.doesNotMatch(build, /PresentonAI\.Presenton/);
+  assert.doesNotMatch(build, /Presenton Inc\./);
+  assert.match(build, /GOMREY_MAS_APP_ID/);
+  assert.match(build, /GOMREY_TEAM_ID/);
+  assert.doesNotMatch(build, /appx:\s*\{/);
 });
-
 test("generated release metadata targets Gomrey artifacts and repository", async () => {
   const [generator, version] = await Promise.all([
     read("electron/scripts/generate-version.cjs"),
@@ -85,7 +80,6 @@ test("desktop telemetry has no inherited donor DSN and is opt-in", async () => {
   assert.doesNotMatch(sentry, /presenton-electron@/);
   assert.match(sentry, /setContext\("gomrey"/);
   assert.doesNotMatch(sentry, /setContext\("presenton"/);
-  assert.doesNotMatch(envSetup, /presenton-electron@/);
   assert.doesNotMatch(envSetup, /presenton-electron@/);
   assert.match(upload, /gomrey-electron@/);
   assert.doesNotMatch(upload, /presenton-electron@/);

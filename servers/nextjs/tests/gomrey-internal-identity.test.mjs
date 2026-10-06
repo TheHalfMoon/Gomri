@@ -19,7 +19,7 @@ test("internal event and chart runtime identity is Gomrey-owned", async () => {
   assert.doesNotMatch(chartSource, /__PRESENTON_CHART_BROWSER_RUNTIME__/);
 });
 
-test("splash source identity is Gomrey while donor artwork remains explicit debt", async () => {
+test("splash source identity is Gomrey and binary-donor-independent", async () => {
   const [splash, auth, loading, config, css] = await Promise.all([
     read("components/ui/gomrey-splash-loader.tsx"),
     read("components/Auth/AuthGate.tsx"),
@@ -30,10 +30,8 @@ test("splash source identity is Gomrey while donor artwork remains explicit debt
   assert.match(splash, /GomreySplashLoader/);
   assert.match(splash, /GOMREY_SPLASH_MIN_DURATION_MS/);
   assert.match(splash, /gomrey-splash-/);
-  assert.match(splash, /\/Presenton_Splash\.png/);
-  assert.match(splash, /P02-G3 asset migration/);
-  assert.ok(splash.includes('const SPLASH_MASK_SRC = "/Presenton_Splash.png";'));
-  assert.doesNotMatch(splash, /\\nconst SPLASH_MASK_SRC/);
+  assert.match(splash, /GOMREY_WORDMARK = "GOMREY"/);
+  assert.doesNotMatch(splash, /Presenton_Splash|maskImage|WebkitMaskImage/);
   assert.doesNotMatch(auth + loading + config + css, /presenton-splash-/);
   assert.doesNotMatch(config, /Loading Presenton/);
 });
