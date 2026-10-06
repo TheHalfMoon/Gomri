@@ -2,6 +2,13 @@ import { app } from "electron"
 import path from "path"
 import fs from "fs"
 import os from "os"
+import {
+  GOMREY_APP_DIRECTORY_NAME,
+  GOMREY_TEMP_DIRECTORY_NAME,
+  LEGACY_PRESENTON_APP_DIRECTORY_NAME,
+  LEGACY_PRESENTON_TEMP_DIRECTORY_NAME,
+  resolveUserDataDirectory,
+} from "./app-path-migration"
 
 export const localhost = "http://127.0.0.1"
 
@@ -17,7 +24,6 @@ export const nextjsDir = isDev
   ? path.resolve(baseDir, "..", "servers", "nextjs")
   : path.join(resourceBaseDir, "resources/nextjs");
 
-const appDirectoryName = "Presenton Open Source";
 
 export type ElectronAppPaths = {
   userDataDir: string;
@@ -54,6 +60,19 @@ function absoluteEnvPath(name: string): string | undefined {
     return undefined;
   }
   return value;
+}
+
+function getGomreyUserDataOverride(): string | undefined {
+  const value = process.env.GOMREY_USER_DATA_DIRECTORY?.trim();
+  if (!value) {
+    return undefined;
+  }
+  if (!path.isAbsolute(value)) {
+    throw new Error(
+      "GOMREY_USER_DATA_DIRECTORY must be an absolute path when set."
+    );
+  }
+  return path.resolve(value);
 }
 
 function getHomeDir(): string | undefined {
@@ -137,6 +156,7 @@ function getTempRoot(): string {
 
 function getAppDataBaseDir(tempRoot: string): string {
   const home = getHomeDir();
+  // Preserve the donor fallback base until Gomrey can detect and migrate both fallback roots safely.
   const fallback = path.join(tempRoot, "presenton-app-data");
 
   if (process.platform === "win32") {
@@ -221,7 +241,7 @@ function setElectronPath(name: string, dir: string): void {
   try {
     app.setPath(name, dir);
   } catch (error) {
-    console.warn(`[Presenton] Failed to set Electron path ${name}=${dir}`, error);
+    console.warn(`[Gomrey] Failed to set Electron path ${name}=${dir}`, error);
   }
 }
 
@@ -229,7 +249,7 @@ function appendDiskCacheSwitch(cacheDir: string): void {
   try {
     app.commandLine.appendSwitch("disk-cache-dir", cacheDir);
   } catch (error) {
-    console.warn("[Presenton] Failed to configure Chromium disk cache path", error);
+    console.warn("[Gomrey] Failed to configure Chromium disk cache path", error);
   }
 }
 
@@ -240,14 +260,37 @@ export function initializeAppPaths(): ElectronAppPaths {
 
   const tempRoot = getTempRoot();
   const appDataBaseDir = getAppDataBaseDir(tempRoot);
-  const userDataDir = firstWritableDirectory(
-    unique([
-      electronPathCandidate("userData"),
-      path.join(appDataBaseDir, appDirectoryName),
-      path.join(tempRoot, "presenton-user-data"),
-    ]),
-    "user data"
+  const canonicalUserDataDir = path.join(
+    appDataBaseDir,
+    GOMREY_APP_DIRECTORY_NAME
   );
+  const legacyUserDataDir = path.join(
+    appDataBaseDir,
+    LEGACY_PRESENTON_APP_DIRECTORY_NAME
+  );
+  const userDataResolution = resolveUserDataDirectory({
+    canonicalDir: canonicalUserDataDir,
+    legacyDir: legacyUserDataDir,
+    overrideDir: getGomreyUserDataOverride(),
+  });
+  const userDataDir =
+    userDataResolution.source === "fresh"
+      ? firstWritableDirectory(
+          unique([
+            userDataResolution.directory,
+            electronPathCandidate("userData"),
+            path.join(tempRoot, "gomrey-user-data"),
+          ]),
+          "user data"
+        )
+      : firstWritableDirectory([userDataResolution.directory], "user data");
+
+  if (userDataResolution.source === "legacy") {
+    console.warn(
+      "[Gomrey] Reusing legacy Presenton user data in place: " + userDataDir
+    );
+  }
+
   const appDataDir = isDev
     ? firstWritableDirectory(
         unique([path.join(baseDir, "app_data"), path.join(userDataDir, "app_data")]),
@@ -255,7 +298,11 @@ export function initializeAppPaths(): ElectronAppPaths {
       )
     : userDataDir;
   const tempDir = firstWritableDirectory(
-    unique([path.join(tempRoot, "presenton"), path.join(userDataDir, "temp")]),
+    unique([
+      path.join(userDataDir, "temp"),
+      path.join(tempRoot, GOMREY_TEMP_DIRECTORY_NAME),
+      path.join(tempRoot, LEGACY_PRESENTON_TEMP_DIRECTORY_NAME),
+    ]),
     "temporary"
   );
   const logsDir = firstWritableDirectory(

@@ -140,3 +140,6 @@ jobs:
 
       - name: Check Electron main globals
         run: npm run check:main-no-undef
+
+      - name: Test Electron app path migration
+        run: npm run test:path-migration
