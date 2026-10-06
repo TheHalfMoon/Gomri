@@ -1079,7 +1079,7 @@ function renderChart(item: JsonRecord, mode: RenderMode): string {
 
   return `<div style="${frameStyle(item, mode)}${transformStyle(
     item
-  )}overflow:hidden"><canvas data-presenton-chart="true" data-chart-config="${escapeAttribute(
+  )}overflow:hidden"><canvas data-gomrey-chart="true" data-chart-config="${escapeAttribute(
     JSON.stringify(config)
   )}" width="${cssNumber(Math.round(width))}" height="${cssNumber(
     Math.round(height)
@@ -2388,8 +2388,8 @@ function chartConfig(item: JsonRecord, height: number): JsonRecord {
             weight: 600,
           },
           offset: dataLabelPosition === "outside" ? 6 : 2,
-          presentonOutsideColor: textColor,
-          presentonPosition: dataLabelPosition ?? "top",
+          gomreyOutsideColor: textColor,
+          gomreyPosition: dataLabelPosition ?? "top",
         },
       },
     },
@@ -2510,7 +2510,7 @@ function chartDatasets(chartKind: ChartKind, data: NormalizedChartData): JsonRec
       borderSkipped: barChart ? (stackedBarChart ? "start" : false) : undefined,
       fill: chartKind === "area",
       maxBarThickness: 62,
-      presentonBarRadius:
+      gomreyBarRadius:
         barChart && !stackedBarChart
           ? { horizontal: isHorizontalChart(chartKind), radius: 7 }
           : undefined,
@@ -2774,7 +2774,7 @@ function chartScales({
             family: CHART_FONT_FAMILY,
             size: Math.max(8, fontSize - 1),
           },
-          presentonFormat: true,
+          gomreyFormat: true,
         },
       },
     };
@@ -2829,7 +2829,7 @@ function chartScales({
         size: Math.max(8, fontSize - 2),
         weight: 600,
       },
-      presentonFormat: true,
+      gomreyFormat: true,
     },
     title: {
       color: axisColor,
@@ -3174,7 +3174,7 @@ function renderChartScripts(): string {
 function chartRendererScript(): string {
   return `
 (function(){
-var state=window.__PRESENTON_JSON_CHARTS__={status:"pending"};
+var state={status:"pending"};window.__GOMREY_JSON_CHARTS__=state;window.__PRESENTON_JSON_CHARTS__=state;
 function finish(status,message){state.status=status;if(message)state.message=message}
 function readNumber(value){var parsed=Number(value);return Number.isFinite(parsed)?parsed:null}
 function chartValue(raw){if(typeof raw==="number")return raw;if(raw&&typeof raw==="object"){var value=raw.y!=null?raw.y:raw.value!=null?raw.value:raw.data;var numeric=readNumber(value);return numeric==null?0:numeric}var parsed=readNumber(raw);return parsed==null?0:parsed}
@@ -3182,17 +3182,17 @@ var compactNumberSuffixes=["","K","M","B","T","Qa","Qi","Sx","Sp","Oc","No","Dc"
 function formatScaledCompactNumber(value){var abs=Math.abs(value);var decimals=abs>=100?0:abs>=10?1:2;return Number(value.toFixed(decimals)).toString()}
 function formatValue(value){if(!Number.isFinite(value))return "";var abs=Math.abs(value);if(abs<1000)return abs%1===0?String(value):String(Math.round(value*10)/10).replace(/\\.0$/,"");var suffixIndex=Math.floor(Math.log10(abs)/3);if(suffixIndex>=compactNumberSuffixes.length)return value.toExponential(2).replace(/\\.?0+e/,"e");var scaled=value/Math.pow(1000,suffixIndex);var formatted=formatScaledCompactNumber(scaled);if(Math.abs(Number(formatted))>=1000&&suffixIndex<compactNumberSuffixes.length-1){suffixIndex+=1;scaled=value/Math.pow(1000,suffixIndex);formatted=formatScaledCompactNumber(scaled)}return formatted+compactNumberSuffixes[suffixIndex]}
 function formatAxisTick(value){var numeric=Number(value);return Number.isFinite(numeric)?formatValue(numeric):String(value)}
-function hydrateScales(scales){if(!scales)return;Object.keys(scales).forEach(function(key){var scale=scales[key];if(!scale)return;if(scale.ticks&&scale.ticks.presentonFormat){scale.ticks.callback=formatAxisTick;delete scale.ticks.presentonFormat}if(scale.r&&scale.r.ticks&&scale.r.ticks.presentonFormat){scale.r.ticks.callback=formatAxisTick;delete scale.r.ticks.presentonFormat}})}
+function hydrateScales(scales){if(!scales)return;Object.keys(scales).forEach(function(key){var scale=scales[key];if(!scale)return;if(scale.ticks&&(scale.ticks.gomreyFormat!=null?scale.ticks.gomreyFormat:scale.ticks.presentonFormat)){scale.ticks.callback=formatAxisTick}if(scale.ticks){delete scale.ticks.gomreyFormat;delete scale.ticks.presentonFormat}if(scale.r&&scale.r.ticks&&(scale.r.ticks.gomreyFormat!=null?scale.r.ticks.gomreyFormat:scale.r.ticks.presentonFormat)){scale.r.ticks.callback=formatAxisTick}if(scale.r&&scale.r.ticks){delete scale.r.ticks.gomreyFormat;delete scale.r.ticks.presentonFormat}})}
 function barBorderRadius(rawValue,horizontal,radius){var value=chartValue(rawValue);if(horizontal){return value<0?{bottomLeft:radius,bottomRight:0,topLeft:radius,topRight:0}:{bottomLeft:0,bottomRight:radius,topLeft:0,topRight:radius}}return value<0?{bottomLeft:radius,bottomRight:radius,topLeft:0,topRight:0}:{bottomLeft:0,bottomRight:0,topLeft:radius,topRight:radius}}
-function hydrateBarBorderRadii(config){var datasets=config&&config.data&&Array.isArray(config.data.datasets)?config.data.datasets:[];datasets.forEach(function(dataset){var options=dataset&&dataset.presentonBarRadius;if(!options)return;var radius=readNumber(options.radius);dataset.borderRadius=function(context){return barBorderRadius(context&&context.raw,!!options.horizontal,radius==null?7:radius)};delete dataset.presentonBarRadius})}
+function hydrateBarBorderRadii(config){var datasets=config&&config.data&&Array.isArray(config.data.datasets)?config.data.datasets:[];datasets.forEach(function(dataset){var options=dataset&&(dataset.gomreyBarRadius!=null?dataset.gomreyBarRadius:dataset.presentonBarRadius);if(!options)return;var radius=readNumber(options.radius);dataset.borderRadius=function(context){return barBorderRadius(context&&context.raw,!!options.horizontal,radius==null?7:radius)};delete dataset.gomreyBarRadius;delete dataset.presentonBarRadius})}
 function datasetBackgroundColor(dataset,index){var background=dataset&&dataset.backgroundColor;var color=Array.isArray(background)?background[index]:background;return typeof color==="string"?color:null}
 function clamp(value,min,max){return Math.min(Math.max(value,min),max)}
 function parseColor(color){if(!color)return null;var hex=String(color).match(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/);if(hex){var raw=hex[1].length===3?hex[1].split("").map(function(ch){return ch+ch}).join(""):hex[1];var value=Number.parseInt(raw,16);return[(value>>16)&255,(value>>8)&255,value&255,1]}var rgb=String(color).match(/^rgba?\\(([^)]+)\\)$/i);if(!rgb)return null;var channels=rgb[1].split(",").map(function(part){return Number(part.trim())});if(channels.length<3||channels.slice(0,3).some(Number.isNaN))return null;return[clamp(channels[0],0,255),clamp(channels[1],0,255),clamp(channels[2],0,255),clamp(Number.isFinite(channels[3])?channels[3]:1,0,1)]}
 function relativeLuminance(channels){var mapped=channels.map(function(channel){var normalized=channel/255;return normalized<=0.04045?normalized/12.92:Math.pow((normalized+0.055)/1.055,2.4)});return mapped[0]*0.2126+mapped[1]*0.7152+mapped[2]*0.0722}
 function contrastRatio(first,second){var lighter=Math.max(first,second);var darker=Math.min(first,second);return(lighter+0.05)/(darker+0.05)}
 function contrastTextColor(backgroundColor,fallback){var background=parseColor(backgroundColor);if(!background)return fallback;var composite=[background[0],background[1],background[2]].map(function(channel){return channel*background[3]+255*(1-background[3])});var luminance=relativeLuminance(composite);var dark=[16,24,40];var light=[255,255,255];return contrastRatio(luminance,relativeLuminance(light))>=contrastRatio(luminance,relativeLuminance(dark))?"#FFFFFF":"#101828"}
-function hydrateDataLabels(config){var plugins=config&&config.options&&config.options.plugins;var options=plugins&&plugins.datalabels;if(!options)return;var position=options.presentonPosition==="base"||options.presentonPosition==="mid"||options.presentonPosition==="outside"||options.presentonPosition==="top"?options.presentonPosition:"top";var outsideColor=options.presentonOutsideColor||options.color||"#475467";options.formatter=function(value){return formatValue(chartValue(value))};options.color=function(context){if(position==="outside")return outsideColor;var meta=context.chart.getDatasetMeta(context.datasetIndex);var type=String(meta&&meta.type||"");if(type!=="bar"&&type!=="pie"&&type!=="doughnut"&&type!=="polarArea")return outsideColor;return contrastTextColor(datasetBackgroundColor(context.dataset,context.dataIndex),outsideColor)};delete options.presentonOutsideColor;delete options.presentonPosition}
-function render(){if(!window.Chart){finish("error","Chart.js failed to load");return}if(!window.ChartDataLabels){finish("error","Chart.js datalabels plugin failed to load");return}try{var Chart=window.Chart;Chart.register(window.ChartDataLabels);document.querySelectorAll("canvas[data-presenton-chart]").forEach(function(canvas){var configText=canvas.getAttribute("data-chart-config");if(!configText)return;var config=JSON.parse(configText);config.options=config.options||{};config.options.animation=false;config.options.responsive=false;config.options.maintainAspectRatio=false;hydrateScales(config.options.scales);hydrateBarBorderRadii(config);hydrateDataLabels(config);var existing=typeof Chart.getChart==="function"?Chart.getChart(canvas):null;if(existing)existing.destroy();var chart=new Chart(canvas,config);if(typeof chart.update==="function")chart.update("none")});requestAnimationFrame(function(){finish("ready")})}catch(error){finish("error",error&&error.message?error.message:String(error))}}
+function hydrateDataLabels(config){var plugins=config&&config.options&&config.options.plugins;var options=plugins&&plugins.datalabels;if(!options)return;var positionValue=options.gomreyPosition!=null?options.gomreyPosition:options.presentonPosition;var position=positionValue==="base"||positionValue==="mid"||positionValue==="outside"||positionValue==="top"?positionValue:"top";var outsideValue=options.gomreyOutsideColor!=null?options.gomreyOutsideColor:options.presentonOutsideColor;var outsideColor=outsideValue||options.color||"#475467";options.formatter=function(value){return formatValue(chartValue(value))};options.color=function(context){if(position==="outside")return outsideColor;var meta=context.chart.getDatasetMeta(context.datasetIndex);var type=String(meta&&meta.type||"");if(type!=="bar"&&type!=="pie"&&type!=="doughnut"&&type!=="polarArea")return outsideColor;return contrastTextColor(datasetBackgroundColor(context.dataset,context.dataIndex),outsideColor)};delete options.gomreyOutsideColor;delete options.gomreyPosition;delete options.presentonOutsideColor;delete options.presentonPosition}
+function render(){if(!window.Chart){finish("error","Chart.js failed to load");return}if(!window.ChartDataLabels){finish("error","Chart.js datalabels plugin failed to load");return}try{var Chart=window.Chart;Chart.register(window.ChartDataLabels);document.querySelectorAll("canvas[data-gomrey-chart],canvas[data-presenton-chart]").forEach(function(canvas){var configText=canvas.getAttribute("data-chart-config");if(!configText)return;var config=JSON.parse(configText);config.options=config.options||{};config.options.animation=false;config.options.responsive=false;config.options.maintainAspectRatio=false;hydrateScales(config.options.scales);hydrateBarBorderRadii(config);hydrateDataLabels(config);var existing=typeof Chart.getChart==="function"?Chart.getChart(canvas):null;if(existing)existing.destroy();var chart=new Chart(canvas,config);if(typeof chart.update==="function")chart.update("none")});requestAnimationFrame(function(){finish("ready")})}catch(error){finish("error",error&&error.message?error.message:String(error))}}
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",render,{once:true})}else{render()}
 })();
 `;

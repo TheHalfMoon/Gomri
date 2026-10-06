@@ -1,5 +1,5 @@
-import { PresentonSplashLoader } from "@/components/ui/presenton-splash-loader";
+import { GomreySplashLoader } from "@/components/ui/gomrey-splash-loader";
 
 export default function Loading() {
-  return <PresentonSplashLoader message="Preparing your workspace..." />;
+  return <GomreySplashLoader message="Preparing your workspace..." />;
 }

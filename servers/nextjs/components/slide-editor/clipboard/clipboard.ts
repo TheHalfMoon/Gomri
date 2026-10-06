@@ -1,3 +1,5 @@
+import { GOMREY_TEMPLATE_V2_CLIPBOARD_FORMAT } from "./protocol";
+
 export type TemplateV2ClipboardRecord = Record<string, unknown>;
 
 export type TemplateV2ClipboardBox = {
@@ -18,7 +20,7 @@ export type TemplateV2ClipboardItem = {
 };
 
 export type TemplateV2ClipboardPayload = {
-  format: "presenton/template-v2";
+  format: typeof GOMREY_TEMPLATE_V2_CLIPBOARD_FORMAT;
   version: 1;
   kind: "component" | "components";
   data?: TemplateV2ClipboardRecord;
@@ -47,7 +49,7 @@ export function createTemplateV2ClipboardPayload(
   );
 
   return {
-    format: "presenton/template-v2",
+    format: GOMREY_TEMPLATE_V2_CLIPBOARD_FORMAT,
     version: 1,
     kind: normalizedItems.length > 1 ? "components" : "component",
     ...(first ? { data: cloneJson(first.data) } : {}),

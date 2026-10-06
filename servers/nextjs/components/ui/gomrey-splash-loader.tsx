@@ -3,14 +3,15 @@
 import { useLayoutEffect, useState, type CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 
-interface PresentonSplashLoaderProps {
+interface GomreySplashLoaderProps {
   message?: string;
   className?: string;
 }
 
-export const PRESENTON_SPLASH_MIN_DURATION_MS = 3000;
+export const GOMREY_SPLASH_MIN_DURATION_MS = 3000;
 
 const SPLASH_ANIMATION_MS = 2600;
+// Donor binary artwork is preserved until the P02-G3 asset migration.
 const SPLASH_MASK_SRC = "/Presenton_Splash.png";
 
 let splashSessionStartedAt: number | null = null;
@@ -50,10 +51,10 @@ function ensureSplashMaskReady(): Promise<void> {
   return splashMaskReadyPromise;
 }
 
-export function PresentonSplashLoader({
+export function GomreySplashLoader({
   message = "Preparing your workspace",
   className,
-}: PresentonSplashLoaderProps) {
+}: GomreySplashLoaderProps) {
   const [isWordmarkReady, setIsWordmarkReady] = useState(false);
   const [animationDelayMs, setAnimationDelayMs] = useState(0);
 
@@ -93,7 +94,7 @@ export function PresentonSplashLoader({
     borderRadius: "50%",
     background: "#7a5af8",
     transform: "translate3d(-50%, -50%, 0) scale(0.001)",
-    animation: `presenton-splash-surface-grow ${SPLASH_ANIMATION_MS}ms linear ${animationDelayMs}ms both`,
+    animation: `gomrey-splash-surface-grow ${SPLASH_ANIMATION_MS}ms linear ${animationDelayMs}ms both`,
     willChange: "transform",
     backfaceVisibility: "hidden",
   };
@@ -124,34 +125,34 @@ export function PresentonSplashLoader({
     <main
       aria-busy="true"
       aria-label={message}
-      className={cn("presenton-splash-loader", className)}
+      className={cn("gomrey-splash-loader", className)}
       role="status"
       style={containerStyle}
     >
       <div
-        className="presenton-splash-surface"
+        className="gomrey-splash-surface"
         aria-hidden="true"
         style={surfaceStyle}
       />
       <div
-        className="presenton-splash-wordmark"
+        className="gomrey-splash-wordmark"
         aria-hidden="true"
         style={wordmarkStyle}
       >
         <span
-          className="presenton-splash-wordmark-layer presenton-splash-wordmark-base"
+          className="gomrey-splash-wordmark-layer gomrey-splash-wordmark-base"
           style={{
             ...wordmarkLayerStyle,
             background: "#7a5af8",
           }}
         />
         <span
-          className="presenton-splash-wordmark-layer presenton-splash-wordmark-reveal"
+          className="gomrey-splash-wordmark-layer gomrey-splash-wordmark-reveal"
           style={{
             ...wordmarkLayerStyle,
             background: "#ffffff",
             clipPath: "circle(0 at 50% 50%)",
-            animation: `presenton-splash-text-reveal ${SPLASH_ANIMATION_MS}ms linear ${animationDelayMs}ms both`,
+            animation: `gomrey-splash-text-reveal ${SPLASH_ANIMATION_MS}ms linear ${animationDelayMs}ms both`,
             willChange: "clip-path",
           }}
         />

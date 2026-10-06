@@ -5,7 +5,7 @@ import { ArrowUp, Loader2, PenLine } from "lucide-react";
 import type { TemplateV2Layout } from "@/components/slide-editor/importing/template-v2-import";
 import { TemplateV2HtmlSlidePreview } from "../components/TemplateV2HtmlSlidePreview";
 import {
-  PRESENTON_BLANK_SLIDE_PROMPT_EVENT,
+  GOMREY_BLANK_SLIDE_PROMPT_EVENT,
   type BlankSlidePromptEventDetail,
 } from "./blank-slide-prompt-event";
 
@@ -80,7 +80,7 @@ export function TemplateV2PromptOverlay({
     if (typeof window === "undefined") return;
     window.dispatchEvent(
       new CustomEvent<BlankSlidePromptEventDetail>(
-        PRESENTON_BLANK_SLIDE_PROMPT_EVENT,
+        GOMREY_BLANK_SLIDE_PROMPT_EVENT,
         {
           detail: {
             prompt: trimmedPrompt,

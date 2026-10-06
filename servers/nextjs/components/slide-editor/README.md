@@ -574,9 +574,12 @@ Primary files:
 
 `useClipboard.ts` handles browser integration:
 
-- Uses custom MIME: `application/x-presenton-template-v2`.
-- Also writes plain text with prefix `PRESENTON_TEMPLATE_V2:`.
-- Stores fallback in `localStorage`.
+- Writes canonical MIME: `application/x-gomrey-template-v2` and emits the
+  legacy Presenton MIME in ClipboardEvent flows for transition compatibility.
+- Writes canonical plain text with prefix `GOMREY_TEMPLATE_V2:`.
+- Stores new fallback payloads under `gomrey:template-v2-clipboard`.
+- Reads legacy Presenton MIME/prefix/storage/format values and normalizes them
+  to `gomrey/template-v2` before paste.
 - Handles browser paste events and keyboard shortcut fallback.
 
 Duplicate uses the same data path as copy/paste, but it does not require the

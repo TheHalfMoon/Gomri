@@ -17,7 +17,8 @@
     "legacyEnvPolicy": "preserve-as-compatibility-alias-until-a-versioned-removal-policy-is-canonical",
     "canonicalMcpRequestHeader": "X-Gomrey-MCP-Request",
     "legacyMcpRequestHeader": "X-Presenton-MCP-Request",
-    "mcpRequestHeaderMigration": "P02-G2"
+    "mcpRequestHeaderMigration": "P02-G2",
+    "persistedProtocolMigration": "P02-G2b: canonical Gomrey writes with bounded Presenton legacy reads"
   },
   "provenance": {
     "primaryDonorName": "Presenton",
@@ -41,6 +42,7 @@
     "desktopAppId": "P02-G3",
     "signingAndStoreIdentity": "P02-G3",
     "binaryIconsAndInstallerArtwork": "P02-G3",
-    "releaseVersionReset": "P02-G4"
+    "releaseVersionReset": "P02-G4",
+    "splashArtworkAsset": "P02-G3: /Presenton_Splash.png donor binary remains unchanged until Gomrey artwork is admitted"
   }
 }
