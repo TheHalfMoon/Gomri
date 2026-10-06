@@ -47,7 +47,7 @@ function getRelease(): string {
     return process.env.SENTRY_RELEASE;
   }
 
-  return `presenton-electron@${app.getVersion()}`;
+  return `gomrey-electron@${app.getVersion()}`;
 }
 
 export function initMainSentry(): void {
@@ -55,10 +55,10 @@ export function initMainSentry(): void {
     return;
   }
 
-  const dsn = "https://48b091ed88ae147c0957a46a823c1449@o4509882707410944.ingest.us.sentry.io/4511171070394368";
-  const isEnabled = parseBoolean(process.env.SENTRY_ENABLED, true);
+  const dsn = (process.env.GOMREY_SENTRY_DSN || process.env.SENTRY_DSN || "").trim();
+  const isEnabled = parseBoolean(process.env.SENTRY_ENABLED, false);
 
-  if (!isEnabled) {
+  if (!isEnabled || !dsn) {
     return;
   }
 
@@ -117,7 +117,7 @@ export function setMainSentryRuntimeContext(context: MainSentryRuntimeContext): 
     if (context.cacheRecoveryMode) {
       Sentry.setTag("cache_recovery.mode", context.cacheRecoveryMode);
     }
-    Sentry.setContext("presenton", {
+    Sentry.setContext("gomrey", {
       profileHash: context.profileHash,
       cacheRecoveryStatus: context.cacheRecoveryStatus,
       cacheRecoveryMode: context.cacheRecoveryMode,
@@ -138,7 +138,7 @@ export function captureMainException(
   try {
     Sentry.withScope((scope) => {
       if (context) {
-        scope.setContext("presenton", context);
+        scope.setContext("gomrey", context);
       }
       Sentry.captureException(error);
     });

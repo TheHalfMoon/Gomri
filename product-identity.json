@@ -39,10 +39,15 @@
     }
   ],
   "deferredIdentity": {
-    "desktopAppId": "P02-G3",
-    "signingAndStoreIdentity": "P02-G3",
-    "binaryIconsAndInstallerArtwork": "P02-G3",
+    "desktopAppId": "P02-G3b: canonical non-store app ID io.github.thehalfmoon.gomrey; MAS legacy override until P02-G3c",
+    "signingAndStoreIdentity": "P02-G3c",
+    "binaryIconsAndInstallerArtwork": "P02-G3c",
     "releaseVersionReset": "P02-G4",
-    "splashArtworkAsset": "P02-G3: /Presenton_Splash.png donor binary remains unchanged until Gomrey artwork is admitted"
+    "splashArtworkAsset": "P02-G3c: /Presenton_Splash.png donor binary remains unchanged until Gomrey artwork is admitted"
+  },
+  "desktopIdentity": {
+    "canonicalAppId": "io.github.thehalfmoon.gomrey",
+    "packageAndExecutableIdentity": "P02-G3b",
+    "legacyStoreIdentityPolicy": "MAS/AppX donor identities remain bounded compatibility contracts until P02-G3c"
   }
 }

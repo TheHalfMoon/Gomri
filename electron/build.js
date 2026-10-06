@@ -10,10 +10,12 @@ const {
   validateSharpRuntime,
 } = require("../scripts/sync-presentation-export.cjs")
 
-const APP_ID = "com.presenton.presenton"
+const GOMREY_APP_ID = "io.github.thehalfmoon.gomrey"
+const LEGACY_PRESENTON_APP_ID = "com.presenton.presenton"
 const TEAM_ID = "S6W5C54KL6"
 const macTarget = process.env.PRESENTON_MAC_TARGET
 const isMasBuild = macTarget === "mas" || macTarget === "mas-dev"
+const APP_ID = isMasBuild ? LEGACY_PRESENTON_APP_ID : GOMREY_APP_ID
 const isDirectMacBuild = !isMasBuild && (process.platform === "darwin" || !!macTarget)
 const requireDirectMacSigning = process.env.PRESENTON_REQUIRE_MAC_SIGNING === "1"
 const masDevProvisioningProfile = resolveProvisioningProfileForTarget({
@@ -487,10 +489,10 @@ function assertCodesignCanUseIdentity(identity) {
     return
   }
 
-  const tempDir = fs.mkdtempSync(path.join(require("os").tmpdir(), "presenton-codesign-"))
+  const tempDir = fs.mkdtempSync(path.join(require("os").tmpdir(), "gomrey-codesign-"))
   const tempFile = path.join(tempDir, "preflight")
   try {
-    fs.writeFileSync(tempFile, "Presenton MAS signing preflight\n")
+    fs.writeFileSync(tempFile, "Gomrey MAS signing preflight\n")
     execFileSync(
       "codesign",
       ["--force", "--sign", identity, "--timestamp=none", tempFile],
@@ -623,10 +625,10 @@ function assertDirectMacNotarizationCredentials() {
 }
 
 function assertCodesignCanUseDirectIdentity(identity) {
-  const tempDir = fs.mkdtempSync(path.join(require("os").tmpdir(), "presenton-codesign-"))
+  const tempDir = fs.mkdtempSync(path.join(require("os").tmpdir(), "gomrey-codesign-"))
   const tempFile = path.join(tempDir, "preflight")
   try {
-    fs.writeFileSync(tempFile, "Presenton direct macOS signing preflight\n")
+    fs.writeFileSync(tempFile, "Gomrey direct macOS signing preflight\n")
     execFileSync(
       "codesign",
       ["--force", "--sign", identity, "--options", "runtime", tempFile],
@@ -898,7 +900,7 @@ const config = {
   ],
   afterPack,
   mac: {
-    artifactName: "Presenton-${version}.${ext}",
+    artifactName: "Gomrey-${version}.${ext}",
     target: [macTarget || "dmg"],
     category: "public.app-category.productivity",
     hardenedRuntime: !isMasBuild,
@@ -919,6 +921,7 @@ const config = {
     },
   },
   masDev: {
+    appId: LEGACY_PRESENTON_APP_ID,
     type: "development",
     identity: masDevIdentity || undefined,
     provisioningProfile: masDevProvisioningProfile,
@@ -928,6 +931,7 @@ const config = {
     additionalArguments: ["--timestamp=none"],
   },
   mas: {
+    appId: LEGACY_PRESENTON_APP_ID,
     type: "distribution",
     identity: masIdentityQualifier || undefined,
     provisioningProfile: masProvisioningProfile,
@@ -937,7 +941,7 @@ const config = {
     additionalArguments: masSigningExtraArgs,
   },
   linux: {
-    artifactName: "Presenton-${version}.${ext}",
+    artifactName: "Gomrey-${version}.${ext}",
     target: ["AppImage", "deb"],
     icon: "build/icons",
     category: "Office",
@@ -946,10 +950,11 @@ const config = {
     afterInstall: "build/after-install.tpl",
   },
   win: {
-    target: ["nsis", "appx"],
+    // AppX remains disabled until G3c owns the Microsoft Store identity.
+    target: ["nsis"],
     icon: "build/icon.ico",
-    artifactName: "Presenton-${version}.${ext}",
-    executableName: "Presenton",
+    artifactName: "Gomrey-${version}.${ext}",
+    executableName: "Gomrey",
   },
   nsis: {
     oneClick: false,
@@ -961,14 +966,15 @@ const config = {
     installerHeaderIcon: "build/icon.ico",
     createDesktopShortcut: true,
     createStartMenuShortcut: true,
-    shortcutName: "Presenton",
-    uninstallDisplayName: "Presenton",
+    shortcutName: "Gomrey",
+    uninstallDisplayName: "Gomrey",
   },
   dmg: {
     sign: shouldSignDirectMacDmg,
     size: "2300m",
   },
   appx: {
+    // G3c must replace this only with a verified Gomrey-owned Store identity.
     identityName: "PresentonAI.Presenton",
     publisher: "CN=8A2C57B5-F1C6-473A-93EE-2E9B72134341",
     displayName: "Presenton",

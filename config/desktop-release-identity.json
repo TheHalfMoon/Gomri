@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "canonical": {
+    "app_id": "io.github.thehalfmoon.gomrey",
+    "product_name": "Gomrey",
+    "artifact_name": "Gomrey-${version}.${ext}",
+    "windows_executable": "Gomrey",
+    "windows_shortcut": "Gomrey",
+    "uninstall_display_name": "Gomrey",
+    "release_repository": "TheHalfMoon/Gomrey",
+    "sentry_release_prefix": "gomrey-electron"
+  },
+  "legacy_store_contracts": {
+    "mac_app_store_app_id": "com.presenton.presenton",
+    "microsoft_store_identity_name": "PresentonAI.Presenton",
+    "microsoft_store_application_id": "PresentonAI.Presenton",
+    "policy": "Preserve until G3c has verified Gomrey-owned store identities and credentials.",
+    "microsoft_store_default_build": "disabled-until-g3c"
+  },
+  "telemetry": {
+    "default": "disabled",
+    "dsn_policy": "No hardcoded donor DSN. Explicit GOMREY_SENTRY_DSN wins, then generic SENTRY_DSN."
+  },
+  "exclusions": [
+    "signing certificates and notarization credentials",
+    "Mac App Store provisioning identity",
+    "Microsoft Store publisher/identity",
+    "binary icons, installer artwork, and splash artwork",
+    "@presenton/export-core"
+  ]
+}

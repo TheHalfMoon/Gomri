@@ -28,10 +28,10 @@ export function initRendererSentry(): void {
     return;
   }
 
-  const dsn = 'https://48b091ed88ae147c0957a46a823c1449@o4509882707410944.ingest.us.sentry.io/4511171070394368';
-  const isEnabled = parseBoolean(process.env.SENTRY_ENABLED, true);
+  const dsn = (process.env.GOMREY_SENTRY_DSN || process.env.SENTRY_DSN || '').trim();
+  const isEnabled = parseBoolean(process.env.SENTRY_ENABLED, false);
 
-  if (!isEnabled) {
+  if (!isEnabled || !dsn) {
     return;
   }
 

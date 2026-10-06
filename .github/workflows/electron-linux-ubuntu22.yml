@@ -70,18 +70,18 @@ jobs:
       - name: Upload workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: presenton-electron-linux-ubuntu-22
+          name: gomrey-electron-linux-ubuntu-22
           path: |
             electron/dist/*.deb
             electron/dist/*.AppImage
           if-no-files-found: error
 
-      - name: Publish temporary presenton-export prerelease
+      - name: Publish temporary Gomrey prerelease
         env:
           GH_TOKEN: ${{ secrets.RELEASE_REPO_TOKEN }}
-          RELEASE_REPOSITORY: presenton/presenton-export
-          RELEASE_TAG: presenton-electron-linux-ubuntu-22
-          RELEASE_TITLE: presenton-electron-linux-ubuntu-22
+          RELEASE_REPOSITORY: TheHalfMoon/Gomrey
+          RELEASE_TAG: gomrey-electron-linux-ubuntu-22
+          RELEASE_TITLE: gomrey-electron-linux-ubuntu-22
         run: |
           if [ -z "${GH_TOKEN}" ]; then
             echo "RELEASE_REPO_TOKEN is required to publish to ${RELEASE_REPOSITORY}." >&2
@@ -92,14 +92,14 @@ jobs:
             gh release edit "${RELEASE_TAG}" \
               --repo "${RELEASE_REPOSITORY}" \
               --title "${RELEASE_TITLE}" \
-              --notes "Temporary Ubuntu 22.04 Electron Linux compatibility build from presenton/presenton@${GITHUB_SHA}. This test release will be removed later." \
+              --notes "Temporary Ubuntu 22.04 Electron Linux compatibility build from TheHalfMoon/Gomrey@${GITHUB_SHA}. This test release will be removed later." \
               --prerelease
           else
             gh release create "${RELEASE_TAG}" \
               --repo "${RELEASE_REPOSITORY}" \
               --target main \
               --title "${RELEASE_TITLE}" \
-              --notes "Temporary Ubuntu 22.04 Electron Linux compatibility build from presenton/presenton@${GITHUB_SHA}. This test release will be removed later." \
+              --notes "Temporary Ubuntu 22.04 Electron Linux compatibility build from TheHalfMoon/Gomrey@${GITHUB_SHA}. This test release will be removed later." \
               --prerelease
           fi
 
