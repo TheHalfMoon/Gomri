@@ -11,7 +11,8 @@ interface GomreySplashLoaderProps {
 export const GOMREY_SPLASH_MIN_DURATION_MS = 3000;
 
 const SPLASH_ANIMATION_MS = 2600;
-// Donor binary artwork is preserved until the P02-G3 asset migration.\nconst SPLASH_MASK_SRC = "/Presenton_Splash.png";
+// Donor binary artwork is preserved until the P02-G3 asset migration.
+const SPLASH_MASK_SRC = "/Presenton_Splash.png";
 
 let splashSessionStartedAt: number | null = null;
 let splashMaskReadyPromise: Promise<void> | null = null;

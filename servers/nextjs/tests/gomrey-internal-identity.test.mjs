@@ -32,6 +32,8 @@ test("splash source identity is Gomrey while donor artwork remains explicit debt
   assert.match(splash, /gomrey-splash-/);
   assert.match(splash, /\/Presenton_Splash\.png/);
   assert.match(splash, /P02-G3 asset migration/);
+  assert.ok(splash.includes('const SPLASH_MASK_SRC = "/Presenton_Splash.png";'));
+  assert.doesNotMatch(splash, /\\nconst SPLASH_MASK_SRC/);
   assert.doesNotMatch(auth + loading + config + css, /presenton-splash-/);
   assert.doesNotMatch(config, /Loading Presenton/);
 });
