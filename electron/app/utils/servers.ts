@@ -56,7 +56,7 @@ function resolveElectronNodeExecutable(): string {
   }
 
   safeConsoleLog(
-    `[Presenton] Electron Node helper not found at ${helperExecutable}; falling back to the main executable.`,
+    `[Gomrey] Electron Node helper not found at ${helperExecutable}; falling back to the main executable.`,
   );
   return process.execPath;
 }
@@ -73,7 +73,7 @@ function ensureNestedStandaloneAssets(bundleRoot: string, serverCwd: string): vo
     }
     fs.mkdirSync(path.dirname(destination), { recursive: true });
     fs.cpSync(source, destination, { recursive: true });
-    safeConsoleLog(`[Presenton] Linked Next.js assets: ${path.basename(source)} -> ${destination}`);
+    safeConsoleLog(`[Gomrey] Linked Next.js assets: ${path.basename(source)} -> ${destination}`);
   };
 
   copyIfMissing(
@@ -177,7 +177,7 @@ export async function startFastApiServer(
   fastApiProcess.stdout.on("data", onFastApiStdoutData);
   fastApiProcess.stderr.on("data", onFastApiStderrData);
   fastApiProcess.on("error", onFastApiError);
-  safeConsoleLog("[Presenton] FastAPI process spawned:", {
+  safeConsoleLog("[Gomrey] FastAPI process spawned:", {
     pid: fastApiProcess.pid,
     memory: memorySnapshotMb(),
   });

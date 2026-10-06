@@ -49,7 +49,7 @@ test("application versions stay aligned", async () => {
   assert.equal(electronVersion.version, electronPackage.version);
   for (const downloadUrl of Object.values(electronVersion.downloads)) {
     assert.match(downloadUrl, new RegExp(`electron-v${electronPackage.version}/`));
-    assert.match(downloadUrl, new RegExp(`Presenton-${electronPackage.version}\\.`));
+    assert.match(downloadUrl, new RegExp(`Gomrey-${electronPackage.version}\\.`));
   }
 });
 
