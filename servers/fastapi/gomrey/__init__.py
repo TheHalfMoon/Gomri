@@ -45,6 +45,9 @@ without migrating the imported database or rewriting the editor.
 - connector_sync: P07-G3 sync contracts (opaque cursors, tombstones,
   stale-marked partials, secret-less credential handles, ACL mapping,
   freshness labels). Pure logic, no providers.
+- source_parity: P07 exit proof (web/media/connector families into the
+  single IR record shape, one assembly gate, one coverage gate). Pure
+  logic.
 - adapters: pure read-only functions projecting imported Presenton rows
   (PresentationModel/SlideModel) into Gomrey contract records.
 - jobs: durable job kernel (P04-G1) with zero database and network needs.
@@ -181,6 +184,12 @@ from gomrey.connector_sync import (
     refresh_handle,
     sync_backoff_seconds,
 )
+from gomrey.source_parity import (
+    media_aligned_to_units,
+    parity_assemble,
+    sync_changes_to_units,
+    web_page_to_units,
+)
 from gomrey.parser_router import (
     BenchmarkCase,
     BenchmarkRun,
@@ -293,11 +302,13 @@ __all__ = [
     "map_acl",
     "map_ocr_regions",
     "map_structured_output",
+    "media_aligned_to_units",
     "media_span",
     "normalize_path",
     "normalized_fetch_result",
     "owner_to_scope",
     "page_snapshot",
+    "parity_assemble",
     "plan_crawl",
     "preflight",
     "presentation_to_artifact",
@@ -320,6 +331,7 @@ __all__ = [
     "slides_to_narrative",
     "sniff_mime",
     "sync_backoff_seconds",
+    "sync_changes_to_units",
     "taint_content",
     "to_source_ir",
     "transition",
@@ -328,4 +340,5 @@ __all__ = [
     "validate_redirect_chain",
     "validate_timeline",
     "verify_coverage",
+    "web_page_to_units",
 ]
