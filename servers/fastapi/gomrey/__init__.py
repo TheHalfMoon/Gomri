@@ -30,6 +30,9 @@ without migrating the imported database or rewriting the editor.
   admission-to-execution), LiteParse baseline identity, Docling-shaped
   output mapping, measurement-only qualification gates. Pure logic, no
   subprocess, no weights, no lockfile change.
+- ocr_worker: P06-G3 OCR region contracts (bbox/rotation/confidence
+  provenance), Unicode script/direction analysis, frozen Arabic P0
+  suite, honest escalation observations. Pure logic, no models.
 - adapters: pure read-only functions projecting imported Presenton rows
   (PresentationModel/SlideModel) into Gomrey contract records.
 - jobs: durable job kernel (P04-G1) with zero database and network needs.
@@ -128,6 +131,14 @@ from gomrey.structure_worker import (
     check_qualification,
     map_structured_output,
 )
+from gomrey.ocr_worker import (
+    ARABIC_P0_CASES,
+    OCRRegion,
+    check_arabic_case,
+    map_ocr_regions,
+    quality_observations,
+    script_profile,
+)
 from gomrey.parser_router import (
     BenchmarkCase,
     BenchmarkRun,
@@ -159,6 +170,7 @@ __all__ = [
     "BenchmarkScore",
     "AdmissionError",
     "AdmissionReceipt",
+    "ARABIC_P0_CASES",
     "ArtifactRecord",
     "ArtifactRevisionRecord",
     "BlobStore",
@@ -176,6 +188,7 @@ __all__ = [
     "MemoryBlobStore",
     "MemoryCanonicalStore",
     "NarrativeSection",
+    "OCRRegion",
     "ParserAdapter",
     "ParserIntermediate",
     "Preflight",
@@ -203,6 +216,7 @@ __all__ = [
     "authorize_fetch",
     "backoff_seconds",
     "can_access",
+    "check_arabic_case",
     "check_archive_entry",
     "check_qualification",
     "check_second_parser_budget",
@@ -217,6 +231,7 @@ __all__ = [
     "file_admission_report",
     "is_duplicate",
     "is_trusted",
+    "map_ocr_regions",
     "map_structured_output",
     "normalize_path",
     "normalized_fetch_result",
@@ -226,6 +241,7 @@ __all__ = [
     "presentation_to_revision",
     "progress_event",
     "promote_to_trusted",
+    "quality_observations",
     "reconcile",
     "reconcile_mime",
     "reconcile_units",
@@ -234,6 +250,7 @@ __all__ = [
     "run_parser",
     "scan_active_content",
     "score_run",
+    "script_profile",
     "select_parser",
     "should_retry",
     "slides_to_narrative",
