@@ -42,6 +42,9 @@ without migrating the imported database or rewriting the editor.
 - media_pipeline: P07-G2 media contracts (validated timelines,
   transcript/visual alignment with explicit gaps, timestamp spans,
   degraded-mode labels). Pure logic, no media I/O.
+- connector_sync: P07-G3 sync contracts (opaque cursors, tombstones,
+  stale-marked partials, secret-less credential handles, ACL mapping,
+  freshness labels). Pure logic, no providers.
 - adapters: pure read-only functions projecting imported Presenton rows
   (PresentationModel/SlideModel) into Gomrey contract records.
 - jobs: durable job kernel (P04-G1) with zero database and network needs.
@@ -166,6 +169,18 @@ from gomrey.media_pipeline import (
     media_span,
     validate_timeline,
 )
+from gomrey.connector_sync import (
+    CredentialHandle,
+    SyncCursor,
+    SyncReceipt,
+    apply_sync,
+    check_handle,
+    freshness,
+    issue_handle,
+    map_acl,
+    refresh_handle,
+    sync_backoff_seconds,
+)
 from gomrey.parser_router import (
     BenchmarkCase,
     BenchmarkRun,
@@ -205,6 +220,7 @@ __all__ = [
     "CanonicalStore",
     "CrawlPlan",
     "CrawlScope",
+    "CredentialHandle",
     "DuplicateDeclaration",
     "DurableJob",
     "IdempotencyLedger",
@@ -233,6 +249,8 @@ __all__ = [
     "SourceArtifactRecord",
     "SourceUnitRecord",
     "StageAttemptRecord",
+    "SyncCursor",
+    "SyncReceipt",
     "TempLease",
     "TempLeaseRegistry",
     "TranscriptSegment",
@@ -248,6 +266,7 @@ __all__ = [
     "admit_child",
     "admit_source",
     "admit_worker",
+    "apply_sync",
     "authorize_fetch",
     "assemble_ir",
     "backoff_seconds",
@@ -261,13 +280,17 @@ __all__ = [
     "classify_url",
     "classify_workload",
     "content_identity",
+    "check_handle",
     "deny_active_content",
     "degraded_modes",
     "enforce_file_budgets",
     "enforce_remote_budgets",
     "file_admission_report",
+    "freshness",
     "is_duplicate",
     "is_trusted",
+    "issue_handle",
+    "map_acl",
     "map_ocr_regions",
     "map_structured_output",
     "media_span",
@@ -285,6 +308,7 @@ __all__ = [
     "reconcile",
     "reconcile_mime",
     "reconcile_units",
+    "refresh_handle",
     "revoke_source",
     "route",
     "run_parser",
@@ -295,6 +319,7 @@ __all__ = [
     "should_retry",
     "slides_to_narrative",
     "sniff_mime",
+    "sync_backoff_seconds",
     "taint_content",
     "to_source_ir",
     "transition",
