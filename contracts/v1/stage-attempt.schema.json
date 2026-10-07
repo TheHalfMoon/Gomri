@@ -1,0 +1,23 @@
+{
+  "$id": "gomrey:v1:StageAttempt",
+  "title": "StageAttempt",
+  "version": 1,
+  "type": "object",
+  "required": ["job_id", "stage", "attempt", "tenant_id", "workspace_id", "status", "started_at"],
+  "additionalProperties": false,
+  "properties": {
+    "job_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "stage": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "attempt": { "type": "integer", "minimum": 1 },
+    "tenant_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "workspace_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "status": {
+      "type": "string",
+      "enum": ["running", "checkpointed", "complete", "transient_failure", "permanent_failure", "cancelled"]
+    },
+    "started_at": { "type": "string", "format": "date-time" },
+    "finished_at": { "type": "string", "format": "date-time" },
+    "error_code": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "checkpoint": { "type": "string", "minLength": 1, "maxLength": 512 }
+  }
+}

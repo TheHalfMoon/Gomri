@@ -1,0 +1,23 @@
+{
+  "$id": "gomrey:v1:ConnectorIdentity",
+  "title": "ConnectorIdentity",
+  "version": 1,
+  "type": "object",
+  "required": ["connector_id", "provider", "tenant_id", "workspace_id", "credential_handle", "scope", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "connector_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "provider": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "tenant_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "workspace_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "credential_handle": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "description": "Opaque server-side credential reference. Raw secrets must never appear in contract payloads."
+    },
+    "scope": { "type": "string", "maxLength": 500 },
+    "status": { "type": "string", "enum": ["connected", "stale", "revoked", "error"] },
+    "last_sync_at": { "type": "string", "format": "date-time" }
+  }
+}

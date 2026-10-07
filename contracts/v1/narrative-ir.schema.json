@@ -1,0 +1,29 @@
+{
+  "$id": "gomrey:v1:NarrativeIR",
+  "title": "NarrativeIR",
+  "version": 1,
+  "type": "object",
+  "required": ["narrative_id", "artifact_id", "revision", "tenant_id", "workspace_id", "sections"],
+  "additionalProperties": false,
+  "properties": {
+    "narrative_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "artifact_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "revision": { "type": "integer", "minimum": 1 },
+    "tenant_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "workspace_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "language": { "type": "string", "pattern": "^[a-z]{2}(-[A-Z]{2})?$" },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["heading", "text"],
+        "additionalProperties": false,
+        "properties": {
+          "heading": { "type": "string", "maxLength": 500 },
+          "text": { "type": "string", "maxLength": 20000 },
+          "claim_ids": { "type": "array", "items": { "type": "string", "maxLength": 128 } }
+        }
+      }
+    }
+  }
+}

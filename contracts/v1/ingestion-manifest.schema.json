@@ -1,0 +1,38 @@
+{
+  "$id": "gomrey:v1:IngestionManifest",
+  "title": "IngestionManifest",
+  "version": 1,
+  "type": "object",
+  "required": ["manifest_id", "source_id", "tenant_id", "workspace_id", "declared_units", "accounted_units", "silent_drop_count", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "manifest_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "source_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "tenant_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "workspace_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "declared_units": { "type": "integer", "minimum": 0 },
+    "observed_units": { "type": "integer", "minimum": 0 },
+    "accounted_units": { "type": "integer", "minimum": 0 },
+    "verified_units": { "type": "integer", "minimum": 0 },
+    "uncertain_units": { "type": "integer", "minimum": 0 },
+    "failed_units": { "type": "integer", "minimum": 0 },
+    "duplicate_units": { "type": "integer", "minimum": 0 },
+    "skipped_units": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["unit_id", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "unit_id": { "type": "string", "maxLength": 128 },
+          "reason": { "type": "string", "maxLength": 500 }
+        }
+      }
+    },
+    "silent_drop_count": { "type": "integer", "minimum": 0, "maximum": 0 },
+    "status": {
+      "type": "string",
+      "enum": ["complete", "partial", "failed"]
+    }
+  }
+}

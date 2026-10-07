@@ -1,0 +1,27 @@
+{
+  "$id": "gomrey:v1:DecisionRequest",
+  "title": "DecisionRequest",
+  "version": 1,
+  "type": "object",
+  "required": ["request_id", "tenant_id", "workspace_id", "workload_kind", "state_digest", "question", "answer_family", "privacy_mode", "consequence_class"],
+  "additionalProperties": false,
+  "properties": {
+    "request_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "tenant_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "workspace_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "workload_kind": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "state_digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "question": { "type": "string", "minLength": 1, "maxLength": 2000 },
+    "answer_family": {
+      "type": "string",
+      "enum": ["BOOLEAN", "CHOICE", "ORDINAL_SCORE", "RANK", "MULTI_LABEL", "ABSTAIN"]
+    },
+    "options": { "type": "array", "items": { "type": "string", "maxLength": 500 } },
+    "evidence_refs": { "type": "array", "items": { "type": "string", "maxLength": 128 } },
+    "language": { "type": "string", "pattern": "^[a-z]{2}(-[A-Z]{2})?$" },
+    "latency_budget_ms": { "type": "integer", "minimum": 0 },
+    "privacy_mode": { "type": "string", "enum": ["local", "remote_allowed"] },
+    "consequence_class": { "type": "string", "enum": ["low", "medium", "high"] },
+    "deadline_at": { "type": "string", "format": "date-time" }
+  }
+}
