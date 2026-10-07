@@ -46,6 +46,7 @@ where = ["."]
 include = [
     "api*",
     "enums*",
+    "gomrey*",
     "models*",
     "services*",
     "constants*",
