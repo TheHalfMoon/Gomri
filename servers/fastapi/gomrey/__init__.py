@@ -13,6 +13,9 @@ without migrating the imported database or rewriting the editor.
   boundary, structured errors, dedup identity). Admission always lands in
   quarantined; only the explicit trust machine can reach
   trusted-for-retrieval.
+- file_boundary: P05-G2 hostile file handling (path containment, MIME
+  reconciliation, shared-budget enforcement, archive entry validation,
+  active-content denial, temp lifecycle). Pure logic, no writes.
 - adapters: pure read-only functions projecting imported Presenton rows
   (PresentationModel/SlideModel) into Gomrey contract records.
 - jobs: durable job kernel (P04-G1) with zero database and network needs.
@@ -42,6 +45,18 @@ from gomrey.adapters import (
     presentation_to_artifact,
     presentation_to_revision,
     slides_to_narrative,
+)
+from gomrey.file_boundary import (
+    TempLease,
+    TempLeaseRegistry,
+    check_archive_entry,
+    deny_active_content,
+    enforce_file_budgets,
+    file_admission_report,
+    normalize_path,
+    reconcile_mime,
+    scan_active_content,
+    sniff_mime,
 )
 from gomrey.gateway import (
     AdmissionError,
@@ -101,24 +116,34 @@ __all__ = [
     "SourceArtifactRecord",
     "SourceUnitRecord",
     "StageAttemptRecord",
+    "TempLease",
+    "TempLeaseRegistry",
     "UnitLedger",
     "UnknownUnit",
     "WorkspaceRecord",
     "admit_source",
     "backoff_seconds",
     "can_access",
+    "check_archive_entry",
     "classify_failure",
     "content_identity",
+    "deny_active_content",
+    "enforce_file_budgets",
+    "file_admission_report",
     "is_duplicate",
     "is_trusted",
+    "normalize_path",
     "owner_to_scope",
     "presentation_to_artifact",
     "presentation_to_revision",
     "progress_event",
     "reconcile",
+    "reconcile_mime",
+    "scan_active_content",
     "select_parser",
     "should_retry",
     "slides_to_narrative",
+    "sniff_mime",
     "transition",
     "transition_trust",
 ]
