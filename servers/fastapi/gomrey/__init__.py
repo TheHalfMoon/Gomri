@@ -53,6 +53,9 @@ without migrating the imported database or rewriting the editor.
   constraints). Pure logic, no index servers.
 - citations: P08-G2 locators per source family plus a resolver that
   fails loudly on unresolvable IDs. Pure logic.
+- evidence_bundle: P08-G3 bounded bundles with digests, marked
+  contradictions, accounted omissions, and sufficiency verdicts. Pure
+  logic, no generation.
 - adapters: pure read-only functions projecting imported Presenton rows
   (PresentationModel/SlideModel) into Gomrey contract records.
 - jobs: durable job kernel (P04-G1) with zero database and network needs.
@@ -204,6 +207,12 @@ from gomrey.retrieval_pipeline import (
     retrieve,
 )
 from gomrey.citations import BrokenCitation, citation_id, make_locator, resolve
+from gomrey.evidence_bundle import (
+    EvidenceBundle,
+    build_bundle,
+    bundle_digest,
+    sufficiency_check,
+)
 from gomrey.parser_router import (
     BenchmarkCase,
     BenchmarkRun,
@@ -247,6 +256,7 @@ __all__ = [
     "CredentialHandle",
     "DuplicateDeclaration",
     "DurableJob",
+    "EvidenceBundle",
     "IdempotencyLedger",
     "IllegalTransition",
     "IllegalTrustTransition",
@@ -296,6 +306,8 @@ __all__ = [
     "authorize_fetch",
     "assemble_ir",
     "backoff_seconds",
+    "build_bundle",
+    "bundle_digest",
     "can_access",
     "check_arabic_case",
     "check_archive_entry",
@@ -354,6 +366,7 @@ __all__ = [
     "should_retry",
     "slides_to_narrative",
     "sniff_mime",
+    "sufficiency_check",
     "sync_backoff_seconds",
     "sync_changes_to_units",
     "taint_content",
