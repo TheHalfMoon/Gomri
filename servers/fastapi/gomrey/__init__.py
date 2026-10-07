@@ -22,6 +22,15 @@ from gomrey.adapters import (
     presentation_to_revision,
     slides_to_narrative,
 )
+from gomrey.jobs import (
+    DurableJob,
+    IdempotencyLedger,
+    IllegalTransition,
+    backoff_seconds,
+    classify_failure,
+    should_retry,
+    transition,
+)
 from gomrey.contracts import (
     ArtifactRecord,
     ArtifactRevisionRecord,
@@ -40,6 +49,9 @@ __all__ = [
     "ArtifactRevisionRecord",
     "BlobStore",
     "CanonicalStore",
+    "DurableJob",
+    "IdempotencyLedger",
+    "IllegalTransition",
     "IngestionManifestRecord",
     "JobRecord",
     "MemoryBlobStore",
@@ -49,8 +61,12 @@ __all__ = [
     "SourceUnitRecord",
     "StageAttemptRecord",
     "WorkspaceRecord",
+    "backoff_seconds",
+    "classify_failure",
     "owner_to_scope",
     "presentation_to_artifact",
     "presentation_to_revision",
+    "should_retry",
     "slides_to_narrative",
+    "transition",
 ]
