@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "product": {
+    "name": "Gomrey",
+    "slug": "gomrey",
+    "repository": "TheHalfMoon/Gomrey",
+    "version": "0.1.0",
+    "version_policy": "P02-G4 resets the inherited 0.9.11-beta donor-family version to a Gomrey-owned 0.1.0 baseline. The desktop app uses a separate appId, so this is a fresh application identity rather than a semver downgrade. P16 owns GA versioning."
+  },
+  "desktop": {
+    "app_id": "io.github.thehalfmoon.gomrey",
+    "product_name": "Gomrey",
+    "executable": "Gomrey",
+    "artifact_template": "Gomrey-${version}.${ext}",
+    "version_file": "electron/version.json",
+    "update_policy": "opt-in only; no donor update endpoint by default"
+  },
+  "platforms": {
+    "linux": { "artifacts": ["Gomrey-${version}.deb", "Gomrey-${version}.AppImage"], "scope": "full-integration" },
+    "windows": { "artifacts": ["Gomrey-${version}.exe"], "scope": "package-configuration-qualification" },
+    "macos": { "artifacts": ["Gomrey-${version}.dmg"], "scope": "package-configuration-qualification" }
+  },
+  "sbom": {
+    "files": ["sbom/root.cdx.json", "sbom/electron.cdx.json", "sbom/nextjs.cdx.json", "sbom/fastapi.cdx.json"],
+    "manifest": "sbom/manifest.json",
+    "surfaces": ["root", "electron", "nextjs", "fastapi"]
+  },
+  "release": {
+    "repository": "TheHalfMoon/Gomrey",
+    "forbidden_repositories": ["presenton/presenton", "presenton/presenton-export"],
+    "forbidden_artifact_prefixes": ["Presenton-"],
+    "forbidden_buckets": ["presenton-desktop"],
+    "docker_image": "ghcr.io/thehalfmoon/gomrey",
+    "forbidden_images": ["ghcr.io/presenton/presenton"],
+    "publish_policy": "No release to end users in P02. P16 owns GA release and operations. Test prereleases must target TheHalfMoon/Gomrey only and never require Store credentials in ordinary CI."
+  },
+  "source_binding": {
+    "commit": "recorded at manifest generation time via git rev-parse HEAD",
+    "lockfiles": ["package-lock.json", "electron/package-lock.json", "servers/nextjs/package-lock.json", "servers/fastapi/uv.lock"]
+  }
+}

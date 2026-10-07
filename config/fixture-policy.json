@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "policy": "Committed fixtures must be synthetic, public, or explicitly licensed. No real user secrets, private health or business data, donor credentials, or production dumps. Every fixture carries provenance and regeneration instructions.",
+  "allowed_kinds": [
+    "synthetic-generated",
+    "public-benchmark-redistributable",
+    "explicitly-licensed-with-attribution"
+  ],
+  "prohibited": [
+    "real user secrets or tokens",
+    "private health data",
+    "private business data",
+    "donor credentials",
+    "production database dumps",
+    "unlicensed scraped personal data"
+  ],
+  "requirements": {
+    "provenance_header": "Each fixture directory must document source, license, creation date, and generator or acquisition method.",
+    "regeneration": "Generated fixtures must record the exact generator script and seed so they can be reproduced.",
+    "no_secrets": "Fixtures must pass scripts/scan-secrets.mjs and must not contain credential-like material.",
+    "size_budget": "Fixtures stay small and bounded; large corpora live outside the repository and are referenced, not committed."
+  },
+  "scan": {
+    "script": "scripts/check-fixtures.mjs",
+    "roots": ["servers/fastapi/tests", "servers/nextjs/tests", "scripts", "sbom"],
+    "exclude_prefixes": ["docs/donors/", "docs/evidence/"],
+    "allowlisted_paths": [
+      {
+        "path": "scripts/scan-secrets.test.mjs",
+        "rationale": "Intentional synthetic scanner-validation strings (sk-abcdefgh..., BEGIN RSA PRIVATE KEY header) with no real credential value. Required to prove the secret scanner detects credential-like material."
+      }
+    ]
+  }
+}

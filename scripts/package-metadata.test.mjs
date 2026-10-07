@@ -87,7 +87,7 @@ test("Docker and Electron use the same pinned presentation export", async () => 
   );
   assert.match(
     dockerCompose,
-    /\nvolumes:\n(?:  .+\n)*  presenton_presentation_export:\n/,
+    /\r?\nvolumes:\r?\n(?:  .+\r?\n)*  presenton_presentation_export:\r?\n/,
   );
 });
 

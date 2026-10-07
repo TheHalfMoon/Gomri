@@ -29,9 +29,15 @@ eng.traineddata
 
 # presenton-export runtime (downloaded via scripts/sync-presentation-export.cjs or Docker build)
 presentation-export/
+# generated SBOM artifacts (recreated deterministically by scripts/generate-sbom.mjs in CI)
+sbom/
+dist/release-manifest.json
 .cache/presentation-export/
 servers/fastapi/build/
 servers/fastapi/dist/
 servers/fastapi/fastembed_cache/
 servers/fastapi/*.egg-info/
 pptxcollection/
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/

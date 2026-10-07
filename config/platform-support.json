@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "policy": "Linux is the full integration path. Windows and macOS run bounded source and package-configuration qualification only. No Store, signing, notarization, or paid-service credentials are required for ordinary CI.",
+  "runners": {
+    "linux": "ubuntu-latest",
+    "windows": "windows-latest",
+    "macos": "macos-latest"
+  },
+  "matrix": {
+    "linux": {
+      "scope": "full-integration",
+      "jobs": [
+        "test-repository-tools",
+        "test-fastapi",
+        "test-nextjs",
+        "test-electron",
+        "g4-baseline",
+        "security-baseline",
+        "sbom-baseline"
+      ],
+      "notes": "Full pytest, Next.js build, Cypress component tests, Electron typecheck/build checks, and G4 baseline gates."
+    },
+    "windows": {
+      "scope": "bounded-qualification",
+      "jobs": ["qualify-windows"],
+      "checks": [
+        "root repository contract tests",
+        "platform-support matrix validation",
+        "release-configuration dry-run validation",
+        "electron builder configuration load without packaging"
+      ],
+      "exclusions": [
+        "full Next.js build",
+        "Cypress component tests",
+        "FastAPI pytest suite",
+        "Electron packaging",
+        "Store/signing/notarization",
+        "release publishing"
+      ]
+    },
+    "macos": {
+      "scope": "bounded-qualification",
+      "jobs": ["qualify-macos"],
+      "checks": [
+        "root repository contract tests",
+        "platform-support matrix validation",
+        "release-configuration dry-run validation",
+        "electron builder configuration load without packaging"
+      ],
+      "exclusions": [
+        "full Next.js build",
+        "Cypress component tests",
+        "FastAPI pytest suite",
+        "Electron packaging",
+        "Store/signing/notarization",
+        "release publishing"
+      ]
+    }
+  },
+  "required_for_merge": [
+    "test-repository-tools",
+    "test-fastapi",
+    "test-nextjs",
+    "test-electron",
+    "g4-baseline",
+    "security-baseline",
+    "sbom-baseline",
+    "qualify-windows",
+    "qualify-macos"
+  ]
+}

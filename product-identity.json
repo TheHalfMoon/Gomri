@@ -3,7 +3,9 @@
   "product": {
     "name": "Gomrey",
     "slug": "gomrey",
-    "repository": "https://github.com/TheHalfMoon/Gomrey"
+    "repository": "https://github.com/TheHalfMoon/Gomrey",
+    "version": "0.1.0",
+    "versionBaseline": "P02-G4 resets the inherited 0.9.11-beta donor-family version to Gomrey-owned 0.1.0"
   },
   "packages": {
     "root": "gomrey",
@@ -42,7 +44,7 @@
     "desktopAppId": "P02-G3b: canonical non-store app ID io.github.thehalfmoon.gomrey; MAS legacy override until P02-G3c",
     "signingAndStoreIdentity": "P02-G3c: canonical GOMREY_* signing inputs; MAS fail-closed; AppX disabled until a verified Gomrey-owned Store identity exists",
     "binaryIconsAndInstallerArtwork": "P02-G3c: donor package/runtime artwork removed from defaults; neutral Electron defaults until Gomrey-owned binary artwork is admitted",
-    "releaseVersionReset": "P02-G4",
+    "releaseVersionReset": "P02-G4: complete; canonical Gomrey baseline is 0.1.0 across root, desktop, and version.json",
     "splashArtworkAsset": "P02-G3c: donor splash removed; code-rendered Gomrey wordmark"
   },
   "desktopIdentity": {

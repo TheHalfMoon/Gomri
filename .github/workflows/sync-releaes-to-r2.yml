@@ -25,7 +25,15 @@ jobs:
       - name: Extract version from filename
         run: |
           FILE=$(ls assets/ | head -n 1)
-          VERSION=$(echo "$FILE" | sed -E 's/^Presenton-(.+)\.(deb|dmg|exe|AppImage)$/\1/')
+          if echo "$FILE" | grep -qi '^Presenton-'; then
+            echo "Donor Presenton artifact names are not accepted by Gomrey release automation: $FILE" >&2
+            exit 1
+          fi
+          VERSION=$(echo "$FILE" | sed -E 's/^Gomrey-(.+)\.(deb|dmg|exe|AppImage)$/\1/')
+          if [ -z "$VERSION" ] || [ "$VERSION" = "$FILE" ]; then
+            echo "Release asset does not match Gomrey-<version>.<ext>: $FILE" >&2
+            exit 1
+          fi
           echo "Extracted version: $VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
@@ -50,4 +58,4 @@ jobs:
       # 6. Upload to R2 (FINAL STEP)
       - name: Upload files to R2
         run: |
-          rclone copy assets r2:presenton-desktop/${{ env.VERSION }} --progress --transfers=8
+          rclone copy assets r2:gomrey-desktop/${{ env.VERSION }} --progress --transfers=8
