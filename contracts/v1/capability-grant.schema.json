@@ -1,0 +1,23 @@
+{
+  "$id": "gomrey:v1:CapabilityGrant",
+  "title": "CapabilityGrant",
+  "version": 1,
+  "type": "object",
+  "required": ["grant_id", "tenant_id", "workspace_id", "principal_id", "scopes", "granted_by", "created_at", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "grant_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "tenant_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "workspace_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "principal_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "scopes": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(\\.[a-z0-9]+)+$" }
+    },
+    "granted_by": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "revoked_at": { "type": "string", "format": "date-time" },
+    "status": { "type": "string", "enum": ["active", "expired", "revoked"] }
+  }
+}

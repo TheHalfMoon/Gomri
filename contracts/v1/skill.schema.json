@@ -1,0 +1,19 @@
+{
+  "$id": "gomrey:v1:Skill",
+  "title": "Skill",
+  "version": 1,
+  "type": "object",
+  "required": ["skill_id", "tenant_id", "name", "version"],
+  "additionalProperties": false,
+  "properties": {
+    "skill_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "plugin_id": { "type": "string", "maxLength": 128 },
+    "tenant_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "workspace_id": { "type": "string", "maxLength": 128 },
+    "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+([-+][0-9A-Za-z.-]+)?$" },
+    "audience": { "type": "string", "maxLength": 300 },
+    "evidence_policy": { "type": "string", "enum": ["strict", "standard", "none"] },
+    "verification_requirements": { "type": "array", "items": { "type": "string", "maxLength": 200 } }
+  }
+}

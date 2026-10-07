@@ -1,0 +1,21 @@
+{
+  "$id": "gomrey:v1:Plugin",
+  "title": "Plugin",
+  "version": 1,
+  "type": "object",
+  "required": ["plugin_id", "publisher", "version", "content_digest", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "plugin_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "publisher": { "type": "string", "minLength": 1, "maxLength": 300 },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+([-+][0-9A-Za-z.-]+)?$" },
+    "tenant_id": { "type": "string", "maxLength": 128 },
+    "compatible_gomrey": { "type": "array", "items": { "type": "string", "maxLength": 64 } },
+    "requested_permissions": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(\\.[a-z0-9]+)+$" }
+    },
+    "content_digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "status": { "type": "string", "enum": ["installed", "disabled", "revoked"] }
+  }
+}

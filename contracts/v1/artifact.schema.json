@@ -1,0 +1,24 @@
+{
+  "$id": "gomrey:v1:Artifact",
+  "title": "Artifact",
+  "version": 1,
+  "type": "object",
+  "required": ["artifact_id", "tenant_id", "workspace_id", "artifact_type", "title", "current_revision", "created_at", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "artifact_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "tenant_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "workspace_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "artifact_type": {
+      "type": "string",
+      "enum": ["presentation", "document", "site", "infographic", "social", "image", "other"]
+    },
+    "title": { "type": "string", "minLength": 1, "maxLength": 500 },
+    "current_revision": { "type": "integer", "minimum": 1 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "verifying", "needs_repair", "ready", "published", "archived"]
+    }
+  }
+}

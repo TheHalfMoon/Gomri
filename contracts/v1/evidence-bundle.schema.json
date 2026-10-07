@@ -1,0 +1,38 @@
+{
+  "$id": "gomrey:v1:EvidenceBundle",
+  "title": "EvidenceBundle",
+  "version": 1,
+  "type": "object",
+  "required": ["bundle_id", "tenant_id", "workspace_id", "source_revisions", "spans", "bundle_digest", "verification_state", "freshness_at"],
+  "additionalProperties": false,
+  "properties": {
+    "bundle_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "tenant_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "workspace_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "source_revisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_id", "revision"],
+        "additionalProperties": false,
+        "properties": {
+          "source_id": { "type": "string", "maxLength": 128 },
+          "revision": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "spans": {
+      "type": "array",
+      "items": { "type": "string", "maxLength": 128 }
+    },
+    "omissions": { "type": "array", "items": { "type": "string", "maxLength": 500 } },
+    "contradictions": { "type": "array", "items": { "type": "string", "maxLength": 500 } },
+    "freshness_at": { "type": "string", "format": "date-time" },
+    "permission_scope": { "type": "string", "maxLength": 256 },
+    "bundle_digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "verification_state": {
+      "type": "string",
+      "enum": ["unverified", "verifying", "verified", "needs_review", "blocked"]
+    }
+  }
+}

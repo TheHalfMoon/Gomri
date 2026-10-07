@@ -1,0 +1,23 @@
+{
+  "$id": "gomrey:v1:Claim",
+  "title": "Claim",
+  "version": 1,
+  "type": "object",
+  "required": ["claim_id", "tenant_id", "workspace_id", "bundle_id", "text", "support_state"],
+  "additionalProperties": false,
+  "properties": {
+    "claim_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "tenant_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "workspace_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "bundle_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "text": { "type": "string", "minLength": 1, "maxLength": 5000 },
+    "support_state": {
+      "type": "string",
+      "enum": ["SUPPORTED", "PARTIALLY_SUPPORTED", "CONTRADICTED", "DOES_NOT_ESTABLISH", "UNRESOLVED", "SOURCE_UNAVAILABLE"]
+    },
+    "citation_ids": { "type": "array", "items": { "type": "string", "maxLength": 128 } },
+    "numeric_check": { "type": "string", "enum": ["pass", "fail", "not_applicable"] },
+    "date_check": { "type": "string", "enum": ["pass", "fail", "not_applicable"] },
+    "unit_check": { "type": "string", "enum": ["pass", "fail", "not_applicable"] }
+  }
+}

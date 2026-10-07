@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "description": "Gomrey-owned P03 core contract schemas. Every schema is self-contained; local $defs refs only. Validators must implement the keyword subset documented in scripts/validate-contracts.mjs. No schema may require vector/graph index fields.",
+  "schemas": [
+    { "name": "Workspace", "file": "contracts/v1/workspace.schema.json" },
+    { "name": "Principal", "file": "contracts/v1/principal.schema.json" },
+    { "name": "CapabilityGrant", "file": "contracts/v1/capability-grant.schema.json" },
+    { "name": "SourceArtifact", "file": "contracts/v1/source-artifact.schema.json" },
+    { "name": "SourceUnit", "file": "contracts/v1/source-unit.schema.json" },
+    { "name": "EvidenceSpan", "file": "contracts/v1/evidence-span.schema.json" },
+    { "name": "SourceSnapshot", "file": "contracts/v1/source-snapshot.schema.json" },
+    { "name": "IngestionManifest", "file": "contracts/v1/ingestion-manifest.schema.json" },
+    { "name": "EvidenceBundle", "file": "contracts/v1/evidence-bundle.schema.json" },
+    { "name": "Claim", "file": "contracts/v1/claim.schema.json" },
+    { "name": "Citation", "file": "contracts/v1/citation.schema.json" },
+    { "name": "Job", "file": "contracts/v1/job.schema.json" },
+    { "name": "StageAttempt", "file": "contracts/v1/stage-attempt.schema.json" },
+    { "name": "ArtifactBaseline", "file": "contracts/v1/artifact-baseline.schema.json" },
+    { "name": "DecisionRequest", "file": "contracts/v1/decision-request.schema.json" },
+    { "name": "DecisionResult", "file": "contracts/v1/decision-result.schema.json" },
+    { "name": "Artifact", "file": "contracts/v1/artifact.schema.json" },
+    { "name": "ArtifactRevision", "file": "contracts/v1/artifact-revision.schema.json" },
+    { "name": "NarrativeIR", "file": "contracts/v1/narrative-ir.schema.json" },
+    { "name": "DesignIR", "file": "contracts/v1/design-ir.schema.json" },
+    { "name": "Plugin", "file": "contracts/v1/plugin.schema.json" },
+    { "name": "Skill", "file": "contracts/v1/skill.schema.json" },
+    { "name": "ConnectorIdentity", "file": "contracts/v1/connector-identity.schema.json" }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "$id": "gomrey:v1:ArtifactRevision",
+  "title": "ArtifactRevision",
+  "version": 1,
+  "type": "object",
+  "required": ["artifact_id", "revision", "tenant_id", "workspace_id", "content_digest", "verification_state", "created_at"],
+  "additionalProperties": false,
+  "properties": {
+    "artifact_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "revision": { "type": "integer", "minimum": 1 },
+    "tenant_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "workspace_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "parent_revision": { "type": "integer", "minimum": 1 },
+    "content_digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "evidence_bundle_id": { "type": "string", "maxLength": 128 },
+    "verification_state": {
+      "type": "string",
+      "enum": ["unverified", "verifying", "verified", "needs_repair", "blocked"]
+    },
+    "author_principal_id": { "type": "string", "maxLength": 128 },
+    "idempotency_key": { "type": "string", "maxLength": 256 },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

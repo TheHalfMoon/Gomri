@@ -1,0 +1,16 @@
+{
+  "$id": "gomrey:v1:Workspace",
+  "title": "Workspace",
+  "version": 1,
+  "type": "object",
+  "required": ["workspace_id", "tenant_id", "name", "created_at", "revision", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "workspace_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "tenant_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "revision": { "type": "integer", "minimum": 1 },
+    "status": { "type": "string", "enum": ["active", "suspended", "deleted"] }
+  }
+}

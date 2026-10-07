@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Agent-first evidence-grounded creation and knowledge platform",
   "scripts": {
-    "test": "npm run test:template-converter && node --test scripts/package-metadata.test.mjs scripts/product-identity.test.mjs scripts/desktop-release-identity.test.mjs scripts/desktop-store-artwork.test.mjs scripts/compatibility-aliases.test.mjs scripts/start-config-permissions.test.mjs scripts/sync-presentation-export.test.mjs scripts/user-config-env.test.mjs scripts/platform-support.test.mjs scripts/scan-secrets.test.mjs scripts/generate-sbom.test.mjs scripts/check-dependency-audit.test.mjs scripts/check-fixtures.test.mjs scripts/release-baseline.test.mjs",
+    "test": "npm run test:template-converter && node --test scripts/package-metadata.test.mjs scripts/product-identity.test.mjs scripts/desktop-release-identity.test.mjs scripts/desktop-store-artwork.test.mjs scripts/compatibility-aliases.test.mjs scripts/start-config-permissions.test.mjs scripts/sync-presentation-export.test.mjs scripts/user-config-env.test.mjs scripts/platform-support.test.mjs scripts/scan-secrets.test.mjs scripts/generate-sbom.test.mjs scripts/check-dependency-audit.test.mjs scripts/check-fixtures.test.mjs scripts/release-baseline.test.mjs scripts/contracts.test.mjs",
     "convert:template": "node scripts/convert-template.mjs",
     "convert:presentation-template": "node scripts/convert-presentation-template.mjs",
     "test:template-converter": "node --test scripts/convert-template.test.mjs scripts/convert-presentation-template.test.mjs",
