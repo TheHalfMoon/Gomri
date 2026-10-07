@@ -56,6 +56,9 @@ without migrating the imported database or rewriting the editor.
 - evidence_bundle: P08-G3 bounded bundles with digests, marked
   contradictions, accounted omissions, and sufficiency verdicts. Pure
   logic, no generation.
+- claims: P09-G1 durable claim records with verification states,
+  evidence binding that never widens insufficiency into support, and
+  a policy-override tripwire. Pure logic, no models.
 - adapters: pure read-only functions projecting imported Presenton rows
   (PresentationModel/SlideModel) into Gomrey contract records.
 - jobs: durable job kernel (P04-G1) with zero database and network needs.
@@ -213,6 +216,20 @@ from gomrey.evidence_bundle import (
     bundle_digest,
     sufficiency_check,
 )
+from gomrey.claims import (
+    CLAIM_STATUSES,
+    DERIVATION_KINDS,
+    UNCERTAINTY_LEVELS,
+    VERIFICATION_STATES,
+    Claim,
+    ClaimStore,
+    MemoryClaimStore,
+    bind_claim_to_bundle,
+    claim_digest,
+    detect_policy_override_attempt,
+    make_claim,
+    normalize_claim,
+)
 from gomrey.parser_router import (
     BenchmarkCase,
     BenchmarkRun,
@@ -250,10 +267,14 @@ __all__ = [
     "ArtifactRevisionRecord",
     "BlobStore",
     "BudgetExhausted",
+    "CLAIM_STATUSES",
     "CanonicalStore",
+    "Claim",
+    "ClaimStore",
     "CrawlPlan",
     "CrawlScope",
     "CredentialHandle",
+    "DERIVATION_KINDS",
     "DuplicateDeclaration",
     "DurableJob",
     "EvidenceBundle",
@@ -267,6 +288,7 @@ __all__ = [
     "MediaTimeline",
     "MemoryBlobStore",
     "MemoryCanonicalStore",
+    "MemoryClaimStore",
     "NarrativeSection",
     "OCRRegion",
     "ParserAdapter",
@@ -290,8 +312,10 @@ __all__ = [
     "TranscriptSegment",
     "TrustedRelease",
     "UnitLedger",
+    "UNCERTAINTY_LEVELS",
     "UnknownUnit",
     "UrlVerdict",
+    "VERIFICATION_STATES",
     "WorkerAuthorization",
     "WorkerEnvelope",
     "WorkspaceRecord",
@@ -306,6 +330,7 @@ __all__ = [
     "authorize_fetch",
     "assemble_ir",
     "backoff_seconds",
+    "bind_claim_to_bundle",
     "build_bundle",
     "bundle_digest",
     "can_access",
@@ -320,8 +345,10 @@ __all__ = [
     "classify_workload",
     "content_identity",
     "check_handle",
+    "claim_digest",
     "deny_active_content",
     "degraded_modes",
+    "detect_policy_override_attempt",
     "enforce_file_budgets",
     "enforce_remote_budgets",
     "exact_boost",
@@ -334,10 +361,12 @@ __all__ = [
     "lexical_overlap",
     "map_acl",
     "map_ocr_regions",
+    "make_claim",
     "map_structured_output",
     "make_locator",
     "media_aligned_to_units",
     "media_span",
+    "normalize_claim",
     "normalize_path",
     "normalized_fetch_result",
     "owner_to_scope",
