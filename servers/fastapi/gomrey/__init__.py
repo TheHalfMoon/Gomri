@@ -59,6 +59,9 @@ without migrating the imported database or rewriting the editor.
 - claims: P09-G1 durable claim records with verification states,
   evidence binding that never widens insufficiency into support, and
   a policy-override tripwire. Pure logic, no models.
+- verification: P09-G2 deterministic verdicts with quantity/date
+  agreement checks and a provider seam that can never overrule hard
+  policy. Pure logic, no model calls.
 - adapters: pure read-only functions projecting imported Presenton rows
   (PresentationModel/SlideModel) into Gomrey contract records.
 - jobs: durable job kernel (P04-G1) with zero database and network needs.
@@ -253,6 +256,7 @@ from gomrey.remote_gateway import (
     normalized_fetch_result,
     validate_redirect_chain,
 )
+from gomrey.verification import STANCES, VERDICTS, check_quantity_agreement, verify_claim
 from gomrey.seams import BlobStore, CanonicalStore, MemoryBlobStore, MemoryCanonicalStore
 
 __all__ = [
@@ -302,6 +306,7 @@ __all__ = [
     "RevocationReceipt",
     "Route",
     "SceneSegment",
+    "STANCES",
     "SourceArtifactRecord",
     "SourceUnitRecord",
     "StageAttemptRecord",
@@ -315,6 +320,7 @@ __all__ = [
     "UNCERTAINTY_LEVELS",
     "UnknownUnit",
     "UrlVerdict",
+    "VERDICTS",
     "VERIFICATION_STATES",
     "WorkerAuthorization",
     "WorkerEnvelope",
@@ -336,6 +342,7 @@ __all__ = [
     "can_access",
     "check_arabic_case",
     "check_archive_entry",
+    "check_quantity_agreement",
     "check_qualification",
     "check_second_parser_budget",
     "citation_id",
@@ -405,6 +412,7 @@ __all__ = [
     "validate_intermediate",
     "validate_redirect_chain",
     "validate_timeline",
+    "verify_claim",
     "verify_coverage",
     "web_page_to_units",
 ]
