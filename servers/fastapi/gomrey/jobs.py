@@ -21,7 +21,7 @@ TERMINAL_STATES = frozenset({"complete", "partial", "failed", "cancelled"})
 LEGAL_TRANSITIONS: dict[str, frozenset[str]] = {
     "queued": frozenset({"running", "cancelled"}),
     "running": frozenset({"checkpointed", "complete", "partial", "failed", "cancelled"}),
-    "checkpointed": frozenset({"running", "failed", "cancelled"}),
+    "checkpointed": frozenset({"running", "complete", "partial", "failed", "cancelled"}),
     "suspended": frozenset({"running", "cancelled"}),
     "complete": frozenset(),
     "partial": frozenset(),
@@ -115,10 +115,10 @@ class DurableJob:
         self.state = transition(self.job_id, self.state, "running")
 
     def complete_stage(self, stage: str) -> None:
-        if self.state not in {"running", "checkpointed"}:
-            raise IllegalTransition(self.job_id, self.state, "checkpointed")
         if stage not in self.stages:
             raise ValueError(f"unknown stage: {stage}")
+        if self.state not in {"running", "checkpointed"}:
+            raise IllegalTransition(self.job_id, self.state, "checkpointed")
         if stage not in self.completed:
             self.completed.append(stage)
         self.state = "checkpointed"
