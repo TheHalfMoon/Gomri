@@ -26,6 +26,10 @@ without migrating the imported database or rewriting the editor.
   workload classification, bounded second-parser routing, explicit
   disagreement reconciliation, Source IR emission, benchmark scoring).
   Pure logic, no models, no network.
+- structure_worker: P06-G2 worker envelope (capability-bounded
+  admission-to-execution), LiteParse baseline identity, Docling-shaped
+  output mapping, measurement-only qualification gates. Pure logic, no
+  subprocess, no weights, no lockfile change.
 - adapters: pure read-only functions projecting imported Presenton rows
   (PresentationModel/SlideModel) into Gomrey contract records.
 - jobs: durable job kernel (P04-G1) with zero database and network needs.
@@ -114,6 +118,16 @@ from gomrey.parser_boundary import (
     taint_content,
     validate_intermediate,
 )
+from gomrey.structure_worker import (
+    KNOWN_WORKERS,
+    LITEPARSE_BASELINE,
+    QualificationProfile,
+    WorkerAuthorization,
+    WorkerEnvelope,
+    admit_worker,
+    check_qualification,
+    map_structured_output,
+)
 from gomrey.parser_router import (
     BenchmarkCase,
     BenchmarkRun,
@@ -157,6 +171,8 @@ __all__ = [
     "IllegalTrustTransition",
     "IngestionManifestRecord",
     "JobRecord",
+    "KNOWN_WORKERS",
+    "LITEPARSE_BASELINE",
     "MemoryBlobStore",
     "MemoryCanonicalStore",
     "NarrativeSection",
@@ -165,6 +181,7 @@ __all__ = [
     "Preflight",
     "Principal",
     "QuarantinedView",
+    "QualificationProfile",
     "Reconciliation",
     "ResourceBudget",
     "RevocationReceipt",
@@ -178,12 +195,16 @@ __all__ = [
     "UnitLedger",
     "UnknownUnit",
     "UrlVerdict",
+    "WorkerAuthorization",
+    "WorkerEnvelope",
     "WorkspaceRecord",
     "admit_source",
+    "admit_worker",
     "authorize_fetch",
     "backoff_seconds",
     "can_access",
     "check_archive_entry",
+    "check_qualification",
     "check_second_parser_budget",
     "classify_failure",
     "classify_sensitivity",
@@ -196,6 +217,7 @@ __all__ = [
     "file_admission_report",
     "is_duplicate",
     "is_trusted",
+    "map_structured_output",
     "normalize_path",
     "normalized_fetch_result",
     "owner_to_scope",
