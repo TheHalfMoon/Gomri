@@ -85,6 +85,20 @@ weakening any gate:
    `check-dependency-audit.mjs` (allowlist + expiry + staleness) be the
    deterministic merge gate instead of the raw audit exit code.
 
+## New-advisory triage (same PR, third commit)
+
+Exact-head CI on `3d620a1` proved the gate fails visibly on novelty: the CI
+registry returned two advisories absent from the local snapshot, both via
+`@tailwindcss/typography` → `postcss-selector-parser` — `GHSA-w9m9-85wc-3x92`
+(uncontrolled AST-recursion DoS, LOW/Medium, fixed 7.1.3) and
+`GHSA-rj75-hqrm-r3gf` (flat-selector quadratic-parse DoS, MODERATE, fixed
+7.1.6). Both affect only consumers parsing untrusted selectors in a request
+path; Gomrey compiles trusted sources at build time. Upgrading the
+Tailwind/postcss chain is unrelated-dependency churn for this grain, so both
+are allowlisted with P15-hardening ownership and 2027-04-05 review. They carry
+`keep_if_absent` because advisory-DB freshness varies by registry mirror and
+audit time. No other surface reported novelty.
+
 ## Exact-head requirement
 
 - Root repository suite: new G4 contract tests included in `npm test`.
