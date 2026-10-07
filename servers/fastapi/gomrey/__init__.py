@@ -48,6 +48,9 @@ without migrating the imported database or rewriting the editor.
 - source_parity: P07 exit proof (web/media/connector families into the
   single IR record shape, one assembly gate, one coverage gate). Pure
   logic.
+- retrieval_pipeline: P08-G1 layered retrieval (ACL-first filter, exact
+  boost, lexical channel, explicit fusion, freshness and diversity
+  constraints). Pure logic, no index servers.
 - adapters: pure read-only functions projecting imported Presenton rows
   (PresentationModel/SlideModel) into Gomrey contract records.
 - jobs: durable job kernel (P04-G1) with zero database and network needs.
@@ -190,6 +193,14 @@ from gomrey.source_parity import (
     sync_changes_to_units,
     web_page_to_units,
 )
+from gomrey.retrieval_pipeline import (
+    acl_filter,
+    apply_constraints,
+    exact_boost,
+    fuse,
+    lexical_overlap,
+    retrieve,
+)
 from gomrey.parser_router import (
     BenchmarkCase,
     BenchmarkRun,
@@ -270,11 +281,13 @@ __all__ = [
     "WorkerAuthorization",
     "WorkerEnvelope",
     "WorkspaceRecord",
+    "acl_filter",
     "align_transcript_visual",
     "acquisition_policy",
     "admit_child",
     "admit_source",
     "admit_worker",
+    "apply_constraints",
     "apply_sync",
     "authorize_fetch",
     "assemble_ir",
@@ -294,11 +307,14 @@ __all__ = [
     "degraded_modes",
     "enforce_file_budgets",
     "enforce_remote_budgets",
+    "exact_boost",
     "file_admission_report",
     "freshness",
+    "fuse",
     "is_duplicate",
     "is_trusted",
     "issue_handle",
+    "lexical_overlap",
     "map_acl",
     "map_ocr_regions",
     "map_structured_output",
@@ -321,6 +337,7 @@ __all__ = [
     "reconcile_units",
     "refresh_handle",
     "revoke_source",
+    "retrieve",
     "route",
     "run_parser",
     "scan_active_content",
