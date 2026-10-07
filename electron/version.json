@@ -1,9 +1,9 @@
 {
-  "version": "0.9.11-beta",
+  "version": "0.1.0",
   "message": "",
   "downloads": {
-    "linux": "https://github.com/TheHalfMoon/Gomrey/releases/download/electron-v0.9.11-beta/Gomrey-0.9.11-beta.deb",
-    "mac": "https://github.com/TheHalfMoon/Gomrey/releases/download/electron-v0.9.11-beta/Gomrey-0.9.11-beta.dmg",
-    "windows": "https://github.com/TheHalfMoon/Gomrey/releases/download/electron-v0.9.11-beta/Gomrey-0.9.11-beta.exe"
+    "linux": "https://github.com/TheHalfMoon/Gomrey/releases/download/electron-v0.1.0/Gomrey-0.1.0.deb",
+    "mac": "https://github.com/TheHalfMoon/Gomrey/releases/download/electron-v0.1.0/Gomrey-0.1.0.dmg",
+    "windows": "https://github.com/TheHalfMoon/Gomrey/releases/download/electron-v0.1.0/Gomrey-0.1.0.exe"
   }
 }

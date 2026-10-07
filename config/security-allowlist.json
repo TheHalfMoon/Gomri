@@ -1,0 +1,2140 @@
+{
+  "schema_version": 1,
+  "policy": "Fail on any high/critical advisory not listed here with an unexpired review_by. Stale entries must be removed. See config/security-policy.json.",
+  "generated": {
+    "tool": "npm audit --audit-level=high --json",
+    "date": "2026-10-07",
+    "surfaces": [
+      "root",
+      "electron",
+      "servers/nextjs"
+    ]
+  },
+  "entries": [
+    {
+      "id": "GHSA-f88m-g3jw-g9cj",
+      "surfaces": [
+        "electron",
+        "nextjs",
+        "root"
+      ],
+      "representative_packages": [
+        "@llamaindex/liteparse",
+        "next",
+        "sharp"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Image processing transitive (libvips/libheif/librsvg via sharp). User-provided images are processed locally without remote fetch by default. Fix requires sharp and liteparse major upgrades with image-torture fixtures. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-rgj7-g3m4-5g8c",
+      "surfaces": [
+        "electron",
+        "nextjs",
+        "root"
+      ],
+      "representative_packages": [
+        "@llamaindex/liteparse",
+        "next",
+        "sharp"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Image processing transitive (libvips/libheif/librsvg via sharp). User-provided images are processed locally without remote fetch by default. Fix requires sharp and liteparse major upgrades with image-torture fixtures. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-wq5f-xc86-pv6w",
+      "surfaces": [
+        "electron",
+        "nextjs",
+        "root"
+      ],
+      "representative_packages": [
+        "@llamaindex/liteparse",
+        "next",
+        "sharp"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Image processing transitive (libvips/libheif/librsvg via sharp). User-provided images are processed locally without remote fetch by default. Fix requires sharp and liteparse major upgrades with image-torture fixtures. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-hfxv-24rg-xrqf",
+      "surfaces": [
+        "electron",
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-777c-7fjr-54vf",
+      "surfaces": [
+        "electron",
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-p92q-9vqr-4j8v",
+      "surfaces": [
+        "electron",
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-j5f8-grm9-p9fc",
+      "surfaces": [
+        "electron",
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-35jp-ww65-95wh",
+      "surfaces": [
+        "electron",
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-898c-q2cr-xwhg",
+      "surfaces": [
+        "electron",
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-654m-c8p4-x5fp",
+      "surfaces": [
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-pjwm-pj3p-43mv",
+      "surfaces": [
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-xj6q-8x83-jv6g",
+      "surfaces": [
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-mmx7-hfxf-jppx",
+      "surfaces": [
+        "electron",
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-pmv8-rq9r-6j72",
+      "surfaces": [
+        "electron",
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-mwf2-3pr3-8698",
+      "surfaces": [
+        "electron",
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-gcfj-64vw-6mp9",
+      "surfaces": [
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-7q8q-rj6j-mhjq",
+      "surfaces": [
+        "electron",
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-jqh4-m9w3-8hp9",
+      "surfaces": [
+        "electron",
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-f4gw-2p7v-4548",
+      "surfaces": [
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-42h9-826w-cgv3",
+      "surfaces": [
+        "electron",
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-hcpx-6fm6-wx23",
+      "surfaces": [
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-vh66-26gq-q6x8",
+      "surfaces": [
+        "electron",
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-9fr6-4gfg-395g",
+      "surfaces": [
+        "electron",
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-mghh-pgcx-3jjj",
+      "surfaces": [
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-x97p-jq2g-jp4f",
+      "surfaces": [
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-3pq3-5fj3-cg6v",
+      "surfaces": [
+        "electron",
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-542g-h47m-68v8",
+      "surfaces": [
+        "electron",
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-j8rh-479h-cp32",
+      "surfaces": [
+        "electron",
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-4hqw-qxg8-jxx2",
+      "surfaces": [
+        "electron",
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-m8m8-qj5v-23w3",
+      "surfaces": [
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-44g4-m2mj-wpvx",
+      "surfaces": [
+        "root"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-hmw2-7cc7-3qxx",
+      "surfaces": [
+        "electron",
+        "root"
+      ],
+      "representative_packages": [
+        "form-data"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-7h2j-956f-4vf2",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "@isaacs/brace-expansion"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-6gmq-8vp8-gcm6",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "@xmldom/xmldom"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-w2rr-34g9-rvrj",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "@xmldom/xmldom"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-4w3w-2rp5-g8jm",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "@xmldom/xmldom"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-c7q8-3ch8-vqpv",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "@xmldom/xmldom"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-27p8-2357-5qqv",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "@xmldom/xmldom"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-6h8r-xr42-gp59",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "@xmldom/xmldom"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-8344-3jmq-59r6",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "@xmldom/xmldom"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-x4fp-j954-r2f4",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "@xmldom/xmldom"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-965w-775f-mr7g",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "@xmldom/xmldom"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-93r5-fhx6-vmg9",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "@xmldom/xmldom"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-hp3w-g68c-fv3c",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "app-builder-lib",
+        "dmg-builder",
+        "electron-builder",
+        "electron-builder-squirrel-windows"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build-time Electron packaging chain. No untrusted archive input traverses the CI package-configuration path. Upgrade requires electron-builder major qualification with packaging regression. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-7g7r-gx96-252g",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "app-builder-lib",
+        "dmg-builder",
+        "electron-builder",
+        "electron-builder-squirrel-windows"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build-time Electron packaging chain. No untrusted archive input traverses the CI package-configuration path. Upgrade requires electron-builder major qualification with packaging regression. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-p2f4-r6v6-j797",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "app-builder-lib",
+        "builder-util",
+        "builder-util-runtime",
+        "dmg-builder"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build-time Electron packaging chain. No untrusted archive input traverses the CI package-configuration path. Upgrade requires electron-builder major qualification with packaging regression. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-3p68-rc4w-qgx5",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-w9j2-pvgh-6h63",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-pmwg-cvhr-8vh7",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-3w6x-2g7m-8v23",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-xhjh-pmcv-23jw",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-445q-vr5w-6q77",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-m7pr-hjqh-92cm",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-5c9x-8gcm-mpgx",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-vf2m-468p-8v99",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-pf86-5x62-jrwf",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-6chq-wfr3-2hj9",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-xx6v-rp6x-q39c",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-q8qp-cvcw-x6jj",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-fvcv-3m26-pcqx",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-62hf-57xw-28j9",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-3g43-6gmg-66jw",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "axios"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-f886-m6hf-6m8v",
+      "surfaces": [
+        "electron",
+        "nextjs"
+      ],
+      "representative_packages": [
+        "@eslint/config-array",
+        "@eslint/eslintrc",
+        "brace-expansion",
+        "eslint"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-3jxr-9vmj-r5cp",
+      "surfaces": [
+        "electron",
+        "nextjs"
+      ],
+      "representative_packages": [
+        "@eslint/config-array",
+        "@eslint/eslintrc",
+        "brace-expansion",
+        "eslint"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-mh99-v99m-4gvg",
+      "surfaces": [
+        "electron",
+        "nextjs"
+      ],
+      "representative_packages": [
+        "@eslint/config-array",
+        "@eslint/eslintrc",
+        "brace-expansion",
+        "eslint"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-rgw5-rvv9-x895",
+      "surfaces": [
+        "electron",
+        "nextjs"
+      ],
+      "representative_packages": [
+        "@eslint/config-array",
+        "@eslint/eslintrc",
+        "brace-expansion",
+        "eslint"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-q2hr-2g5m-vwhr",
+      "surfaces": [
+        "electron",
+        "nextjs"
+      ],
+      "representative_packages": [
+        "@eslint/config-array",
+        "@eslint/eslintrc",
+        "brace-expansion",
+        "eslint"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-qhr7-859c-m2p7",
+      "surfaces": [
+        "electron",
+        "nextjs"
+      ],
+      "representative_packages": [
+        "@eslint/config-array",
+        "@eslint/eslintrc",
+        "brace-expansion",
+        "eslint"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-6j4f-fj2g-mc7p",
+      "surfaces": [
+        "electron",
+        "nextjs"
+      ],
+      "representative_packages": [
+        "@eslint/config-array",
+        "@eslint/eslintrc",
+        "brace-expansion",
+        "eslint"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-r4w5-6pfg-jxp5",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "electron"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Transitive dependency advisory recorded at P02-G4 baseline. Upgrade deferred pending owning-major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-hq2x-r82h-9wj4",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "electron"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Transitive dependency advisory recorded at P02-G4 baseline. Upgrade deferred pending owning-major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-gr2m-v5gq-v685",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "electron"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Transitive dependency advisory recorded at P02-G4 baseline. Upgrade deferred pending owning-major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-j84w-jfhq-vhvj",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "electron"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Transitive dependency advisory recorded at P02-G4 baseline. Upgrade deferred pending owning-major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-9qh4-3jw8-366w",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "electron"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Transitive dependency advisory recorded at P02-G4 baseline. Upgrade deferred pending owning-major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-jmr9-qjv8-65gv",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "electron",
+        "extract-zip"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build-time Electron packaging chain. No untrusted archive input traverses the CI package-configuration path. Upgrade requires electron-builder major qualification with packaging regression. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-7pqw-9j4j-h8q3",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "electron",
+        "extract-zip"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build-time Electron packaging chain. No untrusted archive input traverses the CI package-configuration path. Upgrade requires electron-builder major qualification with packaging regression. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-ch52-4w7c-c8xp",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "http-cache-semantics"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-h67p-54hq-rp68",
+      "surfaces": [
+        "electron",
+        "nextjs"
+      ],
+      "representative_packages": [
+        "js-yaml"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-52cp-r559-cp3m",
+      "surfaces": [
+        "electron",
+        "nextjs"
+      ],
+      "representative_packages": [
+        "js-yaml"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-5p4m-2wfm-xmqj",
+      "surfaces": [
+        "electron",
+        "nextjs"
+      ],
+      "representative_packages": [
+        "js-yaml"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-2883-xcg3-v3hh",
+      "surfaces": [
+        "electron",
+        "nextjs"
+      ],
+      "representative_packages": [
+        "js-yaml"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-3ppc-4f35-3m26",
+      "surfaces": [
+        "electron",
+        "nextjs"
+      ],
+      "representative_packages": [
+        "@eslint/config-array",
+        "@eslint/eslintrc",
+        "eslint",
+        "minimatch"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build-time Electron packaging chain. No untrusted archive input traverses the CI package-configuration path. Upgrade requires electron-builder major qualification with packaging regression. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-7r86-cg39-jmmj",
+      "surfaces": [
+        "electron",
+        "nextjs"
+      ],
+      "representative_packages": [
+        "@eslint/config-array",
+        "@eslint/eslintrc",
+        "eslint",
+        "minimatch"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build-time Electron packaging chain. No untrusted archive input traverses the CI package-configuration path. Upgrade requires electron-builder major qualification with packaging regression. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-23c5-xmqv-rm74",
+      "surfaces": [
+        "electron",
+        "nextjs"
+      ],
+      "representative_packages": [
+        "@eslint/config-array",
+        "@eslint/eslintrc",
+        "eslint",
+        "minimatch"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build-time Electron packaging chain. No untrusted archive input traverses the CI package-configuration path. Upgrade requires electron-builder major qualification with packaging regression. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-68fv-2mgg-jv7q",
+      "surfaces": [
+        "electron",
+        "nextjs"
+      ],
+      "representative_packages": [
+        "source-map-js"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-vmf3-w455-68vh",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "tar"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build-time Electron packaging chain. No untrusted archive input traverses the CI package-configuration path. Upgrade requires electron-builder major qualification with packaging regression. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-w8wr-v893-vjvp",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "tar"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build-time Electron packaging chain. No untrusted archive input traverses the CI package-configuration path. Upgrade requires electron-builder major qualification with packaging regression. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-23hp-3jrh-7fpw",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "tar"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build-time Electron packaging chain. No untrusted archive input traverses the CI package-configuration path. Upgrade requires electron-builder major qualification with packaging regression. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-8x88-c5mf-7j5w",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "tar"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build-time Electron packaging chain. No untrusted archive input traverses the CI package-configuration path. Upgrade requires electron-builder major qualification with packaging regression. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-gvwx-54wh-qm9j",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "tar"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build-time Electron packaging chain. No untrusted archive input traverses the CI package-configuration path. Upgrade requires electron-builder major qualification with packaging regression. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-r292-9mhp-454m",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "tar"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build-time Electron packaging chain. No untrusted archive input traverses the CI package-configuration path. Upgrade requires electron-builder major qualification with packaging regression. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-ph9p-34f9-6g65",
+      "surfaces": [
+        "electron",
+        "nextjs"
+      ],
+      "representative_packages": [
+        "tmp"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build-time Electron packaging chain. No untrusted archive input traverses the CI package-configuration path. Upgrade requires electron-builder major qualification with packaging regression. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-vmh5-mc38-953g",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-p88m-4jfj-68fv",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-vxpw-j846-p89q",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-hm92-r4w5-c3mj",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-g8m3-5g58-fq7m",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-pr7r-676h-xcf6",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-8xcm-r25x-g524",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-4cwx-7wf7-3272",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-m8rv-5g2x-5cg5",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-jr45-8vmc-qm54",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-v3r7-h72x-cjcm",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-35p6-xmwp-9g52",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-3wwx-pv8p-q78v",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-pmjh-fq2x-6v4x",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-r53p-7pc4-xj5r",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-rfgv-xxqx-mfg5",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-3xpg-4rpp-hhhm",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-2jfj-6hjv-fm6j",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-2gqq-gqf2-x968",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-w293-vg96-wgc3",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-8436-99hf-9mmv",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-rx4f-c7p8-82vq",
+      "surfaces": [
+        "electron"
+      ],
+      "representative_packages": [
+        "undici"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "HTTP client transitive. No donor application endpoint is contacted by default under Gomrey identity. Non-breaking audit fixes are preferred; full upgrade deferred to P15 with network-policy tests."
+    },
+    {
+      "id": "GHSA-vfj7-8cjw-p6xm",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "@next/eslint-plugin-next",
+        "braces",
+        "chokidar",
+        "eslint-config-next"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-c83g-rgw3-j3cx",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "browserslist"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-73wf-gq98-2v4g",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "browserslist"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-5j98-mcp5-4vw2",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "glob"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-22p9-wv53-3rq4",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "linkify-it"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-v245-v573-v5vm",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "linkify-it"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-r5fr-rjxr-66jc",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "lodash-es"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-f23m-r3pf-42rh",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "lodash-es"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-xxjr-mmjv-4gpg",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "lodash-es"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-28wg-ghj8-5hjv",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "nanoid"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-2v37-7h3g-55p8",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "nanoid"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-xwg4-73v4-xw9w",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "nanoid"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-6gpp-xcg3-4w24",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "next"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Transitive dependency advisory recorded at P02-G4 baseline. Upgrade deferred pending owning-major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-m99w-x7hq-7vfj",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "next"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Transitive dependency advisory recorded at P02-G4 baseline. Upgrade deferred pending owning-major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-89xv-2m56-2m9x",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "next"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Transitive dependency advisory recorded at P02-G4 baseline. Upgrade deferred pending owning-major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-68g3-v927-f742",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "next"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Transitive dependency advisory recorded at P02-G4 baseline. Upgrade deferred pending owning-major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-4633-3j49-mh5q",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "next"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Transitive dependency advisory recorded at P02-G4 baseline. Upgrade deferred pending owning-major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-4c39-4ccg-62r3",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "next"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Transitive dependency advisory recorded at P02-G4 baseline. Upgrade deferred pending owning-major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-p9j2-gv94-2wf4",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "next"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Transitive dependency advisory recorded at P02-G4 baseline. Upgrade deferred pending owning-major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-q8wf-6r8g-63ch",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "next"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Transitive dependency advisory recorded at P02-G4 baseline. Upgrade deferred pending owning-major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-955p-x3mx-jcvp",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "next"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Transitive dependency advisory recorded at P02-G4 baseline. Upgrade deferred pending owning-major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-p293-qw3h-jr36",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "next"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Transitive dependency advisory recorded at P02-G4 baseline. Upgrade deferred pending owning-major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-2xp9-vwfh-vxw4",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "next"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Transitive dependency advisory recorded at P02-G4 baseline. Upgrade deferred pending owning-major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-vcvr-r3jv-pc5j",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "next"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Transitive dependency advisory recorded at P02-G4 baseline. Upgrade deferred pending owning-major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-qx2v-qp2m-jg93",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "next",
+        "postcss"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-6g55-p6wh-862q",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "next",
+        "postcss"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-fxqj-rqcc-2cmp",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "next",
+        "postcss"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-r28c-9q8g-f849",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "next",
+        "postcss"
+      ],
+      "max_severity": "critical",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-3v7f-55p6-f55p",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "picomatch"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-c2c7-rcm5-vvqj",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "picomatch"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    },
+    {
+      "id": "GHSA-c8x8-7fp4-3x9w",
+      "surfaces": [
+        "nextjs"
+      ],
+      "representative_packages": [
+        "prosemirror-view"
+      ],
+      "max_severity": "high",
+      "first_seen": "2026-10-07",
+      "review_by": "2027-04-05",
+      "owner": "P15-hardening",
+      "rationale": "Build/dev-tooling or framework transitive. Not reachable from the production request path without a separate trigger. Upgrade rides with the owning Next/Electron major qualification. Re-evaluate in P15 hardening."
+    }
+  ]
+}

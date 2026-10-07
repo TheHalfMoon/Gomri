@@ -143,3 +143,175 @@ jobs:
 
       - name: Test Electron app path migration
         run: npm run test:path-migration
+
+  g4-baseline:
+    name: G4 engineering baseline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Run root contract tests
+        run: npm test
+
+      - name: Validate platform-support matrix
+        run: node scripts/check-platform-support.mjs
+
+      - name: Validate release configuration dry-run
+        run: node scripts/validate-release-config.mjs
+
+      - name: Validate release manifest binding
+        run: node scripts/generate-release-manifest.mjs --check-only
+
+      - name: Validate fixture policy
+        run: node scripts/check-fixtures.mjs
+
+      - name: Generate SBOMs without omission
+        run: node scripts/generate-sbom.mjs
+
+  security-baseline:
+    name: Security baseline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Secret scan of repository-owned changes
+        run: node scripts/scan-secrets.mjs
+
+      - name: Audit root dependencies
+        run: |
+          npm audit --audit-level=high --json > /tmp/gomrey-audit-root.json
+          node scripts/check-dependency-audit.mjs root /tmp/gomrey-audit-root.json
+
+      - name: Audit Electron dependencies
+        run: |
+          npm audit --prefix electron --audit-level=high --json > /tmp/gomrey-audit-electron.json
+          node scripts/check-dependency-audit.mjs electron /tmp/gomrey-audit-electron.json
+
+      - name: Audit Next.js dependencies
+        run: |
+          npm audit --prefix servers/nextjs --audit-level=high --json > /tmp/gomrey-audit-nextjs.json
+          node scripts/check-dependency-audit.mjs nextjs /tmp/gomrey-audit-nextjs.json
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: servers/fastapi/uv.lock
+
+      - name: Verify Python lockfile is pinned
+        working-directory: servers/fastapi
+        run: uv sync --locked --dev
+
+      - name: Audit Python dependencies with pip-audit
+        working-directory: servers/fastapi
+        run: uv run --with pip-audit pip-audit --desc --local
+
+  sbom-baseline:
+    name: SBOM baseline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Generate deterministic SBOMs
+        run: node scripts/generate-sbom.mjs
+
+      - name: Generate release manifest binding
+        run: |
+          mkdir -p dist
+          node scripts/generate-release-manifest.mjs > dist/release-manifest.json
+          node scripts/generate-release-manifest.mjs --check-only
+
+      - name: Upload SBOM and release manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: gomrey-sbom-release-baseline
+          path: |
+            sbom/*.cdx.json
+            sbom/manifest.json
+            dist/release-manifest.json
+          if-no-files-found: error
+
+  qualify-windows:
+    name: Qualify Windows (bounded)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Run root contract tests
+        run: npm test
+
+      - name: Validate platform-support matrix
+        run: node scripts/check-platform-support.mjs
+
+      - name: Validate release configuration dry-run
+        run: node scripts/validate-release-config.mjs
+
+  qualify-macos:
+    name: Qualify macOS (bounded)
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Run root contract tests
+        run: npm test
+
+      - name: Validate platform-support matrix
+        run: node scripts/check-platform-support.mjs
+
+      - name: Validate release configuration dry-run
+        run: node scripts/validate-release-config.mjs

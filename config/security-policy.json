@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "policy": "Deterministic public-CI security gates. No hidden SaaS correctness dependency. Findings fail visibly unless explicitly allowlisted with rationale, expiry, and owner.",
+  "static_checks": {
+    "secret_scan": {
+      "script": "scripts/scan-secrets.mjs",
+      "mode": "deterministic-regex",
+      "scope": "repository-owned tracked files; donor, provenance, evidence, and lockfile paths excluded by explicit policy",
+      "gate": "fail on any non-allowlisted credential-like match"
+    },
+    "donor_publish_guard": {
+      "script": "scripts/validate-release-config.mjs",
+      "gate": "fail when Gomrey release automation targets donor-owned repositories, buckets, or image namespaces"
+    },
+    "lockfile_pin": {
+      "gate": "fail when a shipped JS/TS surface lacks package-lock.json or the Python surface lacks uv.lock, or when uv sync --locked is not enforced in CI"
+    }
+  },
+  "dependency_vulnerability": {
+    "js_tool": "npm audit --audit-level=high --json (per surface: root, electron, servers/nextjs)",
+    "python_tool": "pip-audit against servers/fastapi/uv.lock (OSV, no credentials)",
+    "severity_policy": {
+      "critical": "fail unless the exact advisory is allowlisted with rationale and unexpired review date",
+      "high": "fail unless the exact advisory is allowlisted with rationale and unexpired review date",
+      "moderate": "reported; must be triaged before P15 hardening",
+      "low": "reported"
+    },
+    "allowlist": "config/security-allowlist.json",
+    "allowlist_process": "Additions require advisory URL/ID, affected surface, rationale (why immediate upgrade is unsafe or inapplicable), expiry date no more than 180 days out, and owner. Expired or stale entries fail the gate. P15 tightens moderate handling and re-evaluates every high/critical."
+  }
+}

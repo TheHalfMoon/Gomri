@@ -1,7 +1,7 @@
 {
   "name": "gomrey",
   "productName": "Gomrey",
-  "version": "0.9.11-beta",
+  "version": "0.1.0",
   "exportVersion": "v1.0.34",
   "exportChromiumBuildId": "149.0.7827.196",
   "exportMacChromiumBuildIds": {
