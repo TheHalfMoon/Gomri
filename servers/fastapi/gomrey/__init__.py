@@ -33,6 +33,9 @@ without migrating the imported database or rewriting the editor.
 - ocr_worker: P06-G3 OCR region contracts (bbox/rotation/confidence
   provenance), Unicode script/direction analysis, frozen Arabic P0
   suite, honest escalation observations. Pure logic, no models.
+- ir_provenance: P06-G4 IR assembly with unbroken provenance chains and
+  the P04-ledger coverage gate (silent drops fail loudly, partials carry
+  coordinates). Pure logic.
 - adapters: pure read-only functions projecting imported Presenton rows
   (PresentationModel/SlideModel) into Gomrey contract records.
 - jobs: durable job kernel (P04-G1) with zero database and network needs.
@@ -139,6 +142,7 @@ from gomrey.ocr_worker import (
     quality_observations,
     script_profile,
 )
+from gomrey.ir_provenance import assemble_ir, verify_coverage
 from gomrey.parser_router import (
     BenchmarkCase,
     BenchmarkRun,
@@ -214,6 +218,7 @@ __all__ = [
     "admit_source",
     "admit_worker",
     "authorize_fetch",
+    "assemble_ir",
     "backoff_seconds",
     "can_access",
     "check_arabic_case",
@@ -261,4 +266,5 @@ __all__ = [
     "transition_trust",
     "validate_intermediate",
     "validate_redirect_chain",
+    "verify_coverage",
 ]
