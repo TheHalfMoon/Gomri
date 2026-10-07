@@ -36,6 +36,9 @@ without migrating the imported database or rewriting the editor.
 - ir_provenance: P06-G4 IR assembly with unbroken provenance chains and
   the P04-ledger coverage gate (silent drops fail loudly, partials carry
   coordinates). Pure logic.
+- web_acquisition: P07-G1 bounded crawl contracts (explicit scope,
+  depth/page budgets, snapshot records, robots/terms decisions). Pure
+  logic, never fetches.
 - adapters: pure read-only functions projecting imported Presenton rows
   (PresentationModel/SlideModel) into Gomrey contract records.
 - jobs: durable job kernel (P04-G1) with zero database and network needs.
@@ -143,6 +146,14 @@ from gomrey.ocr_worker import (
     script_profile,
 )
 from gomrey.ir_provenance import assemble_ir, verify_coverage
+from gomrey.web_acquisition import (
+    CrawlPlan,
+    CrawlScope,
+    acquisition_policy,
+    admit_child,
+    page_snapshot,
+    plan_crawl,
+)
 from gomrey.parser_router import (
     BenchmarkCase,
     BenchmarkRun,
@@ -180,6 +191,8 @@ __all__ = [
     "BlobStore",
     "BudgetExhausted",
     "CanonicalStore",
+    "CrawlPlan",
+    "CrawlScope",
     "DuplicateDeclaration",
     "DurableJob",
     "IdempotencyLedger",
@@ -215,6 +228,8 @@ __all__ = [
     "WorkerAuthorization",
     "WorkerEnvelope",
     "WorkspaceRecord",
+    "acquisition_policy",
+    "admit_child",
     "admit_source",
     "admit_worker",
     "authorize_fetch",
@@ -241,6 +256,8 @@ __all__ = [
     "normalize_path",
     "normalized_fetch_result",
     "owner_to_scope",
+    "page_snapshot",
+    "plan_crawl",
     "preflight",
     "presentation_to_artifact",
     "presentation_to_revision",
