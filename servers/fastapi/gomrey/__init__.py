@@ -22,6 +22,10 @@ without migrating the imported database or rewriting the editor.
 - parser_boundary: P05-G4 quarantine exit (parser adapter contract,
   normalization gate, trusted IR release, taint markers, sensitivity
   hooks, revocation receipts). Pure logic, no trusted mutation.
+- parser_router: P06-G1 ensemble contracts (deterministic preflight and
+  workload classification, bounded second-parser routing, explicit
+  disagreement reconciliation, Source IR emission, benchmark scoring).
+  Pure logic, no models, no network.
 - adapters: pure read-only functions projecting imported Presenton rows
   (PresentationModel/SlideModel) into Gomrey contract records.
 - jobs: durable job kernel (P04-G1) with zero database and network needs.
@@ -110,6 +114,21 @@ from gomrey.parser_boundary import (
     taint_content,
     validate_intermediate,
 )
+from gomrey.parser_router import (
+    BenchmarkCase,
+    BenchmarkRun,
+    BenchmarkScore,
+    Preflight,
+    Reconciliation,
+    Route,
+    check_second_parser_budget,
+    classify_workload,
+    preflight,
+    reconcile_units,
+    route,
+    score_run,
+    to_source_ir,
+)
 from gomrey.remote_gateway import (
     UrlVerdict,
     authorize_fetch,
@@ -121,6 +140,9 @@ from gomrey.remote_gateway import (
 from gomrey.seams import BlobStore, CanonicalStore, MemoryBlobStore, MemoryCanonicalStore
 
 __all__ = [
+    "BenchmarkCase",
+    "BenchmarkRun",
+    "BenchmarkScore",
     "AdmissionError",
     "AdmissionReceipt",
     "ArtifactRecord",
@@ -140,10 +162,13 @@ __all__ = [
     "NarrativeSection",
     "ParserAdapter",
     "ParserIntermediate",
+    "Preflight",
     "Principal",
     "QuarantinedView",
+    "Reconciliation",
     "ResourceBudget",
     "RevocationReceipt",
+    "Route",
     "SourceArtifactRecord",
     "SourceUnitRecord",
     "StageAttemptRecord",
@@ -159,9 +184,11 @@ __all__ = [
     "backoff_seconds",
     "can_access",
     "check_archive_entry",
+    "check_second_parser_budget",
     "classify_failure",
     "classify_sensitivity",
     "classify_url",
+    "classify_workload",
     "content_identity",
     "deny_active_content",
     "enforce_file_budgets",
@@ -172,20 +199,25 @@ __all__ = [
     "normalize_path",
     "normalized_fetch_result",
     "owner_to_scope",
+    "preflight",
     "presentation_to_artifact",
     "presentation_to_revision",
     "progress_event",
     "promote_to_trusted",
     "reconcile",
     "reconcile_mime",
+    "reconcile_units",
     "revoke_source",
+    "route",
     "run_parser",
     "scan_active_content",
+    "score_run",
     "select_parser",
     "should_retry",
     "slides_to_narrative",
     "sniff_mime",
     "taint_content",
+    "to_source_ir",
     "transition",
     "transition_trust",
     "validate_intermediate",
