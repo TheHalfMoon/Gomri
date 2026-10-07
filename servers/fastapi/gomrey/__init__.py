@@ -62,6 +62,9 @@ without migrating the imported database or rewriting the editor.
 - verification: P09-G2 deterministic verdicts with quantity/date
   agreement checks and a provider seam that can never overrule hard
   policy. Pure logic, no model calls.
+- decisions: P09-G3 support graphs, traceable synthesis over verified
+  claims, calibration registry with deterministic fallback, and
+  disagreement adjudication. Pure logic, no generation.
 - adapters: pure read-only functions projecting imported Presenton rows
   (PresentationModel/SlideModel) into Gomrey contract records.
 - jobs: durable job kernel (P04-G1) with zero database and network needs.
@@ -256,6 +259,24 @@ from gomrey.remote_gateway import (
     normalized_fetch_result,
     validate_redirect_chain,
 )
+from gomrey.decisions import (
+    DECISION_STATUSES,
+    EDGE_RELATIONS,
+    NODE_KINDS,
+    Decision,
+    DecisionStore,
+    GraphEdge,
+    GraphNode,
+    MemoryDecisionStore,
+    SupportGraph,
+    adjudicate,
+    build_graph,
+    graph_digest,
+    make_decision,
+    register_profile,
+    route_workload,
+    synthesize,
+)
 from gomrey.verification import STANCES, VERDICTS, check_quantity_agreement, verify_claim
 from gomrey.seams import BlobStore, CanonicalStore, MemoryBlobStore, MemoryCanonicalStore
 
@@ -278,10 +299,16 @@ __all__ = [
     "CrawlPlan",
     "CrawlScope",
     "CredentialHandle",
+    "DECISION_STATUSES",
     "DERIVATION_KINDS",
     "DuplicateDeclaration",
     "DurableJob",
+    "Decision",
+    "DecisionStore",
+    "EDGE_RELATIONS",
     "EvidenceBundle",
+    "GraphEdge",
+    "GraphNode",
     "IdempotencyLedger",
     "IllegalTransition",
     "IllegalTrustTransition",
@@ -293,7 +320,9 @@ __all__ = [
     "MemoryBlobStore",
     "MemoryCanonicalStore",
     "MemoryClaimStore",
+    "MemoryDecisionStore",
     "NarrativeSection",
+    "NODE_KINDS",
     "OCRRegion",
     "ParserAdapter",
     "ParserIntermediate",
@@ -310,6 +339,7 @@ __all__ = [
     "SourceArtifactRecord",
     "SourceUnitRecord",
     "StageAttemptRecord",
+    "SupportGraph",
     "SyncCursor",
     "SyncReceipt",
     "TempLease",
@@ -335,9 +365,11 @@ __all__ = [
     "apply_sync",
     "authorize_fetch",
     "assemble_ir",
+    "adjudicate",
     "backoff_seconds",
     "bind_claim_to_bundle",
     "build_bundle",
+    "build_graph",
     "bundle_digest",
     "can_access",
     "check_arabic_case",
@@ -362,6 +394,7 @@ __all__ = [
     "file_admission_report",
     "freshness",
     "fuse",
+    "graph_digest",
     "is_duplicate",
     "is_trusted",
     "issue_handle",
@@ -370,6 +403,7 @@ __all__ = [
     "map_ocr_regions",
     "make_claim",
     "map_structured_output",
+    "make_decision",
     "make_locator",
     "media_aligned_to_units",
     "media_span",
@@ -390,7 +424,9 @@ __all__ = [
     "reconcile_mime",
     "reconcile_units",
     "refresh_handle",
+    "register_profile",
     "resolve",
+    "route_workload",
     "revoke_source",
     "retrieve",
     "route",
@@ -404,6 +440,7 @@ __all__ = [
     "sniff_mime",
     "sufficiency_check",
     "sync_backoff_seconds",
+    "synthesize",
     "sync_changes_to_units",
     "taint_content",
     "to_source_ir",
