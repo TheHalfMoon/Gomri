@@ -12,6 +12,8 @@ without migrating the imported database or rewriting the editor.
   (PresentationModel/SlideModel) into Gomrey contract records.
 - jobs: durable job kernel (P04-G1) with zero database and network needs.
 - accounting: source-unit ledger enforcing the no-silent-loss invariant.
+- budgets: resource caps, progress events, and unknown-outcome
+  reconciliation that never upgrades by assumption.
 
 Canonical vs rebuildable rule: records validated here are canonical state.
 Embeddings, thumbnails, search facets, and rendered previews derived from
@@ -23,6 +25,12 @@ from gomrey.accounting import (
     DuplicateDeclaration,
     UnitLedger,
     UnknownUnit,
+)
+from gomrey.budgets import (
+    BudgetExhausted,
+    ResourceBudget,
+    progress_event,
+    reconcile,
 )
 from gomrey.adapters import (
     owner_to_scope,
@@ -56,6 +64,7 @@ __all__ = [
     "ArtifactRecord",
     "ArtifactRevisionRecord",
     "BlobStore",
+    "BudgetExhausted",
     "CanonicalStore",
     "DuplicateDeclaration",
     "DurableJob",
@@ -66,6 +75,7 @@ __all__ = [
     "MemoryBlobStore",
     "MemoryCanonicalStore",
     "NarrativeSection",
+    "ResourceBudget",
     "SourceArtifactRecord",
     "SourceUnitRecord",
     "StageAttemptRecord",
@@ -77,6 +87,8 @@ __all__ = [
     "owner_to_scope",
     "presentation_to_artifact",
     "presentation_to_revision",
+    "progress_event",
+    "reconcile",
     "should_retry",
     "slides_to_narrative",
     "transition",
