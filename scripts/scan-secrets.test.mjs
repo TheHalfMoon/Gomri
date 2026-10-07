@@ -18,5 +18,6 @@ test("secret scanner ignores placeholders and excluded provenance paths", () => 
   assert.ok(isExcluded("docs/evidence/P01_PRESENTON_IMPORT.md"));
   assert.ok(isExcluded("package-lock.json"));
   assert.ok(isExcluded("servers/fastapi/uv.lock"));
+  assert.ok(isExcluded("scripts/scan-secrets.test.mjs"));
   assert.ok(!isExcluded("config/release-baseline.json"));
 });

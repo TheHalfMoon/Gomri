@@ -199,17 +199,17 @@ jobs:
 
       - name: Audit root dependencies
         run: |
-          npm audit --audit-level=high --json > /tmp/gomrey-audit-root.json
+          npm audit --audit-level=high --json > /tmp/gomrey-audit-root.json || true
           node scripts/check-dependency-audit.mjs root /tmp/gomrey-audit-root.json
 
       - name: Audit Electron dependencies
         run: |
-          npm audit --prefix electron --audit-level=high --json > /tmp/gomrey-audit-electron.json
+          npm audit --prefix electron --audit-level=high --json > /tmp/gomrey-audit-electron.json || true
           node scripts/check-dependency-audit.mjs electron /tmp/gomrey-audit-electron.json
 
       - name: Audit Next.js dependencies
         run: |
-          npm audit --prefix servers/nextjs --audit-level=high --json > /tmp/gomrey-audit-nextjs.json
+          npm audit --prefix servers/nextjs --audit-level=high --json > /tmp/gomrey-audit-nextjs.json || true
           node scripts/check-dependency-audit.mjs nextjs /tmp/gomrey-audit-nextjs.json
 
       - name: Set up Python

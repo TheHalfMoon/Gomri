@@ -65,6 +65,26 @@ P16 owns GA versioning.
 - TypeSafe Jev `jev-1.13.0`: material-blocker signal **0.24**; risk triage selects `SECURITY` (0.88, confidence 0.84) for the allowlisted highs with P15 remediation, so exact-head CI remains the mandatory merge gate.
 - PStack: no PStack skill or command is installed in this execution environment; `PSTACK_NOT_EXECUTED` is recorded and all other safe work continues.
 
+## Exact-head CI repairs (same PR, second commit)
+
+Exact-head CI on `c07d26b` found two real issues, both repaired without
+weakening any gate:
+
+1. **Windows CRLF portability** — the bounded `qualify-windows` job proved its
+   value immediately: `package-metadata.test.mjs` asserted a LF-only
+   `docker-compose.yml` volumes pattern, but Windows checks out CRLF, so 42/43
+   passed. The pattern is now CRLF-tolerant (`\r?\n`). macOS passed; Linux
+   passed.
+2. **Secret-scanner self-coverage** — `security-baseline` correctly failed on
+   the scanner's own synthetic validation strings in
+   `scripts/scan-secrets.test.mjs`. The scanner now excludes that one file by
+   documented basename, with a unit assertion locking the behavior. The
+   fixture checker already allowlisted the same path.
+3. **Audit gating order** — `npm audit` exits non-zero when findings exist, so
+   the workflow gates with `|| true` on the audit capture and lets
+   `check-dependency-audit.mjs` (allowlist + expiry + staleness) be the
+   deterministic merge gate instead of the raw audit exit code.
+
 ## Exact-head requirement
 
 - Root repository suite: new G4 contract tests included in `npm test`.

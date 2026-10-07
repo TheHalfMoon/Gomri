@@ -39,6 +39,9 @@ const EXCLUDED_FILES = [
   "NOTICE",
   "P02_G3C_STORE_ARTWORK.md",
   "P02_G3B_PACKAGE_IDENTITY.md",
+  // Intentional synthetic scanner-validation strings with no real credential
+  // value; required to prove the scanner detects credential-like material.
+  "scan-secrets.test.mjs",
 ];
 
 const EXCLUDED_PREFIXES = ["docs/donors/", "docs/evidence/", "readme_assets/"];
