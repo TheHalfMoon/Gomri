@@ -51,6 +51,8 @@ without migrating the imported database or rewriting the editor.
 - retrieval_pipeline: P08-G1 layered retrieval (ACL-first filter, exact
   boost, lexical channel, explicit fusion, freshness and diversity
   constraints). Pure logic, no index servers.
+- citations: P08-G2 locators per source family plus a resolver that
+  fails loudly on unresolvable IDs. Pure logic.
 - adapters: pure read-only functions projecting imported Presenton rows
   (PresentationModel/SlideModel) into Gomrey contract records.
 - jobs: durable job kernel (P04-G1) with zero database and network needs.
@@ -201,6 +203,7 @@ from gomrey.retrieval_pipeline import (
     lexical_overlap,
     retrieve,
 )
+from gomrey.citations import BrokenCitation, citation_id, make_locator, resolve
 from gomrey.parser_router import (
     BenchmarkCase,
     BenchmarkRun,
@@ -230,6 +233,7 @@ __all__ = [
     "BenchmarkCase",
     "BenchmarkRun",
     "BenchmarkScore",
+    "BrokenCitation",
     "AdmissionError",
     "AdmissionReceipt",
     "ARABIC_P0_CASES",
@@ -297,6 +301,7 @@ __all__ = [
     "check_archive_entry",
     "check_qualification",
     "check_second_parser_budget",
+    "citation_id",
     "classify_failure",
     "classify_sensitivity",
     "classify_url",
@@ -318,6 +323,7 @@ __all__ = [
     "map_acl",
     "map_ocr_regions",
     "map_structured_output",
+    "make_locator",
     "media_aligned_to_units",
     "media_span",
     "normalize_path",
@@ -336,6 +342,7 @@ __all__ = [
     "reconcile_mime",
     "reconcile_units",
     "refresh_handle",
+    "resolve",
     "revoke_source",
     "retrieve",
     "route",
