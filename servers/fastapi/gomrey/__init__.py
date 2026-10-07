@@ -16,6 +16,9 @@ without migrating the imported database or rewriting the editor.
 - file_boundary: P05-G2 hostile file handling (path containment, MIME
   reconciliation, shared-budget enforcement, archive entry validation,
   active-content denial, temp lifecycle). Pure logic, no writes.
+- remote_gateway: P05-G3 safe URL policy (scheme/credential denial,
+  literal-IP SSRF classification, DNS pinning contract, redirect bounds,
+  remote budgets, tainted fetch contract). Pure logic, never fetches.
 - adapters: pure read-only functions projecting imported Presenton rows
   (PresentationModel/SlideModel) into Gomrey contract records.
 - jobs: durable job kernel (P04-G1) with zero database and network needs.
@@ -91,6 +94,14 @@ from gomrey.contracts import (
     StageAttemptRecord,
     WorkspaceRecord,
 )
+from gomrey.remote_gateway import (
+    UrlVerdict,
+    authorize_fetch,
+    classify_url,
+    enforce_remote_budgets,
+    normalized_fetch_result,
+    validate_redirect_chain,
+)
 from gomrey.seams import BlobStore, CanonicalStore, MemoryBlobStore, MemoryCanonicalStore
 
 __all__ = [
@@ -120,19 +131,24 @@ __all__ = [
     "TempLeaseRegistry",
     "UnitLedger",
     "UnknownUnit",
+    "UrlVerdict",
     "WorkspaceRecord",
     "admit_source",
+    "authorize_fetch",
     "backoff_seconds",
     "can_access",
     "check_archive_entry",
     "classify_failure",
+    "classify_url",
     "content_identity",
     "deny_active_content",
     "enforce_file_budgets",
+    "enforce_remote_budgets",
     "file_admission_report",
     "is_duplicate",
     "is_trusted",
     "normalize_path",
+    "normalized_fetch_result",
     "owner_to_scope",
     "presentation_to_artifact",
     "presentation_to_revision",
@@ -146,4 +162,5 @@ __all__ = [
     "sniff_mime",
     "transition",
     "transition_trust",
+    "validate_redirect_chain",
 ]
