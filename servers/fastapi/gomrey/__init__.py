@@ -1,5 +1,6 @@
-"""Gomrey-owned P03 storage contracts and seams, plus the P04 durable
-job kernel and source-unit accounting ledger.
+"""Gomrey-owned P03 storage contracts and seams, the P04 durable
+job kernel and source-unit accounting ledger, and the P05 source
+gateway admission boundary.
 
 This package introduces Gomrey-owned domain contracts behind narrow seams
 without migrating the imported database or rewriting the editor.
@@ -8,6 +9,10 @@ without migrating the imported database or rewriting the editor.
   storage-relevant models. No SQLAlchemy, no engine, no network.
 - seams: CanonicalStore and BlobStore protocols plus deterministic
   in-memory implementations used by tests and future adapters.
+- gateway: P05-G1 admission (source identity, trust lifecycle, access
+  boundary, structured errors, dedup identity). Admission always lands in
+  quarantined; only the explicit trust machine can reach
+  trusted-for-retrieval.
 - adapters: pure read-only functions projecting imported Presenton rows
   (PresentationModel/SlideModel) into Gomrey contract records.
 - jobs: durable job kernel (P04-G1) with zero database and network needs.
@@ -38,6 +43,19 @@ from gomrey.adapters import (
     presentation_to_revision,
     slides_to_narrative,
 )
+from gomrey.gateway import (
+    AdmissionError,
+    AdmissionReceipt,
+    IllegalTrustTransition,
+    Principal,
+    admit_source,
+    can_access,
+    content_identity,
+    is_duplicate,
+    is_trusted,
+    select_parser,
+    transition_trust,
+)
 from gomrey.jobs import (
     DurableJob,
     IdempotencyLedger,
@@ -61,6 +79,8 @@ from gomrey.contracts import (
 from gomrey.seams import BlobStore, CanonicalStore, MemoryBlobStore, MemoryCanonicalStore
 
 __all__ = [
+    "AdmissionError",
+    "AdmissionReceipt",
     "ArtifactRecord",
     "ArtifactRevisionRecord",
     "BlobStore",
@@ -70,11 +90,13 @@ __all__ = [
     "DurableJob",
     "IdempotencyLedger",
     "IllegalTransition",
+    "IllegalTrustTransition",
     "IngestionManifestRecord",
     "JobRecord",
     "MemoryBlobStore",
     "MemoryCanonicalStore",
     "NarrativeSection",
+    "Principal",
     "ResourceBudget",
     "SourceArtifactRecord",
     "SourceUnitRecord",
@@ -82,14 +104,21 @@ __all__ = [
     "UnitLedger",
     "UnknownUnit",
     "WorkspaceRecord",
+    "admit_source",
     "backoff_seconds",
+    "can_access",
     "classify_failure",
+    "content_identity",
+    "is_duplicate",
+    "is_trusted",
     "owner_to_scope",
     "presentation_to_artifact",
     "presentation_to_revision",
     "progress_event",
     "reconcile",
+    "select_parser",
     "should_retry",
     "slides_to_narrative",
     "transition",
+    "transition_trust",
 ]
