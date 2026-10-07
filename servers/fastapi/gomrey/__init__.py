@@ -19,6 +19,9 @@ without migrating the imported database or rewriting the editor.
 - remote_gateway: P05-G3 safe URL policy (scheme/credential denial,
   literal-IP SSRF classification, DNS pinning contract, redirect bounds,
   remote budgets, tainted fetch contract). Pure logic, never fetches.
+- parser_boundary: P05-G4 quarantine exit (parser adapter contract,
+  normalization gate, trusted IR release, taint markers, sensitivity
+  hooks, revocation receipts). Pure logic, no trusted mutation.
 - adapters: pure read-only functions projecting imported Presenton rows
   (PresentationModel/SlideModel) into Gomrey contract records.
 - jobs: durable job kernel (P04-G1) with zero database and network needs.
@@ -94,6 +97,19 @@ from gomrey.contracts import (
     StageAttemptRecord,
     WorkspaceRecord,
 )
+from gomrey.parser_boundary import (
+    ParserAdapter,
+    ParserIntermediate,
+    QuarantinedView,
+    RevocationReceipt,
+    TrustedRelease,
+    classify_sensitivity,
+    promote_to_trusted,
+    revoke_source,
+    run_parser,
+    taint_content,
+    validate_intermediate,
+)
 from gomrey.remote_gateway import (
     UrlVerdict,
     authorize_fetch,
@@ -122,13 +138,18 @@ __all__ = [
     "MemoryBlobStore",
     "MemoryCanonicalStore",
     "NarrativeSection",
+    "ParserAdapter",
+    "ParserIntermediate",
     "Principal",
+    "QuarantinedView",
     "ResourceBudget",
+    "RevocationReceipt",
     "SourceArtifactRecord",
     "SourceUnitRecord",
     "StageAttemptRecord",
     "TempLease",
     "TempLeaseRegistry",
+    "TrustedRelease",
     "UnitLedger",
     "UnknownUnit",
     "UrlVerdict",
@@ -139,6 +160,7 @@ __all__ = [
     "can_access",
     "check_archive_entry",
     "classify_failure",
+    "classify_sensitivity",
     "classify_url",
     "content_identity",
     "deny_active_content",
@@ -153,14 +175,19 @@ __all__ = [
     "presentation_to_artifact",
     "presentation_to_revision",
     "progress_event",
+    "promote_to_trusted",
     "reconcile",
     "reconcile_mime",
+    "revoke_source",
+    "run_parser",
     "scan_active_content",
     "select_parser",
     "should_retry",
     "slides_to_narrative",
     "sniff_mime",
+    "taint_content",
     "transition",
     "transition_trust",
+    "validate_intermediate",
     "validate_redirect_chain",
 ]
