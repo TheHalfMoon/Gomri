@@ -39,6 +39,9 @@ without migrating the imported database or rewriting the editor.
 - web_acquisition: P07-G1 bounded crawl contracts (explicit scope,
   depth/page budgets, snapshot records, robots/terms decisions). Pure
   logic, never fetches.
+- media_pipeline: P07-G2 media contracts (validated timelines,
+  transcript/visual alignment with explicit gaps, timestamp spans,
+  degraded-mode labels). Pure logic, no media I/O.
 - adapters: pure read-only functions projecting imported Presenton rows
   (PresentationModel/SlideModel) into Gomrey contract records.
 - jobs: durable job kernel (P04-G1) with zero database and network needs.
@@ -154,6 +157,15 @@ from gomrey.web_acquisition import (
     page_snapshot,
     plan_crawl,
 )
+from gomrey.media_pipeline import (
+    MediaTimeline,
+    SceneSegment,
+    TranscriptSegment,
+    align_transcript_visual,
+    degraded_modes,
+    media_span,
+    validate_timeline,
+)
 from gomrey.parser_router import (
     BenchmarkCase,
     BenchmarkRun,
@@ -202,6 +214,7 @@ __all__ = [
     "JobRecord",
     "KNOWN_WORKERS",
     "LITEPARSE_BASELINE",
+    "MediaTimeline",
     "MemoryBlobStore",
     "MemoryCanonicalStore",
     "NarrativeSection",
@@ -216,11 +229,13 @@ __all__ = [
     "ResourceBudget",
     "RevocationReceipt",
     "Route",
+    "SceneSegment",
     "SourceArtifactRecord",
     "SourceUnitRecord",
     "StageAttemptRecord",
     "TempLease",
     "TempLeaseRegistry",
+    "TranscriptSegment",
     "TrustedRelease",
     "UnitLedger",
     "UnknownUnit",
@@ -228,6 +243,7 @@ __all__ = [
     "WorkerAuthorization",
     "WorkerEnvelope",
     "WorkspaceRecord",
+    "align_transcript_visual",
     "acquisition_policy",
     "admit_child",
     "admit_source",
@@ -246,6 +262,7 @@ __all__ = [
     "classify_workload",
     "content_identity",
     "deny_active_content",
+    "degraded_modes",
     "enforce_file_budgets",
     "enforce_remote_budgets",
     "file_admission_report",
@@ -253,6 +270,7 @@ __all__ = [
     "is_trusted",
     "map_ocr_regions",
     "map_structured_output",
+    "media_span",
     "normalize_path",
     "normalized_fetch_result",
     "owner_to_scope",
@@ -283,5 +301,6 @@ __all__ = [
     "transition_trust",
     "validate_intermediate",
     "validate_redirect_chain",
+    "validate_timeline",
     "verify_coverage",
 ]
