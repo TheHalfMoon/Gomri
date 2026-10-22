@@ -1,0 +1,245 @@
+{
+  "source": {
+    "repository": "https://github.com/0xRafie/nextslide",
+    "revision": "90a46f933b3056d27460400c915ef268a9ec3f56",
+    "license": "MIT \u2014 Copyright (c) 2026 Danish Rafie Ekaputra",
+    "source_path": "STYLE_PRESETS.md",
+    "extracted": "colour custom properties (--ns-*) of each preset :root block"
+  },
+  "presets": [
+    {
+      "preset_number": 1,
+      "name": "Minimal Clean",
+      "tokens": {
+        "--ns-accent": "#f59e0b",
+        "--ns-bg": "#ffffff",
+        "--ns-bg-alt": "#f8fafc",
+        "--ns-primary": "#3b82f6",
+        "--ns-secondary": "#94a3b8",
+        "--ns-text": "#1a1a2e",
+        "--ns-text-muted": "#64748b"
+      }
+    },
+    {
+      "preset_number": 2,
+      "name": "Corporate Pro",
+      "tokens": {
+        "--ns-accent": "#dc2626",
+        "--ns-bg": "#ffffff",
+        "--ns-bg-alt": "#f1f5f9",
+        "--ns-primary": "#2563eb",
+        "--ns-secondary": "#475569",
+        "--ns-text": "#1e293b",
+        "--ns-text-muted": "#475569"
+      }
+    },
+    {
+      "preset_number": 3,
+      "name": "Pitch Deck",
+      "tokens": {
+        "--ns-accent": "#f97316",
+        "--ns-bg": "#0f172a",
+        "--ns-bg-alt": "#1e293b",
+        "--ns-primary": "#22c55e",
+        "--ns-secondary": "#64748b",
+        "--ns-text": "#f8fafc",
+        "--ns-text-muted": "#94a3b8"
+      }
+    },
+    {
+      "preset_number": 4,
+      "name": "Bold Geometric",
+      "tokens": {
+        "--ns-accent": "#ea580c",
+        "--ns-bg": "#fafaf9",
+        "--ns-bg-alt": "#f5f5f4",
+        "--ns-primary": "#dc2626",
+        "--ns-secondary": "#78716c",
+        "--ns-text": "#1c1917",
+        "--ns-text-muted": "#78716c"
+      }
+    },
+    {
+      "preset_number": 5,
+      "name": "Soft Curves",
+      "tokens": {
+        "--ns-accent": "#fb923c",
+        "--ns-bg": "#fffbf5",
+        "--ns-bg-alt": "#fef3e2",
+        "--ns-primary": "#f97066",
+        "--ns-secondary": "#a8a29e",
+        "--ns-text": "#292524",
+        "--ns-text-muted": "#78716c"
+      }
+    },
+    {
+      "preset_number": 6,
+      "name": "Teal Serenity",
+      "tokens": {
+        "--ns-accent": "#06b6d4",
+        "--ns-bg": "#f0fdfa",
+        "--ns-bg-alt": "#ccfbf1",
+        "--ns-primary": "#14b8a6",
+        "--ns-secondary": "#5eead4",
+        "--ns-text": "#134e4a",
+        "--ns-text-muted": "#0f766e"
+      }
+    },
+    {
+      "preset_number": 7,
+      "name": "Asymmetric",
+      "tokens": {
+        "--ns-accent": "#a78bfa",
+        "--ns-bg": "#f5f5f4",
+        "--ns-bg-alt": "#e7e5e4",
+        "--ns-primary": "#6366f1",
+        "--ns-secondary": "#a1a1aa",
+        "--ns-text": "#292524",
+        "--ns-text-muted": "#78716c"
+      }
+    },
+    {
+      "preset_number": 8,
+      "name": "Bento Grid",
+      "tokens": {
+        "--ns-accent": "#10b981",
+        "--ns-bg": "#fafafa",
+        "--ns-bg-alt": "#f4f4f5",
+        "--ns-primary": "#3b82f6",
+        "--ns-secondary": "#a1a1aa",
+        "--ns-text": "#18181b",
+        "--ns-text-muted": "#71717a"
+      }
+    },
+    {
+      "preset_number": 9,
+      "name": "Playful Pop",
+      "tokens": {
+        "--ns-accent": "#fbbf24",
+        "--ns-bg": "#ffffff",
+        "--ns-bg-alt": "#f5f3ff",
+        "--ns-primary": "#7c3aed",
+        "--ns-secondary": "#a78bfa",
+        "--ns-text": "#1e1b4b",
+        "--ns-text-muted": "#6b7280"
+      }
+    },
+    {
+      "preset_number": 10,
+      "name": "Retro 90s",
+      "tokens": {
+        "--ns-accent": "#ca8a04",
+        "--ns-bg": "#fef9ef",
+        "--ns-bg-alt": "#fef3c7",
+        "--ns-primary": "#ea580c",
+        "--ns-secondary": "#0d9488",
+        "--ns-text": "#44403c",
+        "--ns-text-muted": "#78716c"
+      }
+    },
+    {
+      "preset_number": 11,
+      "name": "Editorial",
+      "tokens": {
+        "--ns-accent": "#b45309",
+        "--ns-bg": "#faf9f7",
+        "--ns-bg-alt": "#f5f5f0",
+        "--ns-primary": "#991b1b",
+        "--ns-secondary": "#a3a3a3",
+        "--ns-text": "#1a1a1a",
+        "--ns-text-muted": "#737373"
+      }
+    },
+    {
+      "preset_number": 12,
+      "name": "Data Story",
+      "tokens": {
+        "--ns-accent": "#0891b2",
+        "--ns-bg": "#ffffff",
+        "--ns-bg-alt": "#f1f5f9",
+        "--ns-primary": "#1e40af",
+        "--ns-secondary": "#64748b",
+        "--ns-text": "#1e293b",
+        "--ns-text-muted": "#64748b"
+      }
+    },
+    {
+      "preset_number": 13,
+      "name": "Classic Luxe",
+      "tokens": {
+        "--ns-accent": "#166534",
+        "--ns-bg": "#fefce8",
+        "--ns-bg-alt": "#fef9c3",
+        "--ns-primary": "#92400e",
+        "--ns-secondary": "#a16207",
+        "--ns-text": "#1c1917",
+        "--ns-text-muted": "#78716c"
+      }
+    },
+    {
+      "preset_number": 14,
+      "name": "Botanical",
+      "tokens": {
+        "--ns-accent": "#a16207",
+        "--ns-bg": "#f0fdf4",
+        "--ns-bg-alt": "#dcfce7",
+        "--ns-primary": "#15803d",
+        "--ns-secondary": "#86efac",
+        "--ns-text": "#14532d",
+        "--ns-text-muted": "#16a34a"
+      }
+    },
+    {
+      "preset_number": 15,
+      "name": "Creative Studio",
+      "tokens": {
+        "--ns-accent": "#65a30d",
+        "--ns-bg": "#faf5ee",
+        "--ns-bg-alt": "#f5ebe0",
+        "--ns-primary": "#c2410c",
+        "--ns-secondary": "#a8a29e",
+        "--ns-text": "#292524",
+        "--ns-text-muted": "#78716c"
+      }
+    },
+    {
+      "preset_number": 16,
+      "name": "Midnight Pro",
+      "tokens": {
+        "--ns-accent": "#22d3ee",
+        "--ns-bg": "#0f172a",
+        "--ns-bg-alt": "#1e293b",
+        "--ns-primary": "#3b82f6",
+        "--ns-secondary": "#64748b",
+        "--ns-text": "#e2e8f0",
+        "--ns-text-muted": "#94a3b8"
+      }
+    },
+    {
+      "preset_number": 17,
+      "name": "Prism Glow",
+      "tokens": {
+        "--ns-accent": "#ec4899",
+        "--ns-bg": "#1e1b4b",
+        "--ns-bg-alt": "#312e81",
+        "--ns-primary": "#8b5cf6",
+        "--ns-secondary": "#6366f1",
+        "--ns-text": "#e0e7ff",
+        "--ns-text-muted": "#a5b4fc"
+      }
+    },
+    {
+      "preset_number": 18,
+      "name": "Photo Noir",
+      "tokens": {
+        "--ns-accent": "#f59e0b",
+        "--ns-bg": "#111827",
+        "--ns-bg-alt": "#1f2937",
+        "--ns-primary": "#e5e7eb",
+        "--ns-secondary": "#6b7280",
+        "--ns-text": "#f9fafb",
+        "--ns-text-muted": "#9ca3af"
+      }
+    }
+  ]
+}

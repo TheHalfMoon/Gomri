@@ -10,11 +10,18 @@
 
 ## 0. Current frontier
 
-> **Merge gate status:** PR #78 is open and **MERGEABLE**, but CI could not execute due to an account
-> billing/spending-limit condition (see §2.1). Per `docs/REVIEW_POLICY.md` §10 and the mission's
-> no-bypass rule, the PR is **not merged** until CI runs green on the exact candidate. Every gate was
-> executed locally on the exact candidate and passed; the outstanding item is the canonical CI run,
-> which needs an owner action on GitHub billing.
+> **Merge gate status:** two PRs are open and **MERGEABLE**, but CI could not execute on either due
+> to an account billing/spending-limit condition (see §2.1). Per `docs/REVIEW_POLICY.md` §10 and the
+> mission's no-bypass rule, **neither is merged** until CI runs green on the exact candidate. Every
+> gate was executed locally on the exact candidate and passed; the outstanding item is the canonical
+> CI run, which needs an owner action on GitHub billing.
+>
+> | PR | Branch | Candidate | Contains |
+> |---|---|---|---|
+> | **#78** | `feature/rea/nextslide-gamma-wave1` | `6dde5b4` | Wave 1 animation contract + the 13-mandated-document research record |
+> | **#79** | `feature/rea/w4a-contrast-linter` | `f0fbf52` (base: #78) | W4a legibility linter + corrected measurements + the W3 design |
+>
+> **Merge order:** #78 first, then rebase #79 onto `main`.
 >
 > **Next dependency-ready task:** W2 — extend the slide model with an `animation` field and wire the
 > Wave 1 animation contract into the HTML renderer (`servers/nextjs/lib/template-v2-json-to-html.ts`),
@@ -41,7 +48,9 @@
 | R2 | Source-to-target transplant matrix | **DONE** | `TRANSPLANT_MATRIX.md` — 2 ADOPTED, 3 REJECT (measured), 3 DEFER, 5 BLOCKED_SOURCE, 1 REFERENCE |
 | R2 | Cross-donor feature matrix | **DONE** | `FEATURE_MATRIX.md` — 68 rows, each with a mandatory state |
 | R3 | **Wave 1 — NextSlide animation contract integrated** | **DONE** | `0c19896`; `servers/nextjs/lib/slide-animations/`; 28 tests; `docs/donors/nextslide-skill/NOTICE.md` |
-| R3 | Wave 2 — animation wired into slide model + HTML renderer | **NOT_STARTED** | next dependency-ready task |
+| R3 | **Wave 4a — deterministic WCAG AA theme legibility linter** | **DONE** | `servers/fastapi/templates/v2/quality.py`; 19 tests; wired into `template_theme_for_presentation` as an additive `legibility` key; donor preset fixture + generator |
+| R3 | Wave 2 — animation wired into slide model + HTML renderer | **NOT_STARTED** | next dependency-ready task for the animation line |
+| R3 | **Wave 3 — evidence-bound narrative → artifact producer** | **DESIGNED, NOT_STARTED** | `evidence/W3_DESIGN.md` (1 596 lines): exact integration point, public API, contract extension, 5 required tests, 5 risks, 12 files. Estimated 18–25 h. |
 | R4 | Gamma capability wave | **PARTIAL** | contract donor admitted (`SOURCES.md` §3a); implementation not started |
 | R5 | Unified Gomrey studio experience | **NOT_STARTED** | depends on W6 (multi-node IR) |
 | R6 | Quality + benchmarking | **PARTIAL** | baseline + donor probe done; competitive same-case benchmark not started |
@@ -143,11 +152,11 @@ The following were **not** done and are stated here so no reader mistakes silenc
 
 | Order | Grain | Depends on | Est. size |
 |---|---|---|---|
-| 1 | **W2** — slide `animation` model field + wire the contract into the HTML renderer | Wave 1 (done) | small |
-| 2 | **W3** — evidence-bound narrative → artifact producer (P08/P09 → presentation pipeline) | in-repo only | medium |
+| 1 | **W3** — evidence-bound narrative → artifact producer (P08/P09 → presentation pipeline) | in-repo only; design complete | medium-large |
+| 2 | **W2** — slide `animation` model field + wire the contract into the HTML renderer | Wave 1 (done) | small |
 | 3 | **W12** — export fidelity + export→import round-trip regression suite | none (independent) | small-medium |
 | 4 | **W13** — Arabic / RTL / mixed-script qualification | none (independent) | medium |
-| 5 | **W4** — named theme/style preset layer with machine-matchable keywords | W2 (token model) | medium |
+| 5 | **W4b** — named theme/style preset layer with machine-matchable keywords | W4a (done) + single token source | medium |
 | 6 | **W6** — multi-node artifact IR (slides/cards/pages) | schema migration discipline | large |
 | 7 | **W5** — brand kit | W6 + asset-rights decision | medium |
 | 8 | **W7** — self-contained offline HTML deck artifact | W2 | small |

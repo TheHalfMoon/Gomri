@@ -1,0 +1,129 @@
+# Files (41 reviewable / 120 total)
+
+- mode: range
+- from: main
+- to: HEAD
+- merge_base: 5f299a7a6174ad3a1180f827778db5f4400a4d71
+- total_insertions: 26459
+- total_deletions: 1
+
+~~- `docs/SOURCE_LEDGER.md` [modified] +14/-0 (excluded: unsupported_ext)~~
+  - `docs/donors/nextslide-skill/LICENSE` [added] +21/-0
+~~- `docs/donors/nextslide-skill/NOTICE.md` [added] +170/-0 (excluded: unsupported_ext)~~
+~~- `docs/donors/nextslide-skill/UPSTREAM_README.md` [added] +243/-0 (excluded: unsupported_ext)~~
+  - `research/rea/2026-10-22-nextslide-gamma/.gitignore` [added] +13/-0
+~~- `research/rea/2026-10-22-nextslide-gamma/ARCHITECTURE_DELTA.md` [added] +220/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/BENCHMARKS.md` [added] +262/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/EXPERIMENTS.md` [added] +183/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/FEATURE_MATRIX.md` [added] +172/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/GAMMA.md` [added] +457/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/GOMREY_CURRENT_BASELINE.md` [added] +132/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/IMPLEMENTATION_GRAPH.md` [added] +267/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/NEXTSLIDE_AI.md` [added] +118/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/NEXTSLIDE_SKILL.md` [added] +191/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/NEXT_SLIDE_IO_DISAMBIGUATION.md` [added] +77/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/README.md` [added] +119/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/REVIEW_RECORD.md` [added] +265/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/SOURCES.md` [added] +240/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/STATUS.md` [added] +159/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/TRANSPLANT_MATRIX.md` [added] +245/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/BASELINE_GATE_RUN.md` [added] +114/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/GOMREY_BASELINE_SURVEY.md` [added] +941/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/LIVE_PROBE_LOG.md` [added] +171/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/NEXTSLIDE_PROBE_RUNLOG.md` [added] +603/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/NEXTSLIDE_SKILL_SOURCE_INVENTORY.md` [added] +486/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/NEXTSLIDE_TRANSPLANT_CANDIDATES.md` [added] +108/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/RAW_ARTIFACT_MANIFEST.txt` [added] +53/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/W3_DESIGN.md` [added] +1596/-0 (excluded: unsupported_ext)~~
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/jev-review-output.json` [added] +1/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/jev-review-request.json` [added] +75/-0
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/ocr-delegate-preview.txt` [added] +117/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/probe/README.md` [added] +64/-0 (excluded: unsupported_ext)~~
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/probe/build_deck.py` [added] +199/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/probe/deck_botanical.html` [added] +1937/-0
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/probe/deck_botanical.pptx` [binary] +0/-0 (excluded: binary)~~
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/probe/deck_corporate-pro-fixed.html` [added] +2557/-0
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/probe/deck_corporate-pro-fixed.pptx` [binary] +0/-0 (excluded: binary)~~
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/probe/deck_corporate-pro.html` [added] +2186/-0
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/probe/deck_corporate-pro.pptx` [binary] +0/-0 (excluded: binary)~~
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/probe/deck_midnight-pro.html` [added] +2134/-0
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/probe/deck_midnight-pro.pptx` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/probe/extract_corporate-pro.txt` [added] +100/-0 (excluded: unsupported_ext)~~
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/probe/extract_midnight-pro.json` [added] +433/-0
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/probe/extracted-images/slide5_img0.png` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/probe/extracted-images/slide6_img2.png` [binary] +0/-0 (excluded: binary)~~
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/probe/gen_specs.py` [added] +462/-0
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/probe/shot_chart_STYLED_with_interactive_CSS.png` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/probe/shot_chart_UNSTYLED_per_SKILL.md.png` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/probe/shot_midnight_blank_bento.png` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/probe/shot_midnight_counter_bug.png` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/probe/shot_midnight_image-left.png` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/probe/shot_midnight_title.png` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/probe/shot_midnight_two-column.png` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/probe/shot_presenter_window.png` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/probe/shot_timeline_STYLED.png` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/probe/shot_timeline_UNSTYLED.png` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_app.html.gz` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_dev.html.gz` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_docs/build-with-gamma_brand-template-editing-controls.md` [added] +118/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_docs/build-with-gamma_branded-template-workflow.md` [added] +175/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_docs/build-with-gamma_connect-your-own-agent.md` [added] +109/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_docs/connectors_connectors-and-integrations.md` [added] +390/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_docs/connectors_custom-mcp-connectors.md` [added] +142/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_docs/get-started_access-and-pricing.md` [added] +113/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_docs/get-started_authenticate-with-oauth.md` [added] +229/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_docs/get-started_understanding-the-api-options.md` [added] +165/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_docs/guides_async-patterns-and-polling.md` [added] +425/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_docs/guides_charts-and-structured-content.md` [added] +90/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_docs/guides_header-and-footer-formatting.md` [added] +308/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_docs/mcp_gamma-mcp-server.md` [added] +214/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_docs/mcp_mcp-tools-reference.md` [added] +840/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_docs/reference_changelog.md` [added] +155/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_docs/reference_common-feature-requests.md` [added] +93/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_docs/reference_error-codes.md` [added] +147/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_docs/reference_image-model-accepted-values.md` [added] +125/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_docs/reference_output-language-accepted-values.md` [added] +110/-0 (excluded: unsupported_ext)~~
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_gh/create.operation.ts` [added] +763/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_gh/credentials_GammaApi.credentials.ts` [added] +50/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_gh/nodes_Gamma_api.ts` [added] +23/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_gh/nodes_Gamma_apiEnums.ts` [added] +155/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_hc/10262646-how-do-i-change-my-gamma-theme.html` [added] +61/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_hc/11016385-where-do-i-start-when-adding-content-in-gamma.html` [added] +61/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_hc/11016428-how-do-i-use-toggles-nested-slides-and-footnotes-effectively.html` [added] +61/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_hc/11029098-how-can-i-generate-charts-and-diagrams-in-gamma.html` [added] +61/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_hc/11029150-how-do-i-customize-themes-colors-and-fonts-in-gamma.html` [added] +61/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_hc/11047226-how-do-collaboration-and-sharing-settings-work-in-gamma.html` [added] +61/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_hc/11047576-can-i-publish-or-disable-my-gamma-site.html` [added] +61/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_hc/11047806-can-i-embed-gamma-into-another-site.html` [added] +61/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_hc/11047840-how-can-i-import-slides-or-content-into-gamma.html` [added] +61/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_hc/11048579-can-i-undo-a-change-or-restore-a-previous-version-in-gamma.html` [added] +61/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_hc/13928852-what-is-imagine-and-how-do-i-design-with-it.html` [added] +61/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_hc/15939201-why-doesn-t-my-exported-pdf-or-powerpoint-match-what-i-see-in-gamma.html` [added] +61/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_hc/16951068-what-are-shapes-and-how-do-i-use-them.html` [added] +61/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_hc/17168766-how-do-i-add-videos-to-gamma.html` [added] +61/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_hc/17237438-how-do-i-add-a-form-to-my-gamma.html` [added] +61/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_hc/17238075-what-is-studio-mode-and-how-do-i-use-it.html` [added] +61/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_hc/7838093-how-do-i-create-a-new-presentation-document-or-webpage-in-gamma.html` [added] +61/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_hc/8022861-what-s-the-easiest-way-to-export-my-gamma.html` [added] +61/-0
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_llms-full.txt.gz` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_llms.txt.gz` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/gamma_readme.md` [added] +244/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/nextslide_ai.html.gz` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/nextslide_ai_app.js.gz` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/nextslide_ai_headers.txt` [added] +17/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/nextslide_ai_rendered.png.gz` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/nextslide_io.html.gz` [binary] +0/-0 (excluded: binary)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/raw/nextslide_io_rendered.png.gz` [binary] +0/-0 (excluded: binary)~~
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/scripts/render.mjs` [added] +15/-0
+  - `research/rea/2026-10-22-nextslide-gamma/evidence/scripts/render2.mjs` [added] +14/-0
+  - `servers/fastapi/templates/v2/quality.py` [added] +302/-0
+  - `servers/fastapi/templates/v2/theme.py` [modified] +11/-0
+~~- `servers/fastapi/tests/fixtures/README.md` [added] +37/-0 (excluded: unsupported_ext)~~
+~~- `servers/fastapi/tests/fixtures/donor_nextslide_presets.json` [added] +245/-0 (excluded: default_path)~~
+~~- `servers/fastapi/tests/fixtures/generate_donor_nextslide_presets.py` [added] +107/-0 (excluded: default_path)~~
+~~- `servers/fastapi/tests/integration/test_presentation_generation_flow.py` [modified] +8/-1 (excluded: default_path)~~
+~~- `servers/fastapi/tests/unit/test_template_quality.py` [added] +386/-0 (excluded: default_path)~~
+  - `servers/nextjs/lib/slide-animations/catalog.ts` [added] +357/-0
+  - `servers/nextjs/lib/slide-animations/index.ts` [added] +38/-0
+  - `servers/nextjs/lib/slide-animations/stylesheet.ts` [added] +263/-0
+  - `servers/nextjs/tests/slide-animations.test.mjs` [added] +473/-0
