@@ -40,7 +40,7 @@
 | `F-P01` | Prompt → deck generation | `ALREADY_PRESENT` | `ALREADY_PRESENT` | OBSERVED | DOCUMENTED | OBSERVED | Gomrey `servers/fastapi/api/v1/ppt/endpoints/presentation.py` (`create` 1634, `prepare` 1783, smart stream 1874, standard stream 2224) |
 | `F-P02` | Outline / content planning pipeline | `ALREADY_PRESENT` | `ALREADY_PRESENT` | UNKNOWN | DOCUMENTED | OBSERVED | `utils/llm_calls/generate_presentation_outlines.py` → `generate_presentation_structure.py` → `generate_slide_content.py` |
 | `F-P03` | Adaptive layout selection | `PARTIAL` | `PARTIAL` | UNKNOWN | DOCUMENTED | OBSERVED | Gomrey returns layout *indices* from one LLM call (`models/presentation_structure_model.py`); no scoring objective, no overflow pre-check |
-| `F-P04` | Layout quality assurance beyond overflow | `PARTIAL` | `PARTIAL` | UNKNOWN | N/A | UNKNOWN | `utils/smart_slide_layout.py` checks overflow/clipping/overlap only; contrast, density, reading order missing |
+| `F-P04` | Layout quality assurance beyond overflow | `PARTIAL` | `PARTIAL` | UNKNOWN | DOCUMENTED | UNKNOWN | `utils/smart_slide_layout.py` checks overflow/clipping/overlap only; **contrast, density and reading order missing**. The donor specifies a 4.5:1 rule but never checks it — measured: **34/90** of its own token pairs fail. Queued as wave `W4a` |
 | `F-P05` | Template catalogue | `ALREADY_PRESENT` | `ALREADY_PRESENT` | OBSERVED | N/A | OBSERVED | 16 bundled templates, 400+ layouts under `templates/*/template.json` |
 | `F-P06` | Named style / theme presets | `PARTIAL` | `PARTIAL` | OBSERVED | DOCUMENTED | OBSERVED | **Gap.** Gomrey themes are *derived from a template only* (`templates/v2/theme.py:145-423`); no named preset layer. Gamma exposes machine-matchable `colorKeywords[]`/`toneKeywords[]` |
 | `F-P07` | Brand kit (logos, brand fonts/colors) | `PARTIAL` | `PARTIAL` | OBSERVED | N/A | OBSERVED | **Gap.** Only `DesignIR.brand_skill_id` (a string) exists; no brand system, no rights boundary |
@@ -69,7 +69,7 @@
 | FEATURE_ID | Capability | Gomrey | Presenton | NextSlide.ai | NextSlide OSS | Gamma | Notes / evidence |
 |---|---|---|---|---|---|---|---|
 | `F-E01` | PPTX export | `ALREADY_PRESENT` | `ALREADY_PRESENT` | OBSERVED | DOCUMENTED | OBSERVED | Gomrey owns `@presenton/export-core` v1.0.34 (verified installed and `check:presentation-export` OK) |
-| `F-E02` | Editable PPTX text fidelity | `ALREADY_PRESENT` | `ALREADY_PRESENT` | OBSERVED | VERIFIED | `PARTIAL` | **Independently verified**: donor PPTX = 23–28 text shapes, ~0 pictures → real editable text. **Gamma claims only editable *tables***, not a full round-trip |
+| `F-E02` | Editable PPTX text fidelity | `ALREADY_PRESENT` | `ALREADY_PRESENT` | OBSERVED | VERIFIED | `PARTIAL` | **Independently verified**: donor PPTX = 23–28 text shapes, ~0 pictures → real editable text — **but the donor's chart export is invalid** (`'BAR'` vs `'bar'` → empty `<c:barChart>` → `python-pptx` IndexError, PowerPoint repair prompt). **Gamma claims only editable *tables***, not a full round-trip |
 | `F-E03` | PDF export | `ALREADY_PRESENT` | `ALREADY_PRESENT` | OBSERVED | N/A | OBSERVED | Gamma PDF reflects Present Mode, not Edit Mode |
 | `F-E04` | HTML export | `ALREADY_PRESENT` | `ALREADY_PRESENT` | N/A | DOCUMENTED | N/A | `servers/nextjs/lib/template-v2-json-to-html.ts` (192 230 bytes) |
 | `F-E05` | Image export (PNG/JPEG/WebP) | `PARTIAL` | `PARTIAL` | N/A | N/A | `ALREADY_PRESENT` | **Gap.** Gomrey export enum is `Literal["pptx","pdf"]` (`utils/export_utils.py:46`). Gamma: PNG `.zip` with one PNG per card |

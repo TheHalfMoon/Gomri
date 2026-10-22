@@ -50,16 +50,30 @@ Legend for **Security**: `remote?` = does it fetch a remote asset; `inject?` = d
 
 ## 2. Additional observations that affect the transplant
 
-1. **Contrast is claimed but never checked.** `SKILL.md:291` mandates "Minimum 4.5:1 contrast ratio — for all text against its background", yet no code anywhere computes it. Three presets fail it against their own `--ns-text`:
-   - **Teal Serenity** — `--ns-text: #134e4a` on `--ns-bg: #f0fdfa` is fine, but `--ns-text-muted: #0f766e` on `#f0fdfa` is **≈3.3:1** (fails).
-   - **Botanical** — `--ns-text-muted: #16a34a` on `--ns-bg: #f0fdf4` is **≈2.6:1** (fails).
-   - **Prism Glow** — `--ns-text-muted: #a5b4fc` on `--ns-bg: #1e1b4b` is **≈6.4:1** (passes); `--ns-text: #e0e7ff` on `#1e1b4b` ≈**11:1** (passes) — but `--ns-secondary: #6366f1` on `#1e1b4b` is ≈**2.1:1** (fails if used as text).
-   → Any transplant should **compute and gate** contrast, not copy the tokens verbatim.
+1. **Contrast is claimed but never checked.** `SKILL.md:291` mandates "Minimum 4.5:1 contrast ratio — for all text against its background", yet **no code anywhere in the donor computes it**. I computed every preset's foreground-on-background ratio with the WCAG 2.x formula `(L1+0.05)/(L2+0.05)`:
+
+   | Token | pairs failing 4.5:1 | worst offenders |
+   |---|---|---|
+   | `--ns-text` on `--ns-bg` | **0 / 18** OK | all 18 pass (min: Prism Glow 12.98:1, Midnight Pro 14.48:1) |
+   | `--ns-text-muted` on `--ns-bg` | **3 / 18** FAIL | **Botanical 3.15:1**, Asymmetric 4.40:1, Creative Studio 4.42:1 |
+   | `--ns-primary` on `--ns-bg` | **6 / 18** FAIL | Teal Serenity 2.39:1, Retro 90s 3.39:1, Bento Grid 3.52:1, Minimal Clean 3.68:1, Prism Glow 3.78:1, Asymmetric 4.09:1 |
+   | `--ns-secondary` on `--ns-bg` | 14 / 18 | Botanical 1.34:1, Teal Serenity 1.42:1, Soft Curves 2.45:1 (mostly decorative use) |
+   | `--ns-accent` on `--ns-bg` | 10 / 18 | Playful Pop 1.67:1, Minimal Clean 2.15:1 (mostly decorative use) |
+   | **Total** | **34 / 90 pairs** | |
+
+   The 3 `--ns-text-muted` failures and the 6 `--ns-primary` failures are **real text** in the donor's own CSS: `--ns-text-muted` drives `.subtitle` (`viewport-base.css:103`), `.meta` (`:109`), `.ns-bar-label` (`interactive-elements.md:57`), `.ns-metric-label` (`:246`), `.ns-timeline-date` (`:410`), `.ns-timeline-desc` (`:422`), `.ns-table th` (`:613`), `.ns-attribution` (`viewport-base.css:370`); `--ns-primary` drives `a` (`viewport-base.css:32`), `.ns-compare-card h3` (`:440`), `.ns-progress-value` (`interactive-elements.md:315`).
+   (`--ns-secondary` and `--ns-accent` are mostly decorative — rules, dots, bar fills — so WCAG *text* contrast does not strictly apply to them; those two rows are shown for completeness, not as defects.)
+
+   **Separately, the donor hard-codes two KPI-change colours** (`interactive-elements.md:259-260`): `.ns-metric-change.positive { color:#22c55e }` and `.negative { color:#ef4444 }`. Measured against each preset's own `--ns-bg-alt`:
+   - `positive` fails 4.5:1 in **14 / 18** presets (worst: Asymmetric 1.81:1).
+   - `negative` fails 4.5:1 in **18 / 18** presets (worst: Asymmetric 3.00:1, Prism Glow 3.04:1).
+
+   → Any transplant should **compute and gate** contrast, derive these two from the active preset, and not copy the token values verbatim.
 2. **Only 4 of 18 presets are dark** (3, 16, 17, 18). 14 are light. A "dark theme" transplant should be weighted accordingly.
 3. **The `--ns-border-radius` spread is the only real per-preset layout difference** (4/6/8/12/16 px). Everything else about layout is identical across presets — the presets are **purely a colour + font-pair system**, not a layout system. This means the transplant value is concentrated in **tokens**, not in layout variety.
 4. **The 8px grid is only partially honoured** by the donor's own CSS: `viewport-base.css` uses `padding-top: 80px` (`:184, :201, :313, :376, :416, :447`), `bottom: 48px` (`:171`), `padding-bottom: 96px` (`:276`), `gap: 24px`/`32px`/`48px` in `interactive-elements.md` — mostly multiples of 8, but `80px` and `96px` are on-grid while `18px`/`12px`/`14px` font sizes are deliberately off-grid (type scale ≠ spacing grid, which is correct).
 5. **No RTL/Arabic/CJK support** anywhere in the donor (0 hits for `rtl|arabic|bidi`). If Gomrey serves Arabic markets, the presets need an Arabic font pair and `dir="rtl"` handling — the donor provides nothing.
-6. **Fonts are CDN-only.** Every preset is unusable offline (the donor's own README claims "works offline" — **false**: without the Google Fonts `<link>` the deck falls back to `sans-serif`). Measured: the headless browser had no font access and rendered with fallback faces. This matters for Gomrey's **offline/self-contained export** guarantee.
+6. **Fonts are CDN-only.** The only runtime network dependency is the Google Fonts `<link>`; every preset's typography is a remote call. `README.md:90` claims the output "works offline" — **imprecise**: the deck *renders* offline but falls back to the generic `sans-serif` in every `--ns-font-heading` / `--ns-font-body` stack, so the designed typography does not survive without the CDN. Measured: the headless browser had no font access and rendered with fallback faces. This matters for Gomrey's **offline / self-contained export** guarantee — self-host or subset the fonts, or accept a documented typography downgrade.
 
 ---
 

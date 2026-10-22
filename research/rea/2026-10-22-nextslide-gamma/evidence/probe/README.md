@@ -9,7 +9,7 @@
 | **Creation date (UTC)** | 2026-10-22 |
 | **Generator method** | Manual execution of the donor's documented pipeline against synthetic content. The synthetic topic is *"Ocean Plastic Reduction: 2026 Strategy"*. No real user data, customer data or production content was used. |
 | **Acquisition method** | Donor clone → HTML deck authored per `SKILL.md` → `node scripts/export-pptx.js <deck>.html <deck>.pptx` (PptxGenJS `^3.12.0`). |
-| **Regeneration** | Not scripted end-to-end. The individual commands, exact versions and outputs are recorded in `../NEXTSLIDE_PROBE_RUNLOG.md`; the donor scripts are at the pinned revision above and can be re-run to reproduce. |
+| **Regeneration** | Scripted end-to-end by `build_deck.py` + `gen_specs.py` in this directory. `build_deck.py` concatenates the donor's own `viewport-base.css`, `STYLE_PRESETS.md` `:root` block, `animation-library.md` keyframes and `html-template.md` JS controller **verbatim**; `gen_specs.py` holds the synthetic content. Regenerate with: `python3 gen_specs.py && for v in corporate-pro midnight-pro botanical; do python3 build_deck.py spec_$v.json deck_$v.html; done`, then `node <donor>/scripts/export-pptx.js deck_<v>.html deck_<v>.pptx`. Exact commands, versions, sizes and outputs: `../NEXTSLIDE_PROBE_RUNLOG.md`. |
 | **Seed** | N/A — content is authored text, not generated randomly. |
 | **Size** | Each artifact < 130 KB. Whole directory < 1.3 MB. Within the committed-fixture size budget. |
 
@@ -21,7 +21,7 @@
 | `deck_botanical.pptx` | Same deck exported to PPTX by the donor's exporter |
 | `deck_corporate-pro.html` | Donor single-file HTML deck, Corporate Pro preset |
 | `deck_corporate-pro.pptx` | Same deck exported to PPTX by the donor's exporter |
-| `deck_corporate-pro-fixed.html` | Corporate Pro deck with the `animate-counter-up` defect corrected |
+| `deck_corporate-pro-fixed.html` | Corporate Pro deck **with the `interactive-elements.md` CSS inlined** — the fix for defect D4 (widget CSS is never inlined by the donor's documented pipeline). It does **not** fix `animate-counter-up`; that defect is live in every deck and is evidenced by `shot_midnight_counter_bug.png`. |
 | `deck_corporate-pro-fixed.pptx` | Its PPTX export |
 | `deck_midnight-pro.html` | Donor single-file HTML deck, Midnight Pro preset |
 | `deck_midnight-pro.pptx` | Same deck exported to PPTX by the donor's exporter |
@@ -34,6 +34,12 @@
 | `shot_chart_UNSTYLED_per_SKILL.md.png` | Rendered chart with only the CSS the donor's documented pipeline actually inlines |
 | `shot_midnight_blank_bento.png` | Render of the donor's bento-grid preset — evidence for the "preset advertises a bento layout that the codebase does not implement" finding |
 | `shot_midnight_counter_bug.png` | **Visual proof** of the donor's `animate-counter-up` defect — the counter value is absent from the rendered slide |
+| `shot_midnight_title.png` | Render of the donor's `title` layout (Midnight Pro preset) |
+| `shot_midnight_two-column.png` | Render of the donor's `two-column` layout |
+| `shot_midnight_image-left.png` | Render of the donor's `image-left` layout with an inline data-URI SVG |
+| `shot_presenter_window.png` | The donor's actual presenter window — **shows a slide number, not a slide preview** (0 iframes, 0 images) |
+| `shot_timeline_STYLED.png` / `shot_timeline_UNSTYLED.png` | Timeline widget with / without the inlined interactive CSS |
+| `build_deck.py`, `gen_specs.py` | The generator scripts (see *Regeneration* above) |
 
 ## Independently verified property of the donor's PPTX exporter
 

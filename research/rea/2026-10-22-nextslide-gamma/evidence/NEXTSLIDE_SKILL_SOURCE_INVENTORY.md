@@ -461,6 +461,8 @@ Issue #77 claims, each checked against the source and by execution.
 | D14 | Low | `.ns-highlight` uses a hard-coded `rgba(59,130,246,…)` fallback that matches no preset | `interactive-elements.md:627` | code read |
 | D15 | Low | `Pillow` is declared as a dependency in the docstring but never imported; `rgb_to_hex` is defined and never called | `extract-pptx.py:12, 69` | grep |
 | D16 | Info | `delay-700` is missing from the stagger set (100..600, 800, 1000) | `animation-library.md:64-71` | grep |
+| D17 | **High** | The mandatory 4.5:1 contrast rule is never checked; **34 of 90** foreground/background token pairs fail it. `--ns-text` passes 18/18, but `--ns-text-muted` fails in 3 presets (Botanical 3.15:1, Asymmetric 4.40:1, Creative Studio 4.42:1) and `--ns-primary` fails in 6 (Teal Serenity 2.39:1 … Asymmetric 4.09:1) — and both drive **real text** (`.subtitle`, `.meta`, `.ns-bar-label`, `.ns-timeline-date`, `.ns-table th`, `a`, `.ns-compare-card h3`, `.ns-progress-value`). Separately the hard-coded `.ns-metric-change.positive #22c55e` fails in 14/18 presets and `.negative #ef4444` in **18/18** against each preset's own `--ns-bg-alt`. | `SKILL.md:291` (rule); `STYLE_PRESETS.md:40-800` (tokens); `interactive-elements.md:259-260` (hard-coded colours) | WCAG 2.x `(L1+0.05)/(L2+0.05)` computed over all 18 presets × 5 foreground tokens |
+| D18 | Low | `.ns-highlight` uses a hard-coded `rgba(59,130,246,…)` fallback that matches no preset's `--ns-primary` | `interactive-elements.md:627` | code read |
 
 ---
 

@@ -66,7 +66,8 @@ Each rejection cites a **measured** reason, not a preference.
 | Donor path | `D1:scripts/export-pptx.js` (blob `81062d4268656d0502ef59e89f9b02dae75abf73`) |
 | Disposition | **REJECT — parallel PPTX engine** |
 | Reason | Gomrey's export path is owned by `@presenton/export-core` v1.0.34, installed by `scripts/sync-presentation-export.cjs` and verified by `npm run check:presentation-export` → `[presentation-export] OK (1.0.34)`. Issue #77 §D forbids a duplicated PPTX engine "unless bounded fidelity tests justify them". No fidelity delta has been demonstrated, and the donor's exporter would add a new Node runtime dependency (`pptxgenjs`) to a Python-owned path. |
-| What the donor's exporter *does* prove | Its output is genuinely editable: verified independently with `python-pptx` — 4 probe decks, 23–28 text shapes each, 0–2 pictures. This confirms Gomrey's *existing* editable-PPTX posture is not a regression risk, but it does **not** establish superiority over `@presenton/export-core`. |
+| What the donor's exporter *does* prove | Its output is genuinely editable for text, shapes and notes: verified independently with `python-pptx` — 4 probe decks, 23–28 text shapes each, 0–2 pictures. This confirms Gomrey's *existing* editable-PPTX posture is not a regression risk, but it does **not** establish superiority over `@presenton/export-core`. |
+| What the donor's exporter *does not* prove | **The donor's chart export is invalid.** `export-pptx.js:226` hard-codes the chart type as `'BAR'` while `pptxgenjs@3.12.0` expects `'bar'`; the resulting `ppt/charts/chart1.xml` has a `plotArea` with no `<c:barChart>`, `python-pptx` raises `IndexError`, and PowerPoint would prompt to repair. Charts are a first-class Gomrey capability. |
 | Rollback | N/A — nothing adopted. |
 
 ### T-102 — Donor PPTX extractor (`scripts/extract-pptx.py`, 463 lines)
@@ -74,9 +75,10 @@ Each rejection cites a **measured** reason, not a preference.
 | Field | Value |
 |---|---|
 | Donor path | `D1:scripts/extract-pptx.py` (blob `e3d97b1139dfbff6db905dced2c81154aa889ce8`) |
-| Disposition | **REJECT — inferior, and defective** |
+| Disposition | **REJECT — inferior, defective, and unsafe** |
 | Reason 1 — inferior | Gomrey already owns PPTX→JSON import at `services/export_task_service.py` (`convert_pptx_to_json`) plus `templates/pptx_font_utils.py` (1 668 lines of python-pptx font/geometry handling). Baseline tests prove Template V2 metadata, text-list gaps and marker gaps survive import. |
-| Reason 2 — defective | **Reproduced crash.** Running the donor extractor unmodified on a pristine donor-generated PPTX aborts with `ValueError: shape is not a placeholder` at `extract-pptx.py` line 281 (`hasattr(shape, "placeholder_format")` → `python-pptx` raises for non-placeholder shapes). Log: `research/rea/2026-10-22-nextslide-gamma/evidence/probe/extract_pptx_PRISTINE_crash.log`. A patched variant still emits `⚠ Slide 4, shape 1: tuple index out of range`. |
+| Reason 2 — defective | **Reproduced crash.** Running the donor extractor unmodified on a pristine donor-generated PPTX aborts with `ValueError: shape is not a placeholder` at `extract-pptx.py` line 281 (`hasattr(shape, "placeholder_format")` → `python-pptx` raises for non-placeholder shapes). The same guard appears at three sites. Log: `research/rea/2026-10-22-nextslide-gamma/evidence/probe/extract_pptx_PRISTINE_crash.log`. |
+| Reason 3 — unsafe | **Silent total data loss.** After patching the crash so it could run, the extractor reported `✓ Found 0 elements` **with a success exit code**. It also loses all typography (paragraph-level read vs run-level storage) and all original layouts. A tool that reports success while extracting nothing must not be placed in a product import path. |
 | Rollback | N/A — nothing adopted. |
 
 ### T-103 — Donor presenter mode (`presenter-mode.md`, 458 lines)
@@ -122,7 +124,24 @@ Each rejection cites a **measured** reason, not a preference.
 | Donor path | `D1:interactive-elements.md` (blob `688ec8211dbf5838275de71df1e040919ac570b3`), `D1:viewport-base.css` (blob `dce13d8d52a637a074bb33ba232e26c2690253fe`) |
 | Disposition | **DEFER** |
 | Reason | Gomrey's editor already implements selection, shapes, images, tables, math, charts, infographics, clipboard, keyboard shortcuts and layout. Each donor widget needs an individual comparison; none may be adopted as a batch. |
+| Extra disqualifier | The donor's own pipeline **never inlines** the widget CSS (`SKILL.md:126-142` lists 5 things in the `<style>` block; the widget CSS is not among them), so per the donor's own instructions charts, KPI cards, timelines, donuts, tables and code blocks render **completely unstyled**. Reproduced as the paired screenshots `evidence/probe/shot_chart_UNSTYLED_per_SKILL.md.png` and `shot_chart_STYLED_with_interactive_CSS.png`. |
 | Rollback | N/A — nothing adopted. |
+
+### T-108 — Donor contrast / design-quality rules (`SKILL.md:276-341`)
+
+| Field | Value |
+|---|---|
+| Donor path | `D1:SKILL.md` lines 276–341 (the donor's design-rule checklist, including the 4.5:1 contrast requirement) |
+| Disposition | **ADAPT — queued as wave `W4a`** |
+| Original source path | `SKILL.md:276-341` plus the measured failure data in `evidence/NEXTSLIDE_SKILL_SOURCE_INVENTORY.md` §11 |
+| Target Gomrey module | `servers/fastapi/services/slide_quality_rules.py` (new) — a deterministic contrast/legibility linter that runs on every resolved theme before export |
+| Dependencies | **None.** Pure arithmetic on already-resolved theme tokens. |
+| Required notices | `docs/donors/nextslide-skill/NOTICE.md` must record this slice when it lands. |
+| Adaptation strategy | **ADAPT.** The *rule* (4.5:1 for text) is an accessibility standard, not donor IP, and is implemented independently against Gomrey's own 16 semantic colours. The donor's *palette set* is not adopted — it fails its own rule in 34/90 pairs, and its presets carry Google Fonts network dependencies. |
+| Why this is high value | `F-P04` is a measured Gomrey gap: `utils/smart_slide_layout.py` checks overflow, clipping and overlap but **not contrast**. The donor supplies (a) the machine-checkable rule and (b) proof that a plausible-looking palette set violates it in 38 % of pairs — which is exactly the evidence needed to justify a linter that catches it before a user sees it. |
+| Tests | Deterministic: every resolved theme's foreground/background pairs are checked against 4.5:1 (and 3:1 for large text); a failing pair is reported with both hex values and the computed ratio; the linter is applied to the 18 donor presets as a *negative* fixture and must reject the 34 known-bad pairs. |
+| Rollback | Delete the new module. It is additive and gates nothing until wired. |
+| Status | **NOT YET IMPLEMENTED.** Listed here so the plan is auditable before execution. |
 
 ---
 
