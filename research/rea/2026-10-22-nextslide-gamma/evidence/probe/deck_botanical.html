@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ocean Plastic Reduction: 2026 Strategy — Botanical</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* 1. CSS Variables — from selected preset (STYLE_PRESETS.md) */
+:root {
+  --ns-bg: #f0fdf4;
+  --ns-bg-alt: #dcfce7;
+  --ns-text: #14532d;
+  --ns-text-muted: #16a34a;
+  --ns-primary: #15803d;
+  --ns-secondary: #86efac;
+  --ns-accent: #a16207;
+
+  --ns-font-heading: 'Cormorant Garamond', serif;
+  --ns-font-body: 'Source Sans 3', sans-serif;
+  --ns-font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  --ns-heading-weight: 700;
+  --ns-body-weight: 400;
+
+  --ns-space-xs: 8px;
+  --ns-space-sm: 16px;
+  --ns-space-md: 24px;
+  --ns-space-lg: 32px;
+  --ns-space-xl: 48px;
+  --ns-space-2xl: 64px;
+
+  --ns-slide-padding: 48px 64px;
+  --ns-border-radius: 8px;
+}
+
+    /* 2. Base CSS — full contents of viewport-base.css */
+/* ============================================================
+   NextSlide — viewport-base.css
+   Core CSS embedded in every generated presentation.
+   Handles: slide container, layouts, typography, navigation,
+   print styles, and utility classes.
+   
+   All colors/fonts via --ns-* CSS variables (set by preset).
+   ============================================================ */
+
+/* ===== RESET ===== */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, svg, video {
+  display: block;
+  max-width: 100%;
+}
+
+a { color: var(--ns-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ===== SLIDE CONTAINER ===== */
+
+.ns-deck {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  width: 1920px;
+  height: 1080px;
+  background: var(--ns-bg);
+  transform: scale(var(--ns-scale, 1));
+  transform-origin: center center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 400ms ease, visibility 400ms ease;
+  display: flex;
+  overflow: hidden;
+}
+
+.slide.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.slide-content {
+  width: 100%;
+  height: 100%;
+  padding: var(--ns-slide-padding);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== TYPOGRAPHY ===== */
+
+h1, h2, h3, h4 {
+  font-family: var(--ns-font-heading);
+  font-weight: var(--ns-heading-weight);
+  color: var(--ns-text);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: clamp(40px, 4.5vw, 56px); }
+h2 { font-size: clamp(32px, 3.5vw, 44px); }
+h3 { font-size: clamp(24px, 2.8vw, 36px); }
+h4 { font-size: clamp(20px, 2.2vw, 28px); }
+
+p, li, td, span, label {
+  font-family: var(--ns-font-body);
+  font-weight: var(--ns-body-weight);
+  color: var(--ns-text);
+  line-height: 1.5;
+  font-size: clamp(18px, 2vw, 24px);
+}
+
+.subtitle {
+  font-family: var(--ns-font-body);
+  font-size: clamp(20px, 2.2vw, 28px);
+  color: var(--ns-text-muted);
+  line-height: 1.4;
+}
+
+.meta {
+  font-family: var(--ns-font-body);
+  font-size: clamp(14px, 1.5vw, 18px);
+  color: var(--ns-text-muted);
+}
+
+code, pre, .mono {
+  font-family: var(--ns-font-mono);
+  font-weight: 400;
+}
+
+strong, b { font-weight: 600; }
+em, i { font-style: italic; }
+
+ul, ol {
+  padding-left: var(--ns-space-lg);
+}
+
+li {
+  margin-bottom: var(--ns-space-xs);
+}
+
+/* ===== LAYOUT: TITLE ===== */
+
+[data-layout="title"] .slide-content {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+[data-layout="title"] h1 {
+  font-size: clamp(48px, 5.5vw, 72px);
+  max-width: 80%;
+}
+
+[data-layout="title"] .subtitle {
+  margin-top: var(--ns-space-md);
+  max-width: 60%;
+}
+
+[data-layout="title"] .meta {
+  margin-top: var(--ns-space-lg);
+}
+
+/* ===== LAYOUT: SECTION ===== */
+
+[data-layout="section"] .slide-content {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+[data-layout="section"] h1 {
+  font-size: clamp(48px, 5.5vw, 72px);
+  max-width: 70%;
+}
+
+[data-layout="section"] .subtitle {
+  margin-top: var(--ns-space-md);
+  max-width: 50%;
+}
+
+[data-layout="section"]::after {
+  content: '';
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: var(--ns-primary);
+  border-radius: 2px;
+}
+
+/* ===== LAYOUT: CONTENT ===== */
+
+[data-layout="content"] .slide-content {
+  justify-content: flex-start;
+  padding-top: 80px;
+}
+
+[data-layout="content"] h1 {
+  margin-bottom: var(--ns-space-lg);
+}
+
+[data-layout="content"] p,
+[data-layout="content"] ul,
+[data-layout="content"] ol {
+  max-width: 75%;
+}
+
+/* ===== LAYOUT: TWO-COLUMN ===== */
+
+[data-layout="two-column"] .slide-content {
+  padding-top: 80px;
+}
+
+[data-layout="two-column"] h1 {
+  margin-bottom: var(--ns-space-xl);
+}
+
+.ns-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--ns-space-xl);
+  flex: 1;
+}
+
+.ns-col {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== LAYOUT: IMAGE-LEFT ===== */
+
+[data-layout="image-left"] .slide-content {
+  padding: 0;
+}
+
+[data-layout="image-left"] .ns-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  height: 100%;
+}
+
+.ns-split-image {
+  overflow: hidden;
+}
+
+.ns-split-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ns-split-text {
+  padding: var(--ns-slide-padding);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ===== LAYOUT: IMAGE-RIGHT ===== */
+
+[data-layout="image-right"] .slide-content {
+  padding: 0;
+}
+
+[data-layout="image-right"] .ns-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  height: 100%;
+}
+
+[data-layout="image-right"] .ns-split-text {
+  order: -1;
+}
+
+/* ===== LAYOUT: IMAGE-FULL ===== */
+
+[data-layout="image-full"] {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+[data-layout="image-full"] .slide-content {
+  justify-content: flex-end;
+  padding-bottom: 96px;
+}
+
+[data-layout="image-full"]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.3) 40%,
+    transparent 100%
+  );
+  z-index: 0;
+}
+
+[data-layout="image-full"] h1,
+[data-layout="image-full"] p,
+[data-layout="image-full"] .subtitle {
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.ns-hero {
+  position: absolute;
+  inset: 0;
+}
+
+.ns-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ===== LAYOUT: CHART ===== */
+
+[data-layout="chart"] .slide-content {
+  padding-top: 80px;
+  align-items: center;
+}
+
+[data-layout="chart"] h1 {
+  margin-bottom: var(--ns-space-xl);
+  text-align: center;
+}
+
+.ns-chart-container {
+  width: 80%;
+  max-width: 1400px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== LAYOUT: QUOTE ===== */
+
+[data-layout="quote"] .slide-content {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.ns-quote {
+  max-width: 75%;
+  position: relative;
+}
+
+.ns-quote blockquote {
+  font-family: var(--ns-font-heading);
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: var(--ns-heading-weight);
+  font-style: italic;
+  color: var(--ns-text);
+  line-height: 1.3;
+  position: relative;
+}
+
+.ns-quote blockquote::before {
+  content: '\201C';
+  font-size: 120px;
+  position: absolute;
+  top: -40px;
+  left: -30px;
+  color: var(--ns-primary);
+  opacity: 0.2;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+.ns-attribution {
+  margin-top: var(--ns-space-lg);
+  font-family: var(--ns-font-body);
+  font-size: clamp(16px, 1.8vw, 22px);
+  color: var(--ns-text-muted);
+}
+
+/* ===== LAYOUT: BULLETS ===== */
+
+[data-layout="bullets"] .slide-content {
+  padding-top: 80px;
+}
+
+[data-layout="bullets"] h1 {
+  margin-bottom: var(--ns-space-xl);
+}
+
+.ns-bullets {
+  list-style: none;
+  padding-left: 0;
+  max-width: 75%;
+}
+
+.ns-bullets li {
+  padding: var(--ns-space-sm) 0;
+  padding-left: var(--ns-space-xl);
+  position: relative;
+  font-size: clamp(20px, 2.2vw, 28px);
+  border-bottom: 1px solid var(--ns-bg-alt);
+}
+
+.ns-bullets li:last-child {
+  border-bottom: none;
+}
+
+.ns-bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ns-primary);
+}
+
+/* ===== LAYOUT: COMPARISON ===== */
+
+[data-layout="comparison"] .slide-content {
+  padding-top: 80px;
+}
+
+[data-layout="comparison"] h1 {
+  margin-bottom: var(--ns-space-xl);
+  text-align: center;
+}
+
+.ns-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--ns-space-xl);
+  flex: 1;
+}
+
+.ns-compare-card {
+  background: var(--ns-bg-alt);
+  border-radius: var(--ns-border-radius);
+  padding: var(--ns-space-xl);
+  display: flex;
+  flex-direction: column;
+}
+
+.ns-compare-card h3 {
+  margin-bottom: var(--ns-space-md);
+  color: var(--ns-primary);
+}
+
+/* ===== LAYOUT: TIMELINE ===== */
+
+[data-layout="timeline"] .slide-content {
+  padding-top: 80px;
+}
+
+[data-layout="timeline"] h1 {
+  margin-bottom: var(--ns-space-xl);
+}
+
+/* ===== LAYOUT: BLANK ===== */
+
+[data-layout="blank"] .slide-content {
+  justify-content: center;
+  align-items: center;
+}
+
+/* ===== NAVIGATION UI ===== */
+
+.ns-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: rgba(128, 128, 128, 0.2);
+  z-index: 1000;
+}
+
+.ns-progress-bar {
+  height: 100%;
+  background: var(--ns-primary);
+  transition: width 300ms ease;
+  width: 0%;
+}
+
+.ns-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.ns-nav-prev,
+.ns-nav-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.15);
+  border: none;
+  color: var(--ns-text);
+  font-size: 36px;
+  width: 48px;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  pointer-events: auto;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  border-radius: var(--ns-border-radius);
+}
+
+.ns-nav:hover .ns-nav-prev,
+.ns-nav:hover .ns-nav-next,
+.ns-deck:hover .ns-nav-prev,
+.ns-deck:hover .ns-nav-next {
+  opacity: 0.6;
+}
+
+.ns-nav-prev:hover,
+.ns-nav-next:hover {
+  opacity: 1 !important;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.ns-nav-prev { left: 16px; }
+.ns-nav-next { right: 16px; }
+
+.ns-counter {
+  position: fixed;
+  bottom: 16px;
+  right: 24px;
+  font-family: var(--ns-font-body);
+  font-size: 14px;
+  color: var(--ns-text-muted);
+  opacity: 0.5;
+  z-index: 100;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== SPEAKER NOTES (hidden) ===== */
+
+.notes {
+  display: none;
+}
+
+/* ===== BLACK SCREEN ===== */
+
+.black-screen .slide {
+  visibility: hidden !important;
+}
+
+.black-screen {
+  background: #000 !important;
+}
+
+.black-screen .ns-progress,
+.black-screen .ns-nav,
+.black-screen .ns-counter {
+  display: none;
+}
+
+/* ===== UTILITY CLASSES ===== */
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mb-xs { margin-bottom: var(--ns-space-xs); }
+.mb-sm { margin-bottom: var(--ns-space-sm); }
+.mb-md { margin-bottom: var(--ns-space-md); }
+.mb-lg { margin-bottom: var(--ns-space-lg); }
+.mb-xl { margin-bottom: var(--ns-space-xl); }
+.mb-2xl { margin-bottom: var(--ns-space-2xl); }
+
+.mt-xs { margin-top: var(--ns-space-xs); }
+.mt-sm { margin-top: var(--ns-space-sm); }
+.mt-md { margin-top: var(--ns-space-md); }
+.mt-lg { margin-top: var(--ns-space-lg); }
+.mt-xl { margin-top: var(--ns-space-xl); }
+.mt-2xl { margin-top: var(--ns-space-2xl); }
+
+.gap-xs { gap: var(--ns-space-xs); }
+.gap-sm { gap: var(--ns-space-sm); }
+.gap-md { gap: var(--ns-space-md); }
+.gap-lg { gap: var(--ns-space-lg); }
+.gap-xl { gap: var(--ns-space-xl); }
+.gap-2xl { gap: var(--ns-space-2xl); }
+
+.accent-text { color: var(--ns-primary); }
+.muted-text { color: var(--ns-text-muted); }
+.bg-alt { background: var(--ns-bg-alt); }
+.rounded { border-radius: var(--ns-border-radius); }
+
+.hide-in-print { /* handled in @media print below */ }
+
+/* ===== PRINT STYLES (PDF EXPORT) ===== */
+
+@media print {
+  @page {
+    size: landscape;
+    margin: 0;
+  }
+
+  html, body {
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+  }
+
+  .ns-deck {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    transform: none !important;
+  }
+
+  .slide {
+    width: 100vw !important;
+    height: 100vh !important;
+    transform: none !important;
+    position: relative !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    page-break-after: always;
+    page-break-inside: avoid;
+    break-after: page;
+    break-inside: avoid;
+  }
+
+  .slide:last-child {
+    page-break-after: auto;
+  }
+
+  /* Preserve backgrounds and colors */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Disable all animations and transitions */
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  [class*="animate-"] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  /* Hide navigation and UI elements */
+  .ns-progress,
+  .ns-nav,
+  .ns-counter,
+  .notes,
+  .hide-in-print {
+    display: none !important;
+  }
+}
+
+
+    /* 3. Animations — selected from animation-library.md */
+[class*="animate-"] {
+  opacity: 0;
+  animation-duration: 500ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: forwards;
+}
+
+.slide.active [class*="animate-"] {
+  animation-play-state: running;
+}
+
+.slide:not(.active) [class*="animate-"] {
+  animation-play-state: paused;
+  opacity: 0;
+}
+
+/* Emphasis animations — already visible elements, no opacity: 0 */
+.animate-pulse,
+.animate-glow,
+.animate-float,
+.animate-shimmer {
+  opacity: 1;
+}
+:root {
+  --ns-ease-default: cubic-bezier(0.16, 1, 0.3, 1);
+  --ns-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ns-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ns-ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
+.delay-800 { animation-delay: 800ms; }
+.delay-1000 { animation-delay: 1000ms; }
+.duration-fast { animation-duration: 300ms; }
+.duration-normal { animation-duration: 500ms; }
+.duration-slow { animation-duration: 800ms; }
+.animate-pulse,
+.animate-glow,
+.animate-float,
+.animate-shimmer {
+  opacity: 1;
+}
+@keyframes ns-fade-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up { animation-name: ns-fade-up; }
+@keyframes ns-fade-down {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-down { animation-name: ns-fade-down; }
+@keyframes ns-fade-left {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.animate-fade-left { animation-name: ns-fade-left; }
+@keyframes ns-fade-right {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.animate-fade-right { animation-name: ns-fade-right; }
+@keyframes ns-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fade-in { animation-name: ns-fade-in; }
+@keyframes ns-scale-up {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-scale-up { animation-name: ns-scale-up; }
+@keyframes ns-scale-down {
+  from { opacity: 0; transform: scale(1.15); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-scale-down { animation-name: ns-scale-down; }
+@keyframes ns-scale-x {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.animate-scale-x {
+  animation-name: ns-scale-x;
+  transform-origin: left center;
+  opacity: 1;
+}
+@keyframes ns-scale-y {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+.animate-scale-y {
+  animation-name: ns-scale-y;
+  transform-origin: bottom center;
+  opacity: 1;
+}
+@keyframes ns-blur-in {
+  from { opacity: 0; filter: blur(10px); }
+  to { opacity: 1; filter: blur(0); }
+}
+.animate-blur-in { animation-name: ns-blur-in; }
+@keyframes ns-flip-x {
+  from { opacity: 0; transform: perspective(800px) rotateX(90deg); }
+  to { opacity: 1; transform: perspective(800px) rotateX(0); }
+}
+.animate-flip-x { animation-name: ns-flip-x; }
+@keyframes ns-flip-y {
+  from { opacity: 0; transform: perspective(800px) rotateY(90deg); }
+  to { opacity: 1; transform: perspective(800px) rotateY(0); }
+}
+.animate-flip-y { animation-name: ns-flip-y; }
+@keyframes ns-zoom-in {
+  from { opacity: 0; transform: scale(0); }
+  60% { opacity: 1; transform: scale(1.08); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-zoom-in {
+  animation-name: ns-zoom-in;
+  animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes ns-pop {
+  0% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1.12); }
+  70% { transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.animate-pop {
+  animation-name: ns-pop;
+  animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes ns-rotate-in {
+  from { opacity: 0; transform: rotate(-10deg) scale(0.9); }
+  to { opacity: 1; transform: rotate(0) scale(1); }
+}
+.animate-rotate-in { animation-name: ns-rotate-in; }
+@keyframes ns-slide-in-left {
+  from { opacity: 0; transform: translateX(-100%); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.animate-slide-in-left { animation-name: ns-slide-in-left; }
+@keyframes ns-slide-in-right {
+  from { opacity: 0; transform: translateX(100%); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.animate-slide-in-right { animation-name: ns-slide-in-right; }
+@keyframes ns-typewriter {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+.animate-typewriter {
+  animation-name: ns-typewriter;
+  animation-timing-function: steps(40, end);
+  animation-duration: 2s;
+  opacity: 1;
+}
+@keyframes ns-draw-line {
+  from { stroke-dashoffset: var(--ns-path-length, 1000); }
+  to { stroke-dashoffset: 0; }
+}
+.animate-draw-line {
+  animation-name: ns-draw-line;
+  animation-duration: 1.5s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  stroke-dasharray: var(--ns-path-length, 1000);
+  opacity: 1;
+}
+@keyframes ns-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+.animate-pulse {
+  animation: ns-pulse 2s ease-in-out infinite;
+  opacity: 1;
+}
+@keyframes ns-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(59, 130, 246, 0.2); }
+  50% { box-shadow: 0 0 24px rgba(59, 130, 246, 0.5); }
+}
+.animate-glow {
+  animation: ns-glow 2s ease-in-out infinite;
+  opacity: 1;
+}
+@keyframes ns-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.animate-float {
+  animation: ns-float 3s ease-in-out infinite;
+  opacity: 1;
+}
+@keyframes ns-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-shimmer {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: ns-shimmer 2s linear infinite;
+  opacity: 1;
+}
+
+    /* 4. Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  [class*="animate-"] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
+    /* 5. Custom styles */
+
+  </style>
+</head>
+<body>
+  <div class="ns-deck">
+    <div class="ns-progress"><div class="ns-progress-bar"></div></div>
+
+    <section class="slide active" data-slide="1" data-layout="title">
+      <div class="slide-content">
+        <h1 class="animate-fade-up ">Ocean Plastic Reduction</h1>
+        <p class="subtitle animate-fade-up delay-200">2026 Strategy</p>
+        <p class="meta animate-fade-up delay-400">Global Marine Resilience Initiative · October 2026</p>
+      </div>
+  <aside class="notes">Speaker note for slide 1 (title). Expand with regional detail and cite the 2026 audit.</aside>
+    </section>
+    <section class="slide" data-slide="2" data-layout="bullets">
+      <div class="slide-content">
+        <h1 class="animate-fade-up">Five commitments for 2026</h1>
+        <ul class="ns-bullets">
+          <li class="animate-fade-up delay-100">River interception at 1,400 high-load catchments worldwide</li>
+          <li class="animate-fade-up delay-200">Producer-funded reuse infrastructure in 12 coastal markets</li>
+          <li class="animate-fade-up delay-300">Single-use polymer phase-out in packaging and hospitality</li>
+          <li class="animate-fade-up delay-400">Open chemical-recycling feedstock contracts for PET and nylon</li>
+          <li class="animate-fade-up delay-500">Verified marine habitat restoration across 200,000 hectares</li>
+        </ul>
+      </div>
+  <aside class="notes">Speaker note for slide 2 (bullets). Expand with regional detail and cite the 2026 audit.</aside>
+    </section>
+    <section class="slide" data-slide="3" data-layout="two-column">
+      <div class="slide-content">
+        <h1 class="animate-fade-up ">Where we are vs. where we need to be</h1>
+        <div class="ns-columns">
+          <div class="ns-col animate-fade-up delay-200">
+            <h3>Today</h3>
+            <p>Roughly 9% of ocean plastic is removed each year, concentrated in a handful of high-visibility cleanup projects that rarely touch the highest-volume sources.</p>
+          </div>
+          <div class="ns-col animate-fade-up delay-400">
+            <h3>2026 target</h3>
+            <p>A 73% reduction in annual ocean-bound plastic by 2030, achieved through upstream interception rather than post-hoc recovery.</p>
+          </div>
+        </div>
+      </div>
+  <aside class="notes">Speaker note for slide 3 (two-column). Expand with regional detail and cite the 2026 audit.</aside>
+    </section>
+    <section class="slide" data-slide="4" data-layout="comparison">
+      <div class="slide-content">
+        <h1 class="animate-fade-up " style="text-align:center">Prevention now, not cleanup later</h1>
+        <div class="ns-compare">
+          <div class="ns-compare-card animate-scale-up delay-200">
+            <h3>Cleanup first</h3>
+            <p>Recovery happens after damage is done. Cost per tonne stays above $4,000 and ecological benefit is local and short-lived.</p>
+          </div>
+          <div class="ns-compare-card animate-scale-up delay-400">
+            <h3>Prevention first</h3>
+            <p>Intercepting at source prevents emission entirely. Cost per tonne falls below $180 and avoided emissions compound every year.</p>
+          </div>
+        </div>
+      </div>
+  <aside class="notes">Speaker note for slide 4 (comparison). Expand with regional detail and cite the 2026 audit.</aside>
+    </section>
+    <section class="slide" data-slide="5" data-layout="quote">
+      <div class="slide-content">
+        <div class="ns-quote animate-fade-in duration-slow">
+          <blockquote>We cannot clean the ocean faster than we are polluting it.</blockquote>
+          <p class="ns-attribution animate-fade-up delay-400">— Marine Policy Review, 2026</p>
+        </div>
+      </div>
+  <aside class="notes">Speaker note for slide 5 (quote). Expand with regional detail and cite the 2026 audit.</aside>
+    </section>
+    <section class="slide" data-slide="6" data-layout="content">
+      <div class="slide-content">
+        <h1 class="animate-fade-up ">Reduce at source, measure honestly</h1>
+        <p class=" animate-fade-up delay-200">The 2026 strategy treats interception, reuse infrastructure and producer funding as a single system. Progress is published quarterly against an audited baseline, and every claim in this deck is traceable to a public methodology.</p>
+      </div>
+  <aside class="notes">Speaker note for slide 6 (closing). Expand with regional detail and cite the 2026 audit.</aside>
+    </section>
+
+    <div class="ns-nav">
+      <button class="ns-nav-prev" aria-label="Previous slide">&#8249;</button>
+      <button class="ns-nav-next" aria-label="Next slide">&#8250;</button>
+    </div>
+
+    <div class="ns-counter">
+      <span class="ns-current">1</span> / <span class="ns-total">6</span>
+    </div>
+  </div>
+
+  <script type="application/json" id="slide-data">
+{
+  "meta": {
+    "title": "Ocean Plastic Reduction: 2026 Strategy \u2014 Botanical",
+    "author": "Gomrey Research Probe",
+    "date": "2026-10-22",
+    "theme": "botanical",
+    "slideWidth": 13.333,
+    "slideHeight": 7.5
+  },
+  "slides": [
+    {
+      "layout": "title",
+      "background": {
+        "color": "#f0fdf4"
+      },
+      "elements": [
+        {
+          "type": "text",
+          "content": "Ocean Plastic Reduction",
+          "role": "title",
+          "position": {
+            "x": "10%",
+            "y": "28%",
+            "w": "80%",
+            "h": "22%"
+          },
+          "style": {
+            "fontSize": 44,
+            "fontFace": "Cormorant Garamond",
+            "bold": true,
+            "color": "#14532d",
+            "align": "center",
+            "valign": "middle"
+          }
+        },
+        {
+          "type": "text",
+          "content": "2026 Strategy",
+          "role": "subtitle",
+          "position": {
+            "x": "15%",
+            "y": "55%",
+            "w": "70%",
+            "h": "12%"
+          },
+          "style": {
+            "fontSize": 24,
+            "fontFace": "Inter",
+            "bold": false,
+            "color": "#16a34a",
+            "align": "center",
+            "valign": "middle"
+          }
+        },
+        {
+          "type": "text",
+          "content": "Global Marine Resilience Initiative \u00b7 October 2026",
+          "role": "caption",
+          "position": {
+            "x": "20%",
+            "y": "70%",
+            "w": "60%",
+            "h": "8%"
+          },
+          "style": {
+            "fontSize": 16,
+            "fontFace": "Inter",
+            "bold": false,
+            "color": "#16a34a",
+            "align": "center",
+            "valign": "middle"
+          }
+        }
+      ],
+      "notes": "Speaker note for slide 1 (title). Expand with regional detail and cite the 2026 audit."
+    },
+    {
+      "layout": "bullets",
+      "background": {
+        "color": "#f0fdf4"
+      },
+      "elements": [
+        {
+          "type": "text",
+          "content": "Five commitments for 2026",
+          "role": "title",
+          "position": {
+            "x": "5%",
+            "y": "8%",
+            "w": "90%",
+            "h": "12%"
+          },
+          "style": {
+            "fontSize": 36,
+            "fontFace": "Cormorant Garamond",
+            "bold": true,
+            "color": "#14532d",
+            "align": "left",
+            "valign": "middle"
+          }
+        },
+        {
+          "type": "text",
+          "content": "River interception at 1,400 high-load catchments worldwide",
+          "role": "body",
+          "position": {
+            "x": "5%",
+            "y": "26%",
+            "w": "72%",
+            "h": "9%"
+          },
+          "style": {
+            "fontSize": 22,
+            "fontFace": "Inter",
+            "bold": false,
+            "color": "#14532d",
+            "align": "left",
+            "valign": "middle"
+          }
+        },
+        {
+          "type": "text",
+          "content": "Producer-funded reuse infrastructure in 12 coastal markets",
+          "role": "body",
+          "position": {
+            "x": "5%",
+            "y": "37%",
+            "w": "72%",
+            "h": "9%"
+          },
+          "style": {
+            "fontSize": 22,
+            "fontFace": "Inter",
+            "bold": false,
+            "color": "#14532d",
+            "align": "left",
+            "valign": "middle"
+          }
+        },
+        {
+          "type": "text",
+          "content": "Single-use polymer phase-out in packaging and hospitality",
+          "role": "body",
+          "position": {
+            "x": "5%",
+            "y": "48%",
+            "w": "72%",
+            "h": "9%"
+          },
+          "style": {
+            "fontSize": 22,
+            "fontFace": "Inter",
+            "bold": false,
+            "color": "#14532d",
+            "align": "left",
+            "valign": "middle"
+          }
+        },
+        {
+          "type": "text",
+          "content": "Open chemical-recycling feedstock contracts for PET and nylon",
+          "role": "body",
+          "position": {
+            "x": "5%",
+            "y": "59%",
+            "w": "72%",
+            "h": "9%"
+          },
+          "style": {
+            "fontSize": 22,
+            "fontFace": "Inter",
+            "bold": false,
+            "color": "#14532d",
+            "align": "left",
+            "valign": "middle"
+          }
+        },
+        {
+          "type": "text",
+          "content": "Verified marine habitat restoration across 200,000 hectares",
+          "role": "body",
+          "position": {
+            "x": "5%",
+            "y": "70%",
+            "w": "72%",
+            "h": "9%"
+          },
+          "style": {
+            "fontSize": 22,
+            "fontFace": "Inter",
+            "bold": false,
+            "color": "#14532d",
+            "align": "left",
+            "valign": "middle"
+          }
+        }
+      ],
+      "notes": "Speaker note for slide 2 (bullets). Expand with regional detail and cite the 2026 audit."
+    },
+    {
+      "layout": "two-column",
+      "background": {
+        "color": "#f0fdf4"
+      },
+      "elements": [
+        {
+          "type": "text",
+          "content": "Where we are vs. where we need to be",
+          "role": "title",
+          "position": {
+            "x": "5%",
+            "y": "6%",
+            "w": "90%",
+            "h": "12%"
+          },
+          "style": {
+            "fontSize": 36,
+            "fontFace": "Cormorant Garamond",
+            "bold": true,
+            "color": "#14532d",
+            "align": "left",
+            "valign": "middle"
+          }
+        },
+        {
+          "type": "text",
+          "content": "Today",
+          "role": "label",
+          "position": {
+            "x": "5%",
+            "y": "24%",
+            "w": "45%",
+            "h": "8%"
+          },
+          "style": {
+            "fontSize": 22,
+            "fontFace": "Cormorant Garamond",
+            "bold": true,
+            "color": "#14532d",
+            "align": "left",
+            "valign": "middle"
+          }
+        },
+        {
+          "type": "text",
+          "content": "Roughly 9% of ocean plastic is removed each year, concentrated in a handful of high-visibility cleanup projects that rarely touch the highest-volume sources.",
+          "role": "body",
+          "position": {
+            "x": "5%",
+            "y": "33%",
+            "w": "45%",
+            "h": "34%"
+          },
+          "style": {
+            "fontSize": 20,
+            "fontFace": "Inter",
+            "bold": false,
+            "color": "#14532d",
+            "align": "left",
+            "valign": "middle"
+          }
+        },
+        {
+          "type": "text",
+          "content": "2026 target",
+          "role": "label",
+          "position": {
+            "x": "52%",
+            "y": "24%",
+            "w": "45%",
+            "h": "8%"
+          },
+          "style": {
+            "fontSize": 22,
+            "fontFace": "Cormorant Garamond",
+            "bold": true,
+            "color": "#14532d",
+            "align": "left",
+            "valign": "middle"
+          }
+        },
+        {
+          "type": "text",
+          "content": "A 73% reduction in annual ocean-bound plastic by 2030, achieved through upstream interception rather than post-hoc recovery.",
+          "role": "body",
+          "position": {
+            "x": "52%",
+            "y": "33%",
+            "w": "45%",
+            "h": "34%"
+          },
+          "style": {
+            "fontSize": 20,
+            "fontFace": "Inter",
+            "bold": false,
+            "color": "#14532d",
+            "align": "left",
+            "valign": "middle"
+          }
+        }
+      ],
+      "notes": "Speaker note for slide 3 (two-column). Expand with regional detail and cite the 2026 audit."
+    },
+    {
+      "layout": "comparison",
+      "background": {
+        "color": "#f0fdf4"
+      },
+      "elements": [
+        {
+          "type": "text",
+          "content": "Prevention now, not cleanup later",
+          "role": "title",
+          "position": {
+            "x": "5%",
+            "y": "6%",
+            "w": "90%",
+            "h": "12%"
+          },
+          "style": {
+            "fontSize": 34,
+            "fontFace": "Cormorant Garamond",
+            "bold": true,
+            "color": "#14532d",
+            "align": "center",
+            "valign": "middle"
+          }
+        },
+        {
+          "type": "text",
+          "content": "Cleanup first",
+          "role": "label",
+          "position": {
+            "x": "6%",
+            "y": "24%",
+            "w": "42%",
+            "h": "8%"
+          },
+          "style": {
+            "fontSize": 24,
+            "fontFace": "Cormorant Garamond",
+            "bold": true,
+            "color": "#15803d",
+            "align": "left",
+            "valign": "middle"
+          }
+        },
+        {
+          "type": "text",
+          "content": "Recovery happens after damage is done. Cost per tonne stays above $4,000 and ecological benefit is local and short-lived.",
+          "role": "body",
+          "position": {
+            "x": "6%",
+            "y": "33%",
+            "w": "42%",
+            "h": "34%"
+          },
+          "style": {
+            "fontSize": 20,
+            "fontFace": "Inter",
+            "bold": false,
+            "color": "#14532d",
+            "align": "left",
+            "valign": "middle"
+          }
+        },
+        {
+          "type": "text",
+          "content": "Prevention first",
+          "role": "label",
+          "position": {
+            "x": "53%",
+            "y": "24%",
+            "w": "42%",
+            "h": "8%"
+          },
+          "style": {
+            "fontSize": 24,
+            "fontFace": "Cormorant Garamond",
+            "bold": true,
+            "color": "#15803d",
+            "align": "left",
+            "valign": "middle"
+          }
+        },
+        {
+          "type": "text",
+          "content": "Intercepting at source prevents emission entirely. Cost per tonne falls below $180 and avoided emissions compound every year.",
+          "role": "body",
+          "position": {
+            "x": "53%",
+            "y": "33%",
+            "w": "42%",
+            "h": "34%"
+          },
+          "style": {
+            "fontSize": 20,
+            "fontFace": "Inter",
+            "bold": false,
+            "color": "#14532d",
+            "align": "left",
+            "valign": "middle"
+          }
+        }
+      ],
+      "notes": "Speaker note for slide 4 (comparison). Expand with regional detail and cite the 2026 audit."
+    },
+    {
+      "layout": "quote",
+      "background": {
+        "color": "#f0fdf4"
+      },
+      "elements": [
+        {
+          "type": "text",
+          "content": "We cannot clean the ocean faster than we are polluting it.",
+          "role": "body",
+          "position": {
+            "x": "15%",
+            "y": "30%",
+            "w": "70%",
+            "h": "26%"
+          },
+          "style": {
+            "fontSize": 32,
+            "fontFace": "Cormorant Garamond",
+            "bold": false,
+            "color": "#14532d",
+            "align": "center",
+            "valign": "middle"
+          }
+        },
+        {
+          "type": "text",
+          "content": "\u2014 Marine Policy Review, 2026",
+          "role": "caption",
+          "position": {
+            "x": "30%",
+            "y": "60%",
+            "w": "40%",
+            "h": "8%"
+          },
+          "style": {
+            "fontSize": 18,
+            "fontFace": "Inter",
+            "bold": false,
+            "color": "#16a34a",
+            "align": "center",
+            "valign": "middle"
+          }
+        }
+      ],
+      "notes": "Speaker note for slide 5 (quote). Expand with regional detail and cite the 2026 audit."
+    },
+    {
+      "layout": "content",
+      "background": {
+        "color": "#f0fdf4"
+      },
+      "elements": [
+        {
+          "type": "text",
+          "content": "Reduce at source, measure honestly",
+          "role": "title",
+          "position": {
+            "x": "5%",
+            "y": "8%",
+            "w": "90%",
+            "h": "12%"
+          },
+          "style": {
+            "fontSize": 36,
+            "fontFace": "Cormorant Garamond",
+            "bold": true,
+            "color": "#14532d",
+            "align": "left",
+            "valign": "middle"
+          }
+        },
+        {
+          "type": "text",
+          "content": "The 2026 strategy treats interception, reuse infrastructure and producer funding as a single system. Progress is published quarterly against an audited baseline, and every claim in this deck is traceable to a public methodology.",
+          "role": "body",
+          "position": {
+            "x": "5%",
+            "y": "24%",
+            "w": "75%",
+            "h": "34%"
+          },
+          "style": {
+            "fontSize": 20,
+            "fontFace": "Inter",
+            "bold": false,
+            "color": "#14532d",
+            "align": "left",
+            "valign": "middle"
+          }
+        }
+      ],
+      "notes": "Speaker note for slide 6 (closing). Expand with regional detail and cite the 2026 audit."
+    }
+  ]
+}
+  </script>
+
+  <script>
+(function () {
+  'use strict';
+
+  // ===== STATE =====
+  const SLIDE_WIDTH = 1920;
+  const SLIDE_HEIGHT = 1080;
+
+  let currentSlide = 1;
+  let totalSlides = 0;
+  let isBlackScreen = false;
+
+  const deck = document.querySelector('.ns-deck');
+  const slides = document.querySelectorAll('.slide');
+  const progressBar = document.querySelector('.ns-progress-bar');
+  const counterCurrent = document.querySelector('.ns-current');
+  const counterTotal = document.querySelector('.ns-total');
+  const navPrev = document.querySelector('.ns-nav-prev');
+  const navNext = document.querySelector('.ns-nav-next');
+
+  totalSlides = slides.length;
+
+  // ===== VIEWPORT SCALING =====
+  function updateScale() {
+    const scaleX = window.innerWidth / SLIDE_WIDTH;
+    const scaleY = window.innerHeight / SLIDE_HEIGHT;
+    const scale = Math.min(scaleX, scaleY);
+    document.documentElement.style.setProperty('--ns-scale', scale);
+  }
+
+  let resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(updateScale, 100);
+  });
+  updateScale();
+
+  // ===== SLIDE NAVIGATION =====
+  function goToSlide(n) {
+    n = Math.max(1, Math.min(n, totalSlides));
+    if (n === currentSlide && document.querySelector('.slide.active')) return;
+
+    // Deactivate current
+    const prev = document.querySelector('.slide.active');
+    if (prev) {
+      prev.classList.remove('active');
+      resetAnimations(prev);
+    }
+
+    // Activate target
+    currentSlide = n;
+    const target = document.querySelector('[data-slide="' + n + '"]');
+    if (target) {
+      target.classList.add('active');
+      triggerAnimations(target);
+      runCounterAnimations(target);
+    }
+
+    // Update UI
+    updateProgressBar();
+    updateCounter();
+    updateHash();
+
+    // Sync presenter
+    syncPresenter();
+  }
+
+  function nextSlide() {
+    if (currentSlide < totalSlides) goToSlide(currentSlide + 1);
+  }
+
+  function prevSlide() {
+    if (currentSlide > 1) goToSlide(currentSlide - 1);
+  }
+
+  // ===== PROGRESS BAR =====
+  function updateProgressBar() {
+    if (progressBar) {
+      const pct = (currentSlide / totalSlides) * 100;
+      progressBar.style.width = pct + '%';
+    }
+  }
+
+  // ===== COUNTER =====
+  function updateCounter() {
+    if (counterCurrent) counterCurrent.textContent = currentSlide;
+    if (counterTotal) counterTotal.textContent = totalSlides;
+  }
+
+  // ===== URL HASH =====
+  function updateHash() {
+    history.replaceState(null, '', '#slide-' + currentSlide);
+  }
+
+  function readHash() {
+    const hash = window.location.hash;
+    const match = hash.match(/^#slide-(\d+)$/);
+    if (match) {
+      const n = parseInt(match[1], 10);
+      if (n >= 1 && n <= totalSlides) return n;
+    }
+    return 1;
+  }
+
+  window.addEventListener('hashchange', function () {
+    const n = readHash();
+    if (n !== currentSlide) goToSlide(n);
+  });
+
+  // ===== ANIMATION TRIGGERS =====
+  function triggerAnimations(slide) {
+    const animated = slide.querySelectorAll('[class*="animate-"]');
+    animated.forEach(function (el) {
+      // Force restart: remove and re-add animation
+      const classes = Array.from(el.classList);
+      const animClass = classes.find(function (c) { return c.startsWith('animate-'); });
+      if (animClass && animClass !== 'animate-counter-up') {
+        el.classList.remove(animClass);
+        void el.offsetWidth; // trigger reflow
+        el.classList.add(animClass);
+      }
+    });
+  }
+
+  function resetAnimations(slide) {
+    const animated = slide.querySelectorAll('[class*="animate-"]');
+    animated.forEach(function (el) {
+      el.style.opacity = '0';
+    });
+  }
+
+  // ===== COUNTER-UP ANIMATION =====
+  function runCounterAnimations(slide) {
+    const counters = slide.querySelectorAll('.animate-counter-up');
+    counters.forEach(function (el) {
+      const target = parseFloat(el.getAttribute('data-target'));
+      if (isNaN(target)) return;
+
+      const duration = 1500;
+      const startTime = performance.now();
+      const isFloat = target % 1 !== 0;
+      const prefix = el.textContent.match(/^[^0-9]*/)[0] || '';
+      const suffix = el.textContent.match(/[^0-9]*$/)[0] || '';
+
+      function tick(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        // Ease out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = eased * target;
+
+        if (isFloat) {
+          el.textContent = prefix + value.toFixed(1) + suffix;
+        } else {
+          el.textContent = prefix + Math.round(value) + suffix;
+        }
+
+        if (progress < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          el.textContent = prefix + target + suffix;
+        }
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+
+  // ===== KEYBOARD NAVIGATION =====
+  document.addEventListener('keydown', function (e) {
+    // Ignore if typing in an input
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+      case 'PageDown':
+      case ' ':
+        e.preventDefault();
+        nextSlide();
+        break;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+      case 'PageUp':
+        e.preventDefault();
+        prevSlide();
+        break;
+      case 'Home':
+        e.preventDefault();
+        goToSlide(1);
+        break;
+      case 'End':
+        e.preventDefault();
+        goToSlide(totalSlides);
+        break;
+      case 'f':
+      case 'F':
+        e.preventDefault();
+        toggleFullscreen();
+        break;
+      case 'p':
+      case 'P':
+        e.preventDefault();
+        openPresenterWindow();
+        break;
+      case 'b':
+      case 'B':
+      case '.':
+        e.preventDefault();
+        toggleBlackScreen();
+        break;
+      case 'Escape':
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+        }
+        break;
+      default:
+        // Number keys 1-9 jump to slide
+        if (e.key >= '1' && e.key <= '9') {
+          const n = parseInt(e.key, 10);
+          if (n <= totalSlides) {
+            e.preventDefault();
+            goToSlide(n);
+          }
+        }
+    }
+  });
+
+  // ===== TOUCH / SWIPE =====
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  document.addEventListener('touchstart', function (e) {
+    touchStartX = e.changedTouches[0].clientX;
+    touchStartY = e.changedTouches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function (e) {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+
+    // Only trigger if horizontal swipe > 50px and more horizontal than vertical
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+      if (dx < 0) nextSlide();  // swipe left = next
+      else prevSlide();          // swipe right = prev
+    }
+  }, { passive: true });
+
+  // ===== CLICK NAVIGATION =====
+  if (navPrev) navPrev.addEventListener('click', prevSlide);
+  if (navNext) navNext.addEventListener('click', nextSlide);
+
+  // ===== FULLSCREEN =====
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(function () {});
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  document.addEventListener('fullscreenchange', function () {
+    setTimeout(updateScale, 100);
+  });
+
+  // ===== BLACK SCREEN =====
+  function toggleBlackScreen() {
+    isBlackScreen = !isBlackScreen;
+    document.body.classList.toggle('black-screen', isBlackScreen);
+    if (presenterChannel) {
+      presenterChannel.postMessage({
+        type: 'black-screen',
+        active: isBlackScreen
+      });
+    }
+  }
+
+  // ===== PRESENTER MODE =====
+  let presenterChannel = null;
+
+  try {
+    presenterChannel = new BroadcastChannel('nextslide-presenter');
+    presenterChannel.onmessage = function (event) {
+      if (event.data.type === 'navigate') {
+        goToSlide(event.data.slide);
+      }
+    };
+  } catch (e) {
+    // BroadcastChannel not supported
+  }
+
+  function syncPresenter() {
+    if (!presenterChannel) return;
+    presenterChannel.postMessage({
+      type: 'slide-change',
+      slide: currentSlide,
+      total: totalSlides,
+      notes: getNotesForSlide(currentSlide)
+    });
+  }
+
+  function getNotesForSlide(n) {
+    const slide = document.querySelector('[data-slide="' + n + '"]');
+    if (!slide) return '';
+    const notes = slide.querySelector('.notes');
+    return notes ? notes.textContent.trim() : '';
+  }
+
+  function openPresenterWindow() {
+    const title = document.title || 'Presentation';
+    const presenterHTML = generatePresenterHTML(title);
+    const pw = window.open('', 'nextslide-presenter',
+      'width=1200,height=800,menubar=no,toolbar=no,location=no,status=no');
+    if (!pw) {
+      alert('Popup blocked. Allow popups and try again.');
+      return;
+    }
+    pw.document.write(presenterHTML);
+    pw.document.close();
+
+    // Send initial state
+    setTimeout(function () {
+      if (presenterChannel) {
+        presenterChannel.postMessage({
+          type: 'init',
+          slide: currentSlide,
+          total: totalSlides,
+          notes: getNotesForSlide(currentSlide)
+        });
+      }
+    }, 500);
+  }
+
+  function generatePresenterHTML(title) {
+    return '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">' +
+      '<title>Presenter — ' + title + '</title>' +
+      '<style>' +
+      '*{margin:0;padding:0;box-sizing:border-box}' +
+      'body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#1a1a2e;color:#e0e0e0;height:100vh;overflow:hidden}' +
+      '.p-layout{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr auto;height:100vh;gap:12px;padding:12px}' +
+      '.p-current{background:#000;border-radius:8px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}' +
+      '.p-current-label,.p-next-label{position:absolute;top:8px;left:12px;font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.1em}' +
+      '.p-right{display:flex;flex-direction:column;gap:12px}' +
+      '.p-next{background:#000;border-radius:8px;flex:0 0 180px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}' +
+      '.p-notes{flex:1;background:#16213e;border-radius:8px;padding:16px;overflow-y:auto}' +
+      '.p-notes h3{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.4);margin-bottom:12px}' +
+      '.p-notes-content{font-size:18px;line-height:1.6;white-space:pre-wrap}' +
+      '.p-bar{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;padding:8px 16px;background:#16213e;border-radius:8px}' +
+      '.p-timer{font-size:32px;font-weight:700;font-variant-numeric:tabular-nums;color:#60a5fa}' +
+      '.p-clock{font-size:16px;color:rgba(255,255,255,.4);margin-left:16px}' +
+      '.p-counter{font-size:24px;font-weight:600;color:rgba(255,255,255,.6)}' +
+      '.p-controls{display:flex;gap:8px}' +
+      '.p-controls button{background:rgba(255,255,255,.1);border:none;color:#fff;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:14px}' +
+      '.p-controls button:hover{background:rgba(255,255,255,.2)}' +
+      '.p-slide-num{font-size:48px;font-weight:700;color:rgba(255,255,255,.15)}' +
+      '</style></head><body>' +
+      '<div class="p-layout">' +
+      '<div class="p-current"><span class="p-current-label">Current Slide</span><span class="p-slide-num" id="p-cur-num">1</span></div>' +
+      '<div class="p-right">' +
+      '<div class="p-next"><span class="p-next-label">Next</span><span class="p-slide-num" id="p-next-num">2</span></div>' +
+      '<div class="p-notes"><h3>Speaker Notes</h3><div class="p-notes-content" id="p-notes">No notes for this slide.</div></div>' +
+      '</div>' +
+      '<div class="p-bar">' +
+      '<div><span class="p-timer" id="p-timer">00:00:00</span><span class="p-clock" id="p-clock"></span></div>' +
+      '<span class="p-counter" id="p-counter">1 / 1</span>' +
+      '<div class="p-controls">' +
+      '<button id="p-reset">Reset Timer</button>' +
+      '<button id="p-prev">← Prev</button>' +
+      '<button id="p-next-btn">Next →</button>' +
+      '</div></div></div>' +
+      '<script>' +
+      'var ch=new BroadcastChannel("nextslide-presenter");' +
+      'var cur=1,tot=1,start=Date.now();' +
+      'ch.onmessage=function(e){' +
+      'if(e.data.type==="init"||e.data.type==="slide-change"){' +
+      'cur=e.data.slide;tot=e.data.total;' +
+      'document.getElementById("p-cur-num").textContent=cur;' +
+      'document.getElementById("p-next-num").textContent=cur<tot?cur+1:"End";' +
+      'document.getElementById("p-notes").textContent=e.data.notes||"No notes for this slide.";' +
+      'document.getElementById("p-counter").textContent=cur+" / "+tot;' +
+      '}};' +
+      'document.getElementById("p-prev").onclick=function(){ch.postMessage({type:"navigate",slide:cur-1})};' +
+      'document.getElementById("p-next-btn").onclick=function(){ch.postMessage({type:"navigate",slide:cur+1})};' +
+      'document.getElementById("p-reset").onclick=function(){start=Date.now()};' +
+      'function tick(){' +
+      'var e=Date.now()-start,h=Math.floor(e/36e5),m=Math.floor(e%36e5/6e4),s=Math.floor(e%6e4/1e3);' +
+      'document.getElementById("p-timer").textContent=' +
+      'String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");' +
+      'var n=new Date;document.getElementById("p-clock").textContent=n.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});' +
+      'requestAnimationFrame(tick)}tick();' +
+      'document.addEventListener("keydown",function(e){' +
+      'if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();ch.postMessage({type:"navigate",slide:cur+1})}' +
+      'if(e.key==="ArrowLeft"){e.preventDefault();ch.postMessage({type:"navigate",slide:cur-1})}' +
+      '});' +
+      '<\/script></body></html>';
+  }
+
+  // ===== INIT =====
+  function init() {
+    const startSlide = readHash();
+    if (counterTotal) counterTotal.textContent = totalSlides;
+    goToSlide(startSlide);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+})();
+  </script>
+</body>
+</html>

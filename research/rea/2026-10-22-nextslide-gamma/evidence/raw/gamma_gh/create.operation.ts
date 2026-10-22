@@ -1,0 +1,763 @@
+import type { INodeProperties } from 'n8n-workflow';
+import { NodeOperationError } from 'n8n-workflow';
+
+import { CARD_DIMENSION_OPTIONS, IMAGE_MODEL_OPTIONS, LANGUAGE_OPTIONS } from '../../apiEnums';
+import { sendIfSet, setPath } from '../sendIfSet';
+
+/**
+ * Parameters for Generation: Create.
+ *
+ * `additionalOptions` stays a single collection rather than being split across
+ * files: n8n's linter enforces alphabetical ordering of its members, and
+ * assembling them from several modules would move that ordering out of reach of
+ * the static check.
+ */
+export const createDescription: INodeProperties[] = [
+	// Required: Input Text
+	{
+		displayName: 'Input Text',
+		name: 'inputText',
+		type: 'string',
+		hint: 'With Card Split set to Input Text Breaks, separate cards with a line containing only --- . Joining array items with "\n---\n" gives one card per item.',
+		required: true,
+		typeOptions: {
+			rows: 4,
+		},
+		default: '',
+		placeholder: 'e.g. Create a presentation about renewable energy',
+		description: 'Content to generate from - can be a brief prompt or detailed content (max ~400,000 characters)',
+		displayOptions: {
+			show: {
+				resource: ['generation'],
+				operation: ['create'],
+			},
+		},
+		routing: {
+			request: {
+				body: {
+					inputText: '={{ $value }}',
+				},
+			},
+		},
+	},
+	// Required: Text Mode
+	{
+		displayName: 'Text Mode',
+		name: 'textMode',
+		type: 'options',
+		required: true,
+		options: [
+			{
+				name: 'Generate',
+				value: 'generate',
+				description: 'AI generates and expands content based on the input',
+			},
+			{
+				name: 'Condense',
+				value: 'condense',
+				description: 'AI condenses and summarizes the input',
+			},
+			{
+				name: 'Preserve',
+				value: 'preserve',
+				description: 'Keep your content and structure rather than rewriting it. Not verbatim: Gamma may re-case headings and add detail, so check the output where exact wording matters.',
+			},
+		],
+		default: 'generate',
+		description: 'How to handle the input text',
+		displayOptions: {
+			show: {
+				resource: ['generation'],
+				operation: ['create'],
+			},
+		},
+		routing: {
+			request: {
+				body: {
+					textMode: '={{ $value }}',
+				},
+			},
+		},
+	},
+	// Format
+	{
+		displayName: 'Format',
+		name: 'format',
+		type: 'options',
+		options: [
+			{
+				name: 'Presentation',
+				value: 'presentation',
+			},
+			{
+				name: 'Document',
+				value: 'document',
+			},
+			{
+				name: 'Social Post',
+				value: 'social',
+			},
+			{
+				name: 'Webpage',
+				value: 'webpage',
+			},
+		],
+		default: 'presentation',
+		description: 'Output format type',
+		displayOptions: {
+			show: {
+				resource: ['generation'],
+				operation: ['create'],
+			},
+		},
+		routing: {
+			request: {
+				body: {
+					format: '={{ $value }}',
+				},
+			},
+		},
+	},
+	// Additional Options (optional fields grouped for cleaner UI)
+	{
+		displayName: 'Additional Options',
+		name: 'additionalOptions',
+		type: 'collection',
+		placeholder: 'Add option',
+		default: {},
+		displayOptions: {
+			show: {
+				resource: ['generation'],
+				// File-level options apply to a multi-page generation too. The
+				// per-page ones below are hidden for it individually, because
+				// `pages` overrides them.
+				operation: ['create', 'createMultiPage'],
+			},
+		},
+		options: [
+			{
+				displayName: 'Additional Instructions',
+				name: 'additionalInstructions',
+				displayOptions: {
+					hide: {
+						'/operation': ['createMultiPage'],
+					},
+				},
+				type: 'string',
+				typeOptions: {
+					rows: 2,
+				},
+				default: '',
+				placeholder: 'e.g. Make the card headings humorous and catchy',
+				description: 'Additional instructions for generation (max 2000 characters)',
+				routing: sendIfSet('additionalOptions.additionalInstructions', 'body.additionalInstructions'),
+			},
+			{
+				displayName: 'AI Image Model',
+				name: 'imageModel',
+				type: 'options',
+				options: IMAGE_MODEL_OPTIONS,
+				default: '',
+				description: 'AI model to generate images (only applies if Image Source is AI Generated)',
+				displayOptions: {
+					hide: {
+						'/operation': ['createMultiPage'],
+					},
+					show: {
+						imageSource: ['aiGenerated'],
+					},
+				},
+				routing: sendIfSet('additionalOptions.imageModel', 'body.imageOptions.model'),
+			},
+			{
+				displayName: 'Audience',
+				name: 'audience',
+				displayOptions: {
+					hide: {
+						'/operation': ['createMultiPage'],
+					},
+				},
+				type: 'string',
+				default: '',
+				placeholder: 'e.g. business executives',
+				description: 'Target audience description (max 500 characters)',
+				routing: sendIfSet('additionalOptions.audience', 'body.textOptions.audience'),
+			},
+			{
+				displayName: 'Card Dimensions',
+				name: 'cardDimensionsPresentation',
+				type: 'options',
+				options: CARD_DIMENSION_OPTIONS.presentation,
+				default: 'fluid',
+				description: 'Card aspect ratio. Only the ratios valid for a presentation are listed.',
+				displayOptions: {
+					show: {
+						'/format': ['presentation'],
+					},
+				},
+				routing: sendIfSet('additionalOptions.cardDimensionsPresentation', 'body.cardOptions.dimensions'),
+			},
+			{
+				displayName: 'Card Dimensions',
+				name: 'cardDimensionsDocument',
+				type: 'options',
+				options: CARD_DIMENSION_OPTIONS.document,
+				default: 'fluid',
+				description: 'Card aspect ratio. Only the ratios valid for a document are listed.',
+				displayOptions: {
+					show: {
+						'/format': ['document'],
+					},
+				},
+				routing: sendIfSet('additionalOptions.cardDimensionsDocument', 'body.cardOptions.dimensions'),
+			},
+			{
+				displayName: 'Card Dimensions',
+				name: 'cardDimensionsSocial',
+				type: 'options',
+				options: CARD_DIMENSION_OPTIONS.social,
+				default: '1x1',
+				description: 'Card aspect ratio. Only the ratios valid for a social are listed.',
+				displayOptions: {
+					show: {
+						'/format': ['social'],
+					},
+				},
+				routing: sendIfSet('additionalOptions.cardDimensionsSocial', 'body.cardOptions.dimensions'),
+			},
+			{
+				displayName: 'Card Dimensions',
+				name: 'cardDimensionsWebpage',
+				type: 'options',
+				options: CARD_DIMENSION_OPTIONS.webpage,
+				default: 'fluid',
+				description: 'Card aspect ratio. Only the ratios valid for a webpage are listed.',
+				displayOptions: {
+					show: {
+						'/format': ['webpage'],
+					},
+				},
+				routing: sendIfSet('additionalOptions.cardDimensionsWebpage', 'body.cardOptions.dimensions'),
+			},
+			{
+				displayName: 'Card Split',
+				name: 'cardSplit',
+				displayOptions: {
+					hide: {
+						'/operation': ['createMultiPage'],
+					},
+				},
+				type: 'options',
+				options: [
+					{
+						name: 'Auto',
+						value: 'auto',
+						description: 'Gamma decides where cards break and honours Number of Cards. Separators in the text are ignored.',
+					},
+					{
+						name: 'Input Text Breaks',
+						value: 'inputTextBreaks',
+						description: 'One card per --- separator line in Input Text. Number of Cards is ignored, and text with no separator produces a single card.',
+					},
+				],
+				default: 'auto',
+				description: 'How to split content into cards',
+				routing: {
+					request: {
+						body: {
+							cardSplit: '={{ $value }}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Email Access Level',
+				name: 'emailAccess',
+				type: 'options',
+				options: [
+					{ name: 'View Only', value: 'view' },
+					{ name: 'Can Comment', value: 'comment' },
+					{ name: 'Can Edit', value: 'edit' },
+					{ name: 'Full Access', value: 'fullAccess' },
+				],
+				default: 'view',
+				description: 'Access level for email recipients (only used if Email Recipients is filled)',
+				routing: {
+					send: {
+						preSend: [
+							async function (this, requestOptions) {
+								const recipients = this.getNodeParameter('additionalOptions.emailRecipients') as string;
+								const access = this.getNodeParameter('additionalOptions.emailAccess') as string;
+								if (recipients && access) {
+									setPath(requestOptions, 'body.sharingOptions.emailOptions.access', access);
+								}
+								return requestOptions;
+							},
+						],
+					},
+				},
+			},
+			{
+				displayName: 'Email Recipients',
+				name: 'emailRecipients',
+				type: 'string',
+				default: '',
+				placeholder: 'e.g. user@example.com, team@example.com',
+				description: 'Comma-separated email addresses to share with (max 25)',
+				routing: {
+					send: {
+						preSend: [
+							async function (this, requestOptions) {
+								const value = this.getNodeParameter('additionalOptions.emailRecipients') as string;
+								if (value) {
+									const recipients = value.split(',').map((email) => email.trim()).filter(Boolean);
+									setPath(requestOptions, 'body.sharingOptions.emailOptions.recipients', recipients);
+								}
+								return requestOptions;
+							},
+						],
+					},
+				},
+			},
+			{
+				displayName: 'Enable Search Engine Indexing',
+				name: 'enableSearchEngineIndexing',
+				type: 'boolean',
+				default: false,
+				description: 'Whether to allow search engines to index this content',
+				routing: sendIfSet('additionalOptions.enableSearchEngineIndexing', 'body.sharingOptions.enableSearchEngineIndexing'),
+			},
+			{
+				displayName: 'Export As',
+				name: 'exportAs',
+				type: 'options',
+				options: [
+					{ name: 'None', value: '' },
+					{ name: 'PDF', value: 'pdf' },
+					{ name: 'PNG', value: 'png' },
+					{ name: 'PowerPoint (PPTX)', value: 'pptx' },
+				],
+				default: '',
+				description: 'Export format (optional) - provides download URL when generation completes',
+				routing: sendIfSet('additionalOptions.exportAs', 'body.exportAs'),
+			},
+			{
+				displayName: 'External Access',
+				name: 'externalAccess',
+				type: 'options',
+				options: [
+					{ name: 'Can Comment', value: 'comment' },
+					{ name: 'Can Edit', value: 'edit' },
+					{ name: 'Default (Workspace Settings)', value: '' },
+					{ name: 'No Access', value: 'noAccess' },
+					{ name: 'View Only', value: 'view' },
+				],
+				default: '',
+				description: 'Access level for external users (via link)',
+				routing: sendIfSet('additionalOptions.externalAccess', 'body.sharingOptions.externalAccess'),
+			},
+			{
+				displayName: 'Folder',
+				name: 'folderIds',
+				type: 'resourceLocator',
+				default: { mode: 'list', value: '' },
+				description: 'Folder to place the generated Gamma in. The API accepts a single folder.',
+				modes: [
+					{
+						displayName: 'From List',
+						name: 'list',
+						type: 'list',
+						typeOptions: {
+							searchListMethod: 'searchFolders',
+							searchable: true,
+							searchFilterRequired: false,
+						},
+					},
+					{
+						displayName: 'By ID',
+						name: 'id',
+						type: 'string',
+						hint: 'Paste the ID from the Gamma app or from a List operation',
+					},
+				],
+				routing: {
+					send: {
+						preSend: [
+							async function (this, requestOptions) {
+								const value = this.getNodeParameter('additionalOptions.folderIds', '', {
+									extractValue: true,
+								}) as string;
+								if (value) {
+									const ids = value.split(',').map((id) => id.trim()).filter(Boolean);
+									if (ids.length > 1) {
+										throw new NodeOperationError(
+											this.getNode(),
+											'The \'Folder\' parameter accepts a single folder',
+											{ description: 'Gamma places a generation in at most one folder. Remove the extra IDs and keep one.' },
+										);
+									}
+									// folderId, not the deprecated one-item folderIds array: both engines
+									// accept it, and Gamma 5 rejects folderIds.
+									setPath(requestOptions, 'body.folderId', ids[0]);
+								}
+								return requestOptions;
+							},
+						],
+					},
+				},
+			},
+			{
+				displayName: 'Header/Footer Config (JSON)',
+				name: 'headerFooter',
+				type: 'json',
+				default: '',
+				placeholder: '{"topRight": {"type": "image", "source": "themeLogo", "size": "sm"}, "bottomRight": {"type": "cardNumber"}}',
+				description: 'Header/footer configuration as JSON (optional). Example: {"topRight": {"type": "image", "source": "themeLogo"}, "bottomRight": {"type": "cardNumber"}}.',
+				routing: {
+					send: {
+						preSend: [
+							async function (this, requestOptions) {
+								const value = this.getNodeParameter('additionalOptions.headerFooter') as string;
+								if (value) {
+									let parsed: unknown;
+									try {
+										parsed = JSON.parse(value);
+									} catch {
+										throw new NodeOperationError(
+											this.getNode(),
+											"The 'Header/Footer Config (JSON)' value isn't valid JSON",
+											{ description: 'Enter a JSON object, for example {"topRight": {"type": "image", "source": "themeLogo"}}' },
+										);
+									}
+									setPath(requestOptions, 'body.cardOptions.headerFooter', parsed);
+								}
+								return requestOptions;
+							},
+						],
+					},
+				},
+			},
+			{
+				displayName: 'Image Source',
+				name: 'imageSource',
+				displayOptions: {
+					hide: {
+						'/operation': ['createMultiPage'],
+					},
+				},
+				type: 'options',
+				options: [
+					{ name: 'AI Generated', value: 'aiGenerated', description: 'Generate images using AI models' },
+					{ name: 'Giphy', value: 'giphy', description: 'Get GIFs from Giphy' },
+					{ name: 'No Images', value: 'noImages', description: 'Create with no images' },
+					{ name: 'Pexels', value: 'pexels', description: 'Get stock photos from Pexels' },
+					{ name: 'Pictographic', value: 'pictographic', description: 'Pull images from Pictographic' },
+					{ name: 'Placeholder', value: 'placeholder', description: 'Create with placeholder images' },
+					{ name: 'Theme Accent', value: 'themeAccent', description: 'Use accent graphics from the theme' },
+					{ name: 'Web (All Images)', value: 'webAllImages', description: 'Pull the most relevant images from the web' },
+					{ name: 'Web (Commercial)', value: 'webFreeToUseCommercially', description: 'Get images licensed for commercial use' },
+					{ name: 'Web (Free to Use)', value: 'webFreeToUse', description: 'Pull images licensed for personal use' },
+				],
+				default: 'aiGenerated',
+				description: 'Where to source images from',
+				routing: sendIfSet('additionalOptions.imageSource', 'body.imageOptions.source', { skip: 'aiGenerated' }),
+			},
+			{
+				displayName: 'Image Style',
+				name: 'imageStyle',
+				type: 'string',
+				default: '',
+				placeholder: 'e.g. photorealistic, minimal, artistic',
+				description: 'Style description for AI-generated images (max 500 characters)',
+				displayOptions: {
+					hide: {
+						'/operation': ['createMultiPage'],
+					},
+					show: {
+						imageSource: ['aiGenerated'],
+					},
+				},
+				routing: sendIfSet('additionalOptions.imageStyle', 'body.imageOptions.style'),
+			},
+			{
+				displayName: 'Language',
+				name: 'language',
+				displayOptions: {
+					hide: {
+						'/operation': ['createMultiPage'],
+					},
+				},
+				type: 'options',
+				options: LANGUAGE_OPTIONS,
+				default: 'en',
+				description: 'Language for the generated content',
+				routing: sendIfSet('additionalOptions.language', 'body.textOptions.language', { skip: 'en' }),
+			},
+			{
+				displayName: 'Number of Cards',
+				name: 'numCards',
+				type: 'number',
+				typeOptions: {
+					minValue: 1,
+					maxValue: 75,
+				},
+				default: 10,
+				description: 'Target number of cards to generate. Applies only when Card Split is Auto. Your plan caps this (60 on Pro, Teams and Business; 75 on Ultra) -- the User: Get User Information operation returns your exact limit as maxGenerateCards.',
+				displayOptions: {
+					// Hidden when either applies: `pages` overrides numCards entirely,
+					// and Gamma ignores it when splitting on text breaks.
+					hide: {
+						'/operation': ['createMultiPage'],
+						'/additionalOptions.cardSplit': ['inputTextBreaks'],
+					},
+				},
+				routing: {
+					send: {
+						preSend: [
+							async function (this, requestOptions) {
+								// Gamma ignores numCards when splitting on text breaks, so don't
+								// send a value that cannot apply -- a stale one would otherwise
+								// ride along from before Card Split was changed.
+								const cardSplit = this.getNodeParameter('additionalOptions.cardSplit', 'auto') as string;
+								if (cardSplit === 'inputTextBreaks') {
+									return requestOptions;
+								}
+								const value = this.getNodeParameter('additionalOptions.numCards') as number;
+								if (value) setPath(requestOptions, 'body.numCards', value);
+								return requestOptions;
+							},
+						],
+					},
+				},
+			},
+			{
+				displayName: 'Text Amount',
+				name: 'textAmount',
+				displayOptions: {
+					hide: {
+						'/operation': ['createMultiPage'],
+					},
+				},
+				type: 'options',
+				options: [
+					{ name: 'Brief', value: 'brief' },
+					{ name: 'Medium', value: 'medium' },
+					{ name: 'Detailed', value: 'detailed' },
+					{ name: 'Extensive', value: 'extensive' },
+				],
+				default: 'medium',
+				description: 'Amount of text to generate per card',
+				routing: sendIfSet('additionalOptions.textAmount', 'body.textOptions.amount', { skip: 'medium' }),
+			},
+			{
+				displayName: 'Theme',
+				name: 'themeId',
+				type: 'resourceLocator',
+				default: { mode: 'list', value: '' },
+				description: 'Theme to apply. Leave empty to use the workspace default.',
+				modes: [
+					{
+						displayName: 'From List',
+						name: 'list',
+						type: 'list',
+						typeOptions: {
+							searchListMethod: 'searchThemes',
+							searchable: true,
+							searchFilterRequired: false,
+						},
+					},
+					{
+						displayName: 'By ID',
+						name: 'id',
+						type: 'string',
+						hint: 'Paste the ID from the Gamma app or from a List operation',
+					},
+				],
+				routing: sendIfSet('additionalOptions.themeId', 'body.themeId', { extractValue: true }),
+			},
+			{
+				displayName: 'Title',
+				name: 'title',
+				type: 'string',
+				default: '',
+				placeholder: 'e.g. Q3 Results Overview',
+				description:
+					'Title for the generated Gamma. Leave empty to have one generated from the content.',
+				routing: sendIfSet('additionalOptions.title', 'body.title'),
+			},
+			{
+				displayName: 'Tone',
+				name: 'tone',
+				displayOptions: {
+					hide: {
+						'/operation': ['createMultiPage'],
+					},
+				},
+				type: 'string',
+				default: '',
+				placeholder: 'e.g. professional and friendly',
+				description: 'Tone description for generated content (max 500 characters)',
+				routing: sendIfSet('additionalOptions.tone', 'body.textOptions.tone'),
+			},
+			{
+				displayName: 'Workspace Access',
+				name: 'workspaceAccess',
+				type: 'options',
+				options: [
+					{ name: 'Can Comment', value: 'comment' },
+					{ name: 'Can Edit', value: 'edit' },
+					{ name: 'Default (Workspace Settings)', value: '' },
+					{ name: 'Full Access', value: 'fullAccess' },
+					{ name: 'No Access', value: 'noAccess' },
+					{ name: 'View Only', value: 'view' },
+				],
+				default: '',
+				description: 'Access level for workspace members',
+				routing: sendIfSet('additionalOptions.workspaceAccess', 'body.sharingOptions.workspaceAccess'),
+			},
+		],
+	},
+];
+
+// Create with Gamma 5
+const showAgent = { resource: ['generation'], operation: ['createAgent'] };
+
+// Folder, sharing and export behave the same on both engines, so Gamma 5 reuses
+// those options and their preSend hooks as they are.
+const SHARED_OPTIONS = ['emailAccess', 'emailRecipients', 'exportAs', 'externalAccess', 'folderIds', 'workspaceAccess'];
+const classicOptions = createDescription.find((p) => p.name === 'additionalOptions')!.options as INodeProperties[];
+
+const agentOptions: INodeProperties[] = [
+	...classicOptions.filter((o) => SHARED_OPTIONS.includes(o.name)),
+	{
+		displayName: 'Additional Instructions',
+		name: 'additionalInstructions',
+		type: 'string',
+		typeOptions: { rows: 2 },
+		default: '',
+		placeholder: 'e.g. Formal tone. Audience is the board. Keep text minimal.',
+		description: 'Extra direction such as tone, audience, language or style. The agent treats it as guidance (max 5000 characters).',
+		routing: sendIfSet('additionalOptions.additionalInstructions', 'body.additionalInstructions'),
+	},
+	{
+		displayName: 'Disable Connectors',
+		name: 'disableConnectors',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to stop the agent reading the workspace connectors, such as Notion or Slack, for this run',
+		routing: sendIfSet('additionalOptions.disableConnectors', 'body.disableConnectors'),
+	},
+	{
+		displayName: 'Number of Cards',
+		name: 'numCards',
+		type: 'number',
+		typeOptions: { minValue: 1, maxValue: 100 },
+		default: 10,
+		description: 'Target number of cards. The agent may land a card or two either side. Your plan caps it (10 on Free, 100 on paid plans).',
+		routing: sendIfSet('additionalOptions.numCards', 'body.numCards'),
+	},
+	{
+		displayName: 'Quality',
+		name: 'quality',
+		type: 'options',
+		options: [
+			{ name: 'Default', value: '', description: 'The workspace default, within your plan' },
+			{ name: 'Lite', value: 'lite' },
+			{ name: 'Max', value: 'max', description: 'Needs a plan that includes it' },
+			{ name: 'Standard', value: 'standard' },
+		],
+		default: '',
+		description: 'The quality preset, as offered in the Gamma app',
+		routing: sendIfSet('additionalOptions.quality', 'body.quality'),
+	},
+	{
+		displayName: 'Source URLs',
+		name: 'sourceUrls',
+		type: 'string',
+		default: '',
+		placeholder: 'e.g. https://example.com/q3-report, https://example.com/roadmap',
+		description: 'Comma-separated http(s) pages for the agent to read as source material (max 10). One it cannot read is skipped.',
+		routing: {
+			send: {
+				preSend: [
+					async function (this, requestOptions) {
+						const value = this.getNodeParameter('additionalOptions.sourceUrls') as string;
+						const urls = value.split(',').map((url) => url.trim()).filter(Boolean);
+						if (urls.length) setPath(requestOptions, 'body.sourceUrls', urls);
+						return requestOptions;
+					},
+				],
+			},
+		},
+	},
+	{
+		displayName: 'Template',
+		name: 'templateId',
+		type: 'resourceLocator',
+		default: { mode: 'list', value: '' },
+		description: 'A workspace or official Gamma template to start from. Leave empty to let the agent choose a design.',
+		modes: [
+			{
+				displayName: 'From List',
+				name: 'list',
+				type: 'list',
+				typeOptions: {
+					searchListMethod: 'searchTemplates',
+					searchable: true,
+					searchFilterRequired: false,
+				},
+			},
+			{
+				displayName: 'By ID',
+				name: 'id',
+				type: 'string',
+				hint: 'A template ID, or the ID of any Gamma in your workspace',
+			},
+		],
+		routing: sendIfSet('additionalOptions.templateId', 'body.templateId', { extractValue: true }),
+	},
+];
+
+/**
+ * Parameters for Generation: Create with Gamma 5. Gamma 5 takes a brief, not
+ * classic's text-handling settings. It has no webpage format and no theme
+ * field, and it rejects either rather than ignoring them.
+ */
+export const createAgentDescription: INodeProperties[] = [
+	{
+		displayName: 'Prompt',
+		name: 'prompt',
+		type: 'string',
+		required: true,
+		typeOptions: { rows: 4 },
+		default: '',
+		placeholder: 'e.g. A 10-card investor update for Q3 covering revenue, churn and roadmap',
+		description: 'The brief: what to make. The agent plans, writes and designs from it (max ~400,000 characters).',
+		displayOptions: { show: showAgent },
+		routing: { request: { body: { prompt: '={{ $value }}' } } },
+	},
+	{
+		displayName: 'Format',
+		name: 'format',
+		type: 'options',
+		options: [
+			{ name: 'Presentation', value: 'presentation' },
+			{ name: 'Document', value: 'document' },
+			{ name: 'Social Post', value: 'social' },
+		],
+		default: 'presentation',
+		description: 'Output format. Gamma 5 cannot build webpages yet; use Create (Classic) for one.',
+		displayOptions: { show: showAgent },
+		routing: { request: { body: { format: '={{ $value }}' } } },
+	},
+	{
+		displayName: 'Additional Options',
+		name: 'additionalOptions',
+		type: 'collection',
+		placeholder: 'Add option',
+		default: {},
+		displayOptions: { show: showAgent },
+		// Sorted here, as the linter cannot see into an assembled list.
+		options: agentOptions.sort((a, b) => a.displayName.localeCompare(b.displayName)),
+	},
+];
