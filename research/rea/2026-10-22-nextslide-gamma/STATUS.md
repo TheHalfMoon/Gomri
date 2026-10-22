@@ -10,6 +10,12 @@
 
 ## 0. Current frontier
 
+> **Merge gate status:** PR #78 is open and **MERGEABLE**, but CI could not execute due to an account
+> billing/spending-limit condition (see §2.1). Per `docs/REVIEW_POLICY.md` §10 and the mission's
+> no-bypass rule, the PR is **not merged** until CI runs green on the exact candidate. Every gate was
+> executed locally on the exact candidate and passed; the outstanding item is the canonical CI run,
+> which needs an owner action on GitHub billing.
+>
 > **Next dependency-ready task:** W2 — extend the slide model with an `animation` field and wire the
 > Wave 1 animation contract into the HTML renderer (`servers/nextjs/lib/template-v2-json-to-html.ts`),
 > so the contract stops being an unwired library. W2 is a small, independently testable grain.
@@ -67,6 +73,7 @@
 | Release config | `node scripts/validate-release-config.mjs` | `release-config: OK` |
 | Release manifest | `node scripts/generate-release-manifest.mjs --check-only` | `release-manifest: OK` |
 | Export runtime | `npm run sync:presentation-export && npm run check:presentation-export` | `[presentation-export] OK (1.0.34)` |
+| **GitHub Actions CI on the exact candidate** | `gh run view 39720008012` (PR #78, run attempt 1 **and** attempt 2) | **`CI_NOT_EXECUTED` — BLOCKED_COST.** All 9 jobs were refused **at the runner queue**, before any step ran. Annotation, verbatim from the GitHub check-runs API:<br>`The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings`<br>Attempt 2 was requested via `gh run rerun --failed` and failed identically. The last **successful** run on `main` was `5f299a7` (2026-10-07), so the condition appeared after that run and is **not** attributable to this change. |
 
 ### 2.2 Mandatory review stack
 
@@ -80,6 +87,7 @@ See `REVIEW_RECORD.md` in this directory for the full exact-candidate binding re
 | **Alibaba OCR — semantic LLM review** | **NO** | `OCR_NOT_EXECUTED` — blocker: `ocr auth status` → `Not signed in, run ocr auth login --provider chatgpt.` No substitute reviewer was used, per `REVIEW_POLICY.md` §5. |
 | Graft | NO | `GRAFT_NOT_EXECUTED` — no funded LLM provider configured |
 | `morluto/rea` LLM analysis path | NO | `REA_NOT_EXECUTED` — source cloned and inspected; its analysis path requires a funded LLM provider. REA was performed by direct source reading, executed runtime probes and live observation instead. |
+| **GitHub Actions CI** | NO | `CI_NOT_EXECUTED` — BLOCKED_COST: account spending limit / payment failure refused all 9 jobs at the queue. Every gate in §2.1 was nonetheless executed **locally on the exact candidate** and passed; the canonical CI gate remains outstanding and the PR is **not** merged. |
 | PStack | NO | `PSTACK_NOT_EXECUTED` — not present on PATH, no repository identified |
 | Independent semantic review | **YES** | Three subagents with fresh context produced independent donor inventories and the baseline survey; none authored the adopted code. |
 

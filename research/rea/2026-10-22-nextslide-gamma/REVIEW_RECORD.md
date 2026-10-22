@@ -204,6 +204,34 @@ surveyor established the seven canonical modules that constrained every adoption
 | Release manifest | `node scripts/generate-release-manifest.mjs --check-only` | OK |
 | Export runtime | `npm run sync:presentation-export && npm run check:presentation-export` | OK (1.0.34) |
 
+## 6a. CI status on the exact candidate — `CI_NOT_EXECUTED`
+
+```text
+CI_NOT_EXECUTED
+blocker : BLOCKED_COST — GitHub Actions account spending limit / payment failure.
+evidence: run 39720008012 (PR #78), run_attempt 1 and run_attempt 2.
+          All 9 jobs — Security baseline, SBOM baseline, G4 engineering baseline,
+          Test repository tooling, Test FastAPI, Test Next.js, Test Electron,
+          Qualify Windows (bounded), Qualify macOS (bounded) — were refused at the
+          runner queue BEFORE any step executed.
+annotation (verbatim, GitHub check-runs API):
+  "The job was not started because recent account payments have failed or your
+   spending limit needs to be increased. Please check the 'Billing & plans'
+   section in your settings"
+counter-evidence that this is not caused by the change:
+  the last successful run on main is 5f299a7 (2026-10-07), i.e. the condition
+  appeared after that run and is independent of this branch's content.
+```
+
+**Consequence.** The local deterministic gates in §6 all passed **on the exact candidate**, and that
+evidence stands. But the canonical CI gate did not execute, so **the PR is not merged** and no CI
+result is claimed. `docs/REVIEW_POLICY.md` §10 requires the acceptance packet to state whether each
+required reviewer actually executed on the exact final candidate; this section is that statement for
+CI: it did not.
+
+**Owner action to clear:** resolve the GitHub account's *Billing & plans* spending limit, then
+`gh run rerun 39720008012 --failed`. No code change is required.
+
 ## 7. Authority boundary
 
 Per `docs/JEV_BUILD_POLICY.md` §9, this record is **evidence, not authority**:
