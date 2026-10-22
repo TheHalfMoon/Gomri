@@ -47,6 +47,9 @@ function runsContainRtlText(runs: unknown[]) {
 // Konva lays rich-text runs out as individual left-to-right canvas segments.
 // Route scripts that require bidi reordering through the browser text engine so
 // their visual order stays identical when the DOM-based editor is opened.
-export function containsRtlText(text: string) {
-  return /[\u0590-\u08ff\ufb1d-\ufdff\ufe70-\ufefc]/u.test(text);
-}
+//
+// The detector lives in the shared text-direction module so that it cannot
+// drift away from the Python classifier.
+import { containsRtlText } from "@/components/slide-editor/text/text-direction";
+
+export { containsRtlText };

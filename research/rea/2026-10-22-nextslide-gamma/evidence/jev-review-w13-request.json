@@ -1,0 +1,75 @@
+{
+  "state": "Gomrey candidate a0d28fe0a2132e7f0011d18bfca34ae1ca30306f, branch feature/rea/w13-arabic-rtl, base canonical main 5f299a7a6174ad3a1180f827778db5f4400a4d71. WHAT THE CHANGE DOES: adds a shared script and text-direction classifier at servers/fastapi/gomrey/text_direction.py, with script_profile (presence-based: which scripts and numeral systems a text contains) and resolve_base_direction (first-strong-character: which base direction the text's paragraphs have); gomrey/ocr_worker.py now re-exports that classifier instead of defining its own, so the OCR behaviour is unchanged and a regression test asserts the re-exported objects are the shared ones. It adds a TypeScript mirror at servers/nextjs/components/slide-editor/text/text-direction.ts and a shared contract fixture at servers/fastapi/tests/qualification/arabic_rtl_contract.json that BOTH the Python and the TypeScript qualification suites read, so the two classifiers are checked against one declaration instead of two copies. It makes the shared CSS font stack script-aware at servers/nextjs/components/slide-editor/text/css-text.ts, and routes every surface that names a font through it: the editor DOM text layer, the inline Tiptap editor and the export renderer. It changes servers/nextjs/lib/template-v2-json-to-html.ts so that renderText, renderTextList and renderTable emit dir=\"auto\" on the text container and unicode-bidi:plaintext on the content, and so that textAlign returns LOGICAL alignment (left to start, right to end, center and justify unchanged). It adds 43 tests: 25 in servers/fastapi/tests/qualification/test_arabic_rtl_qualification.py and 18 in servers/nextjs/tests/arabic-rtl-qualification.test.mjs. WHICH AGENT TOOLS IT ADDS OR MODIFIES: none. No MCP tool, tool schema, tool registry, tool result shape or tool invocation path is added, removed or modified. The MCP server is untouched. No language-model call is added or modified. SCOPE OF THE CLAIM, stated explicitly by the change itself: every assertion is markup-level or model-level. There is no headless browser in servers/nextjs/tests/, so the suite can prove that a dir attribute is emitted, that an Arabic-capable family is named and that the source string is intact, but it cannot prove rendered pixel order. The change records that limitation in evidence/W13_IMPLEMENTATION_EVIDENCE.md section 5 and states that a manual generate-export-reopen check on one Arabic deck is required before the wave closes. It also records, as unfixed, the Konva canvas Arabic layout for table cells, chart labels and vector text, the editor's HTML text layer for table cells, a direction field on the element schema, a per-script theme font slot, and the PPTX import rtl flag. ASSET RIGHTS: no font binary is vendored, downloaded or relicensed. The Arabic families named in the fallback chain are SIL OFL 1.1 and are already installed in the shipped container image. GATES ON THIS EXACT REVISION: FastAPI pytest 1150 passed (1125 baseline + 25 qualification); root npm test 48/48; Next.js node --test 91/91 (73 baseline + 18 qualification); tsc --noEmit clean; scan-secrets, check-fixtures, check-platform-support, validate-release-config, release-manifest and validate-contracts all OK. The candidate contains only the W13 implementation and its own two evidence documents; a separate wave's design document was removed from it after an earlier run, because a candidate must contain nothing but what it claims.",
+  "questions": {
+    "q1": {
+      "question": "Does the change violate a declared invariant of the project (docs/REVIEW_POLICY.md, docs/JEV_BUILD_POLICY.md, docs/SOURCE_LEDGER.md)?",
+      "instructions": "Does the change violate a declared invariant of the project (docs/REVIEW_POLICY.md, docs/JEV_BUILD_POLICY.md, docs/SOURCE_LEDGER.md)? Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q2": {
+      "question": "Is donor code copied beyond the authorized and admitted slice? This change adds no donor code; it is original Gomrey code.",
+      "instructions": "Is donor code copied beyond the authorized and admitted slice? This change adds no donor code; it is original Gomrey code. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q3": {
+      "question": "Is a deterministic check being replaced by an unnecessary model call? The change adds no model call.",
+      "instructions": "Is a deterministic check being replaced by an unnecessary model call? The change adds no model call. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q4": {
+      "question": "Is failure/retry/idempotency behavior complete for this change? The change adds a pure classifier, a shared font stack and renderer attributes; the classifier is deterministic and has no state.",
+      "instructions": "Is failure/retry/idempotency behavior complete for this change? The change adds a pure classifier, a shared font stack and renderer attributes; the classifier is deterministic and has no state. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q5": {
+      "question": "Is any source, page, chunk or artifact silently dropped? The surfaces the change does not fix are recorded explicitly in the evidence file section 8, including the Konva canvas Arabic layout, the editor's HTML text layer for table cells, and the PPTX import rtl flag.",
+      "instructions": "Is any source, page, chunk or artifact silently dropped? The surfaces the change does not fix are recorded explicitly in the evidence file section 8, including the Konva canvas Arabic layout, the editor's HTML text layer for table cells, and the PPTX import rtl flag. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q6": {
+      "question": "Does the change weaken provenance or citation precision? The change does not touch citations, provenance or contracts.",
+      "instructions": "Does the change weaken provenance or citation precision? The change does not touch citations, provenance or contracts. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q7": {
+      "question": "Does it add ambient network, filesystem or secret authority? The change adds a pure classifier and renderer attributes. No new I/O, no network, no filesystem, no credential access, and no new font binary is vendored.",
+      "instructions": "Does it add ambient network, filesystem or secret authority? The change adds a pure classifier and renderer attributes. No new I/O, no network, no filesystem, no credential access, and no new font binary is vendored. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q8": {
+      "question": "Is an agent tool result structured and idempotent?",
+      "instructions": "Is an agent tool result structured and idempotent? Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q9": {
+      "question": "Is the claimed test and evidence applicable to the exact candidate revision 03738505093643b9d6e4e9fdcb49081837eda5e9? All gates were executed on that exact revision.",
+      "instructions": "Is the claimed test and evidence applicable to the exact candidate revision 03738505093643b9d6e4e9fdcb49081837eda5e9? All gates were executed on that exact revision. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q10": {
+      "question": "Is there a simpler already-admitted implementation in Gomrey that should be reused instead of this new code? The change reuses the existing script_profile in gomrey/ocr_worker.py by re-exporting it rather than duplicating it, and reuses the existing remove-fields helper conventions.",
+      "instructions": "Is there a simpler already-admitted implementation in Gomrey that should be reused instead of this new code? The change reuses the existing script_profile in gomrey/ocr_worker.py by re-exporting it rather than duplicating it, and reuses the existing remove-fields helper conventions. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    }
+  }
+}
