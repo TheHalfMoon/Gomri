@@ -7,6 +7,8 @@ from fastapi.openapi.utils import get_openapi
 from pydantic import ValidationError
 from starlette.requests import Request
 
+from utils import export_utils
+
 from api.v1.ppt.endpoints.presentation import (
     PRESENTATION_ROUTER,
     export_existing_presentation,
@@ -18,6 +20,7 @@ from models.generate_presentation_request import (
 from models.image_export_options import ImageExportOptions
 from models.presentation_and_path import PresentationAndPath
 from models.presentation_from_template import EditPresentationRequest
+from utils.export_utils import _resolve_image_options
 
 
 class _FakeAsyncSession:
@@ -186,3 +189,57 @@ def test_export_route_reports_a_missing_presentation():
         )
 
     assert error.value.status_code == 404
+
+
+# ---------------------------------------------------------------------------
+# Image option resolution
+# ---------------------------------------------------------------------------
+
+
+def test_export_format_wins_over_the_image_options_format():
+    options = _resolve_image_options("jpeg", ImageExportOptions(format="png"))
+    assert options.format == "jpeg"
+
+
+def test_matching_export_and_option_formats_are_kept_as_is():
+    options = ImageExportOptions(format="webp", quality=70)
+    assert _resolve_image_options("webp", options) is options
+
+
+def test_export_format_cannot_resurrect_an_illegal_option_combination():
+    with pytest.raises(ValueError):
+        _resolve_image_options(
+            "png",
+            ImageExportOptions(format="jpeg", quality=85),
+        )
+
+
+def test_export_presentation_refuses_an_illegal_option_combination():
+    from fastapi import HTTPException
+
+    with pytest.raises(HTTPException) as error:
+        asyncio.run(
+            export_utils.export_presentation(
+                uuid.uuid4(),
+                "Quarterly review",
+                "png",
+                image_options=ImageExportOptions(format="jpeg", quality=85),
+            )
+        )
+
+    assert error.value.status_code == 400
+
+
+def test_export_presentation_refuses_an_unknown_format():
+    from fastapi import HTTPException
+
+    with pytest.raises(HTTPException) as error:
+        asyncio.run(
+            export_utils.export_presentation(
+                uuid.uuid4(),
+                "Quarterly review",
+                "gif",
+            )
+        )
+
+    assert error.value.status_code == 400

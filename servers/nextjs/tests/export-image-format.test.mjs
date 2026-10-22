@@ -1,27 +1,66 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { pathToFileURL } from "node:url";
 
-const exportRoutePath = path.resolve("app/api/export-presentation/route.ts");
-const bundledExportLibPath = path.resolve("lib/run-bundled-presentation-export.ts");
-const exportFileRoutePath = path.resolve("app/api/export-presentation/file/route.ts");
+import { build } from "esbuild";
 
-test("the export route accepts the image formats", async () => {
-  const source = await readFile(exportRoutePath, "utf8");
+const exportFileRoutePath = path.resolve(
+  "app/api/export-presentation/file/route.ts",
+);
 
-  assert.match(source, /value === "png"/);
-  assert.match(source, /value === "pptx"/);
-  assert.match(source, /value === "pdf"/);
+let exportFormats;
+let temporaryDirectory;
+
+test.before(async () => {
+  temporaryDirectory = await mkdtemp(
+    path.join(tmpdir(), "gomrey-export-formats-"),
+  );
+  const entryFile = path.join(temporaryDirectory, "entry.ts");
+  const outputFile = path.join(temporaryDirectory, "bundle.mjs");
+  await writeFile(
+    entryFile,
+    `export { BUNDLED_EXPORT_FORMATS, isBundledExportFormat } from ${JSON.stringify(
+      path.resolve("lib/export-formats.ts"),
+    )};`,
+  );
+  await build({
+    entryPoints: [entryFile],
+    bundle: true,
+    format: "esm",
+    platform: "node",
+    outfile: outputFile,
+    logLevel: "silent",
+  });
+  exportFormats = await import(pathToFileURL(outputFile).href);
 });
 
-test("the bundled export runtime declares the image format", async () => {
-  const source = await readFile(bundledExportLibPath, "utf8");
+test.after(async () => {
+  if (temporaryDirectory) {
+    await rm(temporaryDirectory, { recursive: true, force: true });
+  }
+});
 
-  assert.match(
-    source,
-    /BundledPresentationExportFormat\s*=\s*"pdf"\s*\|\s*"pptx"\s*\|\s*"png"/,
-  );
+test("the export runtime accepts the image format", () => {
+  assert.deepEqual([...exportFormats.BUNDLED_EXPORT_FORMATS], [
+    "pdf",
+    "pptx",
+    "png",
+  ]);
+});
+
+test("the format guard accepts every supported format", () => {
+  for (const format of ["pdf", "pptx", "png"]) {
+    assert.equal(exportFormats.isBundledExportFormat(format), true, format);
+  }
+});
+
+test("the format guard rejects anything else", () => {
+  for (const value of ["gif", "jpeg", "webp", "PDF", "", null, undefined, 7, {}]) {
+    assert.equal(exportFormats.isBundledExportFormat(value), false, String(value));
+  }
 });
 
 test("the download route serves image archives as zip", async () => {

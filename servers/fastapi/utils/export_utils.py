@@ -4,9 +4,11 @@ import uuid
 from typing import Literal, Optional
 from urllib.parse import urlencode
 
+from fastapi import HTTPException
 from pathvalidate import sanitize_filename
 
 from enums.export_format import (
+    EXPORT_FORMATS,
     ExportFormat,
     is_image_export_format,
 )
@@ -59,6 +61,36 @@ def _image_archive_basename(title: str) -> str:
     return safe_export_basename(sanitize_filename(name))
 
 
+def _remove_intermediate(path: str) -> None:
+    try:
+        if path and os.path.isfile(path):
+            os.remove(path)
+    except OSError as exc:
+        LOGGER.warning(
+            "presentation.export.images.intermediate_cleanup_failed path=%s error=%s",
+            path,
+            exc,
+        )
+
+
+def _resolve_image_options(
+    export_as: ExportFormat,
+    image_options: Optional[ImageExportOptions],
+) -> ImageExportOptions:
+    """Resolve the effective image options for an export request.
+
+    ``export_as`` is the format the caller asked for and it wins. The options
+    object is re-validated through the model rather than copied, so a
+    combination the model refuses can never reach the encoder.
+    """
+    options = image_options or ImageExportOptions()
+    if options.format == export_as:
+        return options
+    return ImageExportOptions.model_validate(
+        {**options.model_dump(), "format": export_as}
+    )
+
+
 async def _export_presentation_as_images(
     presentation_id: uuid.UUID,
     title: str,
@@ -91,7 +123,13 @@ async def _export_presentation_as_images(
             output_directory=get_exports_directory(),
             archive_basename=_image_archive_basename(title),
         )
-    except ImageExportError:
+    except ImageExportError as exc:
+        _remove_intermediate(rendered_path)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Image export failed: {exc}",
+        ) from exc
+    except Exception:
         _remove_intermediate(rendered_path)
         raise
 
@@ -103,24 +141,13 @@ async def _export_presentation_as_images(
         presentation_id=str(presentation_id),
         image_format=options.format,
         entry_count=archive.entry_count,
+        first_entry=archive.entries[0].filename if archive.entries else None,
     )
 
     return PresentationAndPath(
         presentation_id=presentation_id,
         path=archive.path,
     )
-
-
-def _remove_intermediate(path: str) -> None:
-    try:
-        if path and os.path.isfile(path):
-            os.remove(path)
-    except OSError as exc:
-        LOGGER.warning(
-            "presentation.export.images.intermediate_cleanup_failed path=%s error=%s",
-            path,
-            exc,
-        )
 
 
 async def export_presentation(
@@ -136,10 +163,20 @@ async def export_presentation(
         presentation_id=str(presentation_id),
         export_as=export_as,
     )
+    if export_as not in EXPORT_FORMATS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported export format: {export_as}",
+        )
+
     if is_image_export_format(export_as):
-        options = image_options or ImageExportOptions()
-        if options.format != export_as:
-            options = options.model_copy(update={"format": export_as})
+        try:
+            options = _resolve_image_options(export_as, image_options)
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid image export options: {exc}",
+            ) from exc
         result = await _export_presentation_as_images(
             presentation_id,
             title,

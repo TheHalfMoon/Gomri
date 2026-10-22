@@ -3,6 +3,7 @@ import os from "os";
 import fs from "fs/promises";
 import { spawn } from "child_process";
 import { sanitizeFilename } from "@/app/(presentation-generator)/utils/others";
+import type { BundledPresentationExportFormat } from "@/lib/export-formats";
 import {
   BoundedTextBuffer,
   memorySnapshotMb,
@@ -55,14 +56,7 @@ export async function bundledExportPackageAvailable(): Promise<boolean> {
   }
 }
 
-/**
- * Formats the bundled export runtime can render.
- *
- * `png` renders one PNG per slide and packages them into a ZIP archive; the
- * FastAPI service owns the image archive contract (entry names, ordering, and
- * the JPEG/WebP re-encode) on top of that render.
- */
-export type BundledPresentationExportFormat = "pdf" | "pptx" | "png";
+export type { BundledPresentationExportFormat } from "@/lib/export-formats";
 
 export type BundledPresentationExportResult = { path: string };
 

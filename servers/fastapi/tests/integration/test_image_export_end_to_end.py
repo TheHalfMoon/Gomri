@@ -199,10 +199,10 @@ def test_end_to_end_png_export_renders_every_slide(rendered_archive):
     entries = _packed_entries(str(path))
     assert len(entries) == len(SLIDES)
     assert sorted(entries) == [
-        "slide_01.png",
-        "slide_02.png",
-        "slide_03.png",
-        "slide_04.png",
+        "slide_001.png",
+        "slide_002.png",
+        "slide_003.png",
+        "slide_004.png",
     ]
 
 
@@ -240,7 +240,7 @@ def test_end_to_end_jpeg_export_converts_the_rendered_slides(
     rendered_archive, export_environment
 ):
     entries = _packed_entries(rendered_archive.path)
-    source = entries["slide_01.png"]
+    source = entries["slide_001.png"]
 
     archive = build_image_archive(
         rendered_archive.path,
@@ -252,14 +252,14 @@ def test_end_to_end_jpeg_export_converts_the_rendered_slides(
     assert archive.image_format == "jpeg"
     assert archive.entry_count == len(SLIDES)
     assert [entry.filename for entry in archive.entries] == [
-        "slide_01.jpg",
-        "slide_02.jpg",
-        "slide_03.jpg",
-        "slide_04.jpg",
+        "slide_001.jpg",
+        "slide_002.jpg",
+        "slide_003.jpg",
+        "slide_004.jpg",
     ]
 
     converted = _packed_entries(archive.path)
-    payload = converted["slide_01.jpg"]
+    payload = converted["slide_001.jpg"]
     assert payload.startswith(b"\xff\xd8\xff")
     with Image.open(io.BytesIO(payload)) as image:
         assert image.format == "JPEG"
@@ -278,7 +278,7 @@ def test_end_to_end_webp_export_converts_the_rendered_slides(
 
     assert archive.image_format == "webp"
     converted = _packed_entries(archive.path)
-    payload = converted["slide_04.webp"]
+    payload = converted["slide_004.webp"]
     assert payload[:4] == b"RIFF"
     assert payload[8:12] == b"WEBP"
     with Image.open(io.BytesIO(payload)) as image:

@@ -19,6 +19,7 @@ without a running application.
 import io
 import os
 import re
+import uuid
 import zipfile
 from dataclasses import dataclass
 from typing import Optional
@@ -47,10 +48,6 @@ IMAGE_FILE_EXTENSIONS: dict[str, str] = {
     "webp": ".webp",
 }
 
-# Formats that can carry an alpha channel. JPEG cannot, so it flattens onto the
-# requested background colour instead.
-IMAGE_FORMATS_WITH_ALPHA: frozenset[str] = frozenset({"png", "webp"})
-
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 
 MAX_ARCHIVE_ENTRIES = 200
@@ -58,7 +55,11 @@ MAX_IMAGE_BYTES = 64 * 1024 * 1024
 MAX_ARCHIVE_BYTES = 512 * 1024 * 1024
 MAX_IMAGE_PIXELS = 64_000_000
 
-_TRAILING_DIGITS = re.compile(r"(\d+)\D*$")
+# The renderer names its slides `slide_001.png`, `slide_002.png`, … and the
+# Gomrey archive keeps that convention so the renderer's own output and the
+# Gomrey archive describe the same slides with the same names.
+_SLIDE_INDEX_PATTERN = re.compile(r"^slide[_-]?(\d+)$", re.IGNORECASE)
+_SLIDE_NAME_DIGITS = 3
 _SAFE_FILENAME = re.compile(r"^[A-Za-z0-9._-]+$")
 
 
@@ -99,12 +100,12 @@ class ImageArchive:
 def _slide_sort_key(name: str) -> tuple[int, int, str]:
     """Order archive entries by slide index.
 
-    Numbered slide files (``slide_001.png``) come first in numeric order, which
-    is the render order. Anything without a trailing number is appended
-    afterwards in lexical order so the result is still deterministic.
+    Slides are the files the renderer named ``slide_<index>``. They come first,
+    in numeric order, which is the render order. Anything else is appended
+    afterwards in lexical order so the result stays deterministic.
     """
     stem = os.path.splitext(name)[0]
-    match = _TRAILING_DIGITS.search(stem)
+    match = _SLIDE_INDEX_PATTERN.match(stem)
     if match:
         return (0, int(match.group(1)), stem)
     return (1, 0, stem)
@@ -154,26 +155,41 @@ def _read_bounded(archive: zipfile.ZipFile, info: zipfile.ZipInfo) -> bytes:
 
 
 def _open_image(payload: bytes) -> Image.Image:
+    """Decode a rendered slide, refusing anything that is not a complete image."""
     if not payload.startswith(PNG_SIGNATURE):
         raise ImageExportValidationError(
             "Rendered archive contains an entry that is not a PNG slide"
         )
     try:
         image = Image.open(io.BytesIO(payload))
-    except (UnidentifiedImageError, OSError) as exc:
+        width, height = image.size
+        if width <= 0 or height <= 0:
+            raise ImageExportValidationError(
+                "Rendered archive contains a PNG slide with no pixels"
+            )
+        if width * height > MAX_IMAGE_PIXELS:
+            raise ImageExportBudgetError(
+                f"Rendered slide exceeds the {MAX_IMAGE_PIXELS} pixel budget"
+            )
+        # Pillow decodes lazily. Force the decode so a truncated or corrupt
+        # slide is refused here instead of being written into the archive.
+        image.load()
+    except ImageExportBudgetError:
+        raise
+    except ImageExportValidationError:
+        raise
+    except (UnidentifiedImageError, OSError, ValueError) as exc:
         raise ImageExportValidationError(
             "Rendered archive contains an unreadable PNG slide"
         ) from exc
-    width, height = image.size
-    if width <= 0 or height <= 0:
-        raise ImageExportValidationError(
-            "Rendered archive contains a PNG slide with no pixels"
-        )
-    if width * height > MAX_IMAGE_PIXELS:
-        raise ImageExportBudgetError(
-            f"Rendered slide exceeds the {MAX_IMAGE_PIXELS} pixel budget"
-        )
     return image
+
+
+def _has_alpha(image: Image.Image) -> bool:
+    """True when the image carries transparency."""
+    return image.mode in ("RGBA", "LA") or (
+        image.mode == "P" and "transparency" in image.info
+    )
 
 
 def _resize(image: Image.Image, target_width: Optional[int]) -> Image.Image:
@@ -189,10 +205,7 @@ def _resize(image: Image.Image, target_width: Optional[int]) -> Image.Image:
 
 def _flatten(image: Image.Image, background: tuple[int, int, int]) -> Image.Image:
     """Composite an image onto an opaque background, dropping the alpha channel."""
-    has_alpha = image.mode in ("RGBA", "LA") or (
-        image.mode == "P" and "transparency" in image.info
-    )
-    if not has_alpha:
+    if not _has_alpha(image):
         return image.convert("RGB")
     canvas = Image.new("RGB", image.size, background)
     rgba = image.convert("RGBA")
@@ -216,8 +229,10 @@ def _encode(
             subsampling=0,
         )
     elif image_format == "webp":
-        if image.mode not in ("RGBA", "RGB"):
-            image = image.convert("RGBA" if "A" in image.getbands() else "RGB")
+        if _has_alpha(image):
+            image = image.convert("RGBA")
+        elif image.mode != "RGB":
+            image = image.convert("RGB")
         image.save(
             buffer,
             format="WEBP",
@@ -231,8 +246,25 @@ def _encode(
 
 
 def _slide_filename(index: int, total: int, extension: str) -> str:
-    width = max(2, len(str(total)))
-    return f"slide_{index:0{width}d}{extension}"
+    digits = max(_SLIDE_NAME_DIGITS, len(str(total)))
+    return f"slide_{index:0{digits}d}{extension}"
+
+
+def _archive_path(
+    output_directory: str,
+    archive_basename: str,
+    image_format: str,
+) -> str:
+    """A unique archive path.
+
+    The title alone is not unique: two presentations can share a title, and two
+    exports of one presentation can run at the same time. The unique suffix
+    keeps every export a separate artifact.
+    """
+    return os.path.join(
+        output_directory,
+        f"{archive_basename}_{image_format}_{uuid.uuid4().hex[:8]}.zip",
+    )
 
 
 def build_image_archive(
@@ -257,64 +289,71 @@ def build_image_archive(
         )
 
     os.makedirs(output_directory, exist_ok=True)
-
-    with zipfile.ZipFile(rendered_archive_path, "r") as archive:
-        members = [info for info in archive.infolist() if not info.is_dir()]
-        if not members:
-            raise ImageExportValidationError(
-                "Rendered slide archive contains no slides"
-            )
-        if len(members) > MAX_ARCHIVE_ENTRIES:
-            raise ImageExportBudgetError(
-                f"Rendered archive exceeds the {MAX_ARCHIVE_ENTRIES} slide budget"
-            )
-        total_declared = sum(info.file_size for info in members)
-        if total_declared > MAX_ARCHIVE_BYTES:
-            raise ImageExportBudgetError(
-                f"Rendered archive exceeds the {MAX_ARCHIVE_BYTES} byte budget"
-            )
-
-        prepared: list[tuple[str, bytes, int, int]] = []
-        for info in sorted(members, key=lambda item: _slide_sort_key(item.filename)):
-            name = _validate_entry_name(info.filename)
-            payload = _read_bounded(archive, info)
-            image = _open_image(payload)
-            if options.format == "png" and options.width is None:
-                # PNG is already the rendered format: keep the renderer bytes
-                # exactly as produced instead of re-encoding them.
-                prepared.append((name, payload, image.width, image.height))
-                continue
-            resized = _resize(image, options.width)
-            encoded = _encode(resized, options.format, options)
-            prepared.append((name, encoded, resized.width, resized.height))
+    final_path = _archive_path(output_directory, archive_basename, options.format)
+    staging_path = f"{final_path}.part"
 
     extension = IMAGE_FILE_EXTENSIONS[options.format]
     media_type = IMAGE_MEDIA_TYPES[options.format]
-    total = len(prepared)
-    # The format is part of the archive name so exporting the same deck as PNG
-    # and as JPEG produces two distinct artifacts instead of one overwriting
-    # the other.
-    archive_path = os.path.join(
-        output_directory, f"{archive_basename}_{options.format}.zip"
-    )
-
     entries: list[ImageArchiveEntry] = []
-    with zipfile.ZipFile(archive_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        for position, (_name, payload, width, height) in enumerate(prepared, start=1):
-            filename = _slide_filename(position, total, extension)
-            archive.writestr(filename, payload)
-            entries.append(
-                ImageArchiveEntry(
-                    filename=filename,
-                    media_type=media_type,
-                    width=width,
-                    height=height,
-                    size_bytes=len(payload),
+
+    try:
+        with zipfile.ZipFile(rendered_archive_path, "r") as archive:
+            members = [info for info in archive.infolist() if not info.is_dir()]
+            if not members:
+                raise ImageExportValidationError(
+                    "Rendered slide archive contains no slides"
                 )
-            )
+            if len(members) > MAX_ARCHIVE_ENTRIES:
+                raise ImageExportBudgetError(
+                    f"Rendered archive exceeds the {MAX_ARCHIVE_ENTRIES} slide budget"
+                )
+            total_declared = sum(info.file_size for info in members)
+            if total_declared > MAX_ARCHIVE_BYTES:
+                raise ImageExportBudgetError(
+                    f"Rendered archive exceeds the {MAX_ARCHIVE_BYTES} byte budget"
+                )
+
+            ordered = sorted(members, key=lambda item: _slide_sort_key(item.filename))
+            total = len(ordered)
+            with zipfile.ZipFile(staging_path, "w", compression=zipfile.ZIP_STORED) as out:
+                for position, info in enumerate(ordered, start=1):
+                    _validate_entry_name(info.filename)
+                    payload = _read_bounded(archive, info)
+                    image = _open_image(payload)
+                    if options.format == "png" and options.width is None:
+                        # PNG is already the rendered format: keep the renderer
+                        # bytes exactly as produced instead of re-encoding them.
+                        encoded = payload
+                        width, height = image.width, image.height
+                    else:
+                        resized = _resize(image, options.width)
+                        encoded = _encode(resized, options.format, options)
+                        width, height = resized.width, resized.height
+                    filename = _slide_filename(position, total, extension)
+                    out.writestr(filename, encoded)
+                    entries.append(
+                        ImageArchiveEntry(
+                            filename=filename,
+                            media_type=media_type,
+                            width=width,
+                            height=height,
+                            size_bytes=len(encoded),
+                        )
+                    )
+
+        # Publish the finished archive atomically so a downloader never sees a
+        # half-written ZIP and a concurrent export never truncates this one.
+        os.replace(staging_path, final_path)
+    except BaseException:
+        try:
+            if os.path.isfile(staging_path):
+                os.remove(staging_path)
+        except OSError:
+            pass
+        raise
 
     return ImageArchive(
-        path=archive_path,
+        path=final_path,
         media_type=ARCHIVE_MEDIA_TYPE,
         image_format=options.format,
         entry_count=len(entries),
