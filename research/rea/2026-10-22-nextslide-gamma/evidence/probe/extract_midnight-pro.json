@@ -1,0 +1,433 @@
+{
+  "meta": {
+    "title": "deck_midnight-pro",
+    "slideWidth": 13.333,
+    "slideHeight": 7.5,
+    "slideCount": 9,
+    "author": "Gomrey Research Probe",
+    "date": "2026-10-22"
+  },
+  "slides": [
+    {
+      "slideNumber": 1,
+      "layout": "content",
+      "elements": [
+        {
+          "type": "text",
+          "position": {
+            "x": "10.0%",
+            "y": "28.0%",
+            "w": "80.0%",
+            "h": "22.0%"
+          },
+          "content": "Ocean Plastic Reduction",
+          "role": "body",
+          "style": {
+            "align": "center"
+          }
+        },
+        {
+          "type": "text",
+          "position": {
+            "x": "15.0%",
+            "y": "55.0%",
+            "w": "70.0%",
+            "h": "12.0%"
+          },
+          "content": "2026 Strategy",
+          "role": "body",
+          "style": {
+            "align": "center"
+          }
+        },
+        {
+          "type": "text",
+          "position": {
+            "x": "20.0%",
+            "y": "70.0%",
+            "w": "60.0%",
+            "h": "8.0%"
+          },
+          "content": "Global Marine Resilience Initiative · October 2026",
+          "role": "body",
+          "style": {
+            "align": "center"
+          }
+        }
+      ],
+      "notes": "Speaker note for slide 1 (title). Expand with regional detail and cite the 2026 audit."
+    },
+    {
+      "slideNumber": 2,
+      "layout": "bullets",
+      "elements": [
+        {
+          "type": "text",
+          "position": {
+            "x": "5.0%",
+            "y": "6.0%",
+            "w": "90.0%",
+            "h": "12.0%"
+          },
+          "content": "Where we are vs. where we need to be",
+          "role": "body",
+          "style": {
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "position": {
+            "x": "5.0%",
+            "y": "24.0%",
+            "w": "45.0%",
+            "h": "8.0%"
+          },
+          "content": "Today",
+          "role": "body",
+          "style": {
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "position": {
+            "x": "5.0%",
+            "y": "33.0%",
+            "w": "45.0%",
+            "h": "34.0%"
+          },
+          "content": "Roughly 9% of ocean plastic is removed each year, concentrated in a handful of high-visibility cleanup projects that rarely touch the highest-volume sources.",
+          "role": "body",
+          "style": {
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "position": {
+            "x": "52.0%",
+            "y": "24.0%",
+            "w": "45.0%",
+            "h": "8.0%"
+          },
+          "content": "2026 target",
+          "role": "body",
+          "style": {
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "position": {
+            "x": "52.0%",
+            "y": "33.0%",
+            "w": "45.0%",
+            "h": "34.0%"
+          },
+          "content": "A 73% reduction in annual ocean-bound plastic by 2030, achieved through upstream interception rather than post-hoc recovery.",
+          "role": "body",
+          "style": {
+            "align": "left"
+          }
+        }
+      ],
+      "notes": "Speaker note for slide 2 (two-column). Expand with regional detail and cite the 2026 audit."
+    },
+    {
+      "slideNumber": 3,
+      "layout": "content",
+      "elements": [
+        {
+          "type": "text",
+          "position": {
+            "x": "15.0%",
+            "y": "35.0%",
+            "w": "70.0%",
+            "h": "20.0%"
+          },
+          "content": "Three Pillars",
+          "role": "body",
+          "style": {
+            "align": "center"
+          }
+        },
+        {
+          "type": "text",
+          "position": {
+            "x": "25.0%",
+            "y": "58.0%",
+            "w": "50.0%",
+            "h": "10.0%"
+          },
+          "content": "Intercept, Innovate, Regenerate",
+          "role": "body",
+          "style": {
+            "align": "center"
+          }
+        }
+      ],
+      "notes": "Speaker note for slide 3 (section). Expand with regional detail and cite the 2026 audit."
+    },
+    {
+      "slideNumber": 4,
+      "layout": "content",
+      "elements": [
+        {
+          "type": "text",
+          "position": {
+            "x": "5.0%",
+            "y": "6.0%",
+            "w": "90.0%",
+            "h": "12.0%"
+          },
+          "content": "73% of ocean plastic traces to five river systems",
+          "role": "body",
+          "style": {
+            "align": "left"
+          }
+        }
+      ],
+      "notes": "Speaker note for slide 4 (chart). Expand with regional detail and cite the 2026 audit."
+    },
+    {
+      "slideNumber": 5,
+      "layout": "image-left",
+      "elements": [
+        {
+          "type": "image",
+          "position": {
+            "x": "0.0%",
+            "y": "0.0%",
+            "w": "50.0%",
+            "h": "100.0%"
+          },
+          "src": "/private/var/folders/zj/kby34wq12tq0vy4clz9spsgm0000gn/T/opencode/nextslide-probe/extracted-images/slide5_img0.png",
+          "alt": "Image 0"
+        },
+        {
+          "type": "text",
+          "position": {
+            "x": "54.0%",
+            "y": "18.0%",
+            "w": "42.0%",
+            "h": "16.0%"
+          },
+          "content": "Plastic concentrates at river mouths",
+          "role": "body",
+          "style": {
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "position": {
+            "x": "54.0%",
+            "y": "38.0%",
+            "w": "42.0%",
+            "h": "34.0%"
+          },
+          "content": "Riverine transport dominates: 80% of ocean-bound plastic enters through a limited number of catchments, making interception the highest-leverage intervention available.",
+          "role": "body",
+          "style": {
+            "align": "left"
+          }
+        }
+      ],
+      "notes": "Speaker note for slide 5 (image-left). Expand with regional detail and cite the 2026 audit."
+    },
+    {
+      "slideNumber": 6,
+      "layout": "image-left",
+      "elements": [
+        {
+          "type": "text",
+          "position": {
+            "x": "4.0%",
+            "y": "18.0%",
+            "w": "42.0%",
+            "h": "16.0%"
+          },
+          "content": "Monitoring becomes the bottleneck",
+          "role": "body",
+          "style": {
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "position": {
+            "x": "4.0%",
+            "y": "38.0%",
+            "w": "42.0%",
+            "h": "34.0%"
+          },
+          "content": "Audit-grade measurement of plastic flows is now the limiting factor. Without it, reduction targets cannot be independently verified.",
+          "role": "body",
+          "style": {
+            "align": "left"
+          }
+        },
+        {
+          "type": "image",
+          "position": {
+            "x": "50.0%",
+            "y": "0.0%",
+            "w": "50.0%",
+            "h": "100.0%"
+          },
+          "src": "/private/var/folders/zj/kby34wq12tq0vy4clz9spsgm0000gn/T/opencode/nextslide-probe/extracted-images/slide6_img2.png",
+          "alt": "Image 0"
+        }
+      ],
+      "notes": "Speaker note for slide 6 (image-right). Expand with regional detail and cite the 2026 audit."
+    },
+    {
+      "slideNumber": 7,
+      "layout": "bullets",
+      "elements": [
+        {
+          "type": "text",
+          "position": {
+            "x": "5.0%",
+            "y": "6.0%",
+            "w": "90.0%",
+            "h": "12.0%"
+          },
+          "content": "Three enablers, one deadline",
+          "role": "body",
+          "style": {
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "position": {
+            "x": "5.0%",
+            "y": "26.0%",
+            "w": "29.0%",
+            "h": "22.0%"
+          },
+          "content": "🔒 Reuse policy — 12 coastal markets by end of 2026",
+          "role": "body",
+          "style": {
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "position": {
+            "x": "36.0%",
+            "y": "26.0%",
+            "w": "29.0%",
+            "h": "22.0%"
+          },
+          "content": "📊 Verified data — 40 audited river basins, open methodology",
+          "role": "body",
+          "style": {
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "position": {
+            "x": "67.0%",
+            "y": "26.0%",
+            "w": "29.0%",
+            "h": "22.0%"
+          },
+          "content": "💰 Producer funding — $1.8B committed over five years",
+          "role": "body",
+          "style": {
+            "align": "left"
+          }
+        }
+      ],
+      "notes": "Speaker note for slide 7 (blank). Expand with regional detail and cite the 2026 audit."
+    },
+    {
+      "slideNumber": 8,
+      "layout": "content",
+      "elements": [
+        {
+          "type": "text",
+          "position": {
+            "x": "5.0%",
+            "y": "8.0%",
+            "w": "90.0%",
+            "h": "12.0%"
+          },
+          "content": "The 2026 baseline",
+          "role": "body",
+          "style": {
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "position": {
+            "x": "8.0%",
+            "y": "30.0%",
+            "w": "40.0%",
+            "h": "18.0%"
+          },
+          "content": "11",
+          "role": "body",
+          "style": {
+            "align": "center"
+          }
+        },
+        {
+          "type": "text",
+          "position": {
+            "x": "52.0%",
+            "y": "30.0%",
+            "w": "40.0%",
+            "h": "18.0%"
+          },
+          "content": "73%",
+          "role": "body",
+          "style": {
+            "align": "center"
+          }
+        }
+      ],
+      "notes": "Speaker note for slide 8 (counter). Expand with regional detail and cite the 2026 audit."
+    },
+    {
+      "slideNumber": 9,
+      "layout": "content",
+      "elements": [
+        {
+          "type": "text",
+          "position": {
+            "x": "5.0%",
+            "y": "8.0%",
+            "w": "90.0%",
+            "h": "12.0%"
+          },
+          "content": "Reduce at source, measure honestly",
+          "role": "body",
+          "style": {
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "position": {
+            "x": "5.0%",
+            "y": "24.0%",
+            "w": "75.0%",
+            "h": "34.0%"
+          },
+          "content": "The 2026 strategy treats interception, reuse infrastructure and producer funding as a single system. Progress is published quarterly against an audited baseline, and every claim in this deck is traceable to a public methodology.",
+          "role": "body",
+          "style": {
+            "align": "left"
+          }
+        }
+      ],
+      "notes": "Speaker note for slide 9 (closing). Expand with regional detail and cite the 2026 audit."
+    }
+  ]
+}

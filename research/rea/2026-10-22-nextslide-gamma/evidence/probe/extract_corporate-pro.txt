@@ -1,0 +1,100 @@
+# deck_corporate-pro
+
+Author: Gomrey Research Probe
+Date: 2026-10-22
+Slides: 9
+Dimensions: 13.333" × 7.5"
+
+---
+
+## Slide 1 [content]
+
+[body]: Ocean Plastic Reduction
+[body]: 2026 Strategy
+[body]: Global Marine Resilience Initiative · October 2026
+
+Notes: Speaker note for slide 1 (title). Expand with regional detail and cite the 2026 audit.
+
+---
+
+## Slide 2 [content]
+
+[body]: The ocean absorbs 11 million tonnes of plastic annually
+[body]: Atmospheric and riverside leakage pushes an estimated 11 million tonnes of plastic into the ocean every year — a figure projected to nearly triple by 2040 without intervention. The 2026 strategy concentrates on upstream interception, where prevention costs a fraction of downstream cleanup.
+
+Notes: Speaker note for slide 2 (content). Expand with regional detail and cite the 2026 audit.
+
+---
+
+## Slide 3 [content]
+
+[body]: Three Pillars
+[body]: Intercept, Innovate, Regenerate
+
+Notes: Speaker note for slide 3 (section). Expand with regional detail and cite the 2026 audit.
+
+---
+
+## Slide 4 [bullets]
+
+[body]: Five commitments for 2026
+[body]: River interception at 1,400 high-load catchments worldwide
+[body]: Producer-funded reuse infrastructure in 12 coastal markets
+[body]: Single-use polymer phase-out in packaging and hospitality
+[body]: Open chemical-recycling feedstock contracts for PET and nylon
+[body]: Verified marine habitat restoration across 200,000 hectares
+
+Notes: Speaker note for slide 4 (bullets). Expand with regional detail and cite the 2026 audit.
+
+---
+
+## Slide 5 [content]
+
+[body]: 73% of ocean plastic traces to five river systems
+
+Notes: Speaker note for slide 5 (chart). Expand with regional detail and cite the 2026 audit.
+
+---
+
+## Slide 6 [bullets]
+
+[body]: Prevention now, not cleanup later
+[body]: Cleanup first
+[body]: Recovery happens after damage is done. Cost per tonne stays above $4,000 and ecological benefit is local and short-lived.
+[body]: Prevention first
+[body]: Intercepting at source prevents emission entirely. Cost per tonne falls below $180 and avoided emissions compound every year.
+
+Notes: Speaker note for slide 6 (comparison). Expand with regional detail and cite the 2026 audit.
+
+---
+
+## Slide 7 [content]
+
+[body]: We cannot clean the ocean faster than we are polluting it.
+[body]: — Marine Policy Review, 2026
+
+Notes: Speaker note for slide 7 (quote). Expand with regional detail and cite the 2026 audit.
+
+---
+
+## Slide 8 [bullets]
+
+[body]: The road to 2030
+[body]: Q1 2026 — Baselines locked: Audited plastic flow data published for 40 river basins.
+[body]: Q3 2026 — Interception live: 1,400 catchment barriers reach full deployment.
+[body]: Q1 2027 — Reuse at scale: Reusable packaging available in 12 coastal markets.
+[body]: Q4 2030 — 73% reduction: Verified year-on-year reduction against 2024 baseline.
+
+Notes: Speaker note for slide 8 (timeline). Expand with regional detail and cite the 2026 audit.
+
+---
+
+## Slide 9 [content]
+
+[body]: Reduce at source, measure honestly
+[body]: The 2026 strategy treats interception, reuse infrastructure and producer funding as a single system. Progress is published quarterly against an audited baseline, and every claim in this deck is traceable to a public methodology.
+
+Notes: Speaker note for slide 9 (closing). Expand with regional detail and cite the 2026 audit.
+
+---
+
