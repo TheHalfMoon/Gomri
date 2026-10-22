@@ -3,15 +3,14 @@ import fs from "fs/promises";
 import path from "path";
 
 import {
-  BundledPresentationExportFormat,
   bundledExportPackageAvailable,
   runBundledPresentationExport,
 } from "@/lib/run-bundled-presentation-export";
+import {
+  BUNDLED_EXPORT_FORMATS,
+  isBundledExportFormat,
+} from "@/lib/export-formats";
 import { authStatusForRequest } from "@/lib/server-auth-role";
-
-function isValidFormat(value: unknown): value is BundledPresentationExportFormat {
-  return value === "pdf" || value === "pptx";
-}
 
 async function readExportRequestBody(req: NextRequest): Promise<{
   format?: unknown;
@@ -122,9 +121,13 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  if (!isValidFormat(format)) {
+  if (!isBundledExportFormat(format)) {
     return NextResponse.json(
-      { error: "Invalid export format" },
+      {
+        error: `Invalid export format. Supported formats: ${BUNDLED_EXPORT_FORMATS.join(
+          ", ",
+        )}`,
+      },
       { status: 400 }
     );
   }

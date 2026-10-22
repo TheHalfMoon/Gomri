@@ -1,6 +1,9 @@
-from typing import List, Literal
+from typing import List, Optional
 from pydantic import BaseModel
 import uuid
+
+from enums.export_format import ExportFormat
+from models.image_export_options import ImageExportOptions
 
 
 class SlideContentUpdate(BaseModel):
@@ -11,4 +14,5 @@ class SlideContentUpdate(BaseModel):
 class EditPresentationRequest(BaseModel):
     presentation_id: uuid.UUID
     slides: List[SlideContentUpdate]
-    export_as: Literal["pptx", "pdf"] = "pptx"
+    export_as: ExportFormat = "pptx"
+    image_export: Optional[ImageExportOptions] = None

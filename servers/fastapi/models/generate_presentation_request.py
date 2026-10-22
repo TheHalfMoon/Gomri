@@ -1,8 +1,10 @@
-from typing import List, Literal, Optional
+from typing import List, Optional
 from pydantic import BaseModel, Field
 
+from enums.export_format import ExportFormat
 from enums.tone import Tone
 from enums.verbosity import Verbosity
+from models.image_export_options import ImageExportOptions
 
 
 class GeneratePresentationRequest(BaseModel):
@@ -38,8 +40,12 @@ class GeneratePresentationRequest(BaseModel):
     files: Optional[List[str]] = Field(
         default=None, description="Files to use for the presentation"
     )
-    export_as: Literal["pptx", "pdf"] = Field(
+    export_as: ExportFormat = Field(
         default="pptx", description="Export format"
+    )
+    image_export: Optional[ImageExportOptions] = Field(
+        default=None,
+        description="Options used when export_as produces images (png, jpeg, webp)",
     )
     trigger_webhook: bool = Field(
         default=False, description="Whether to trigger subscribed webhooks"
@@ -61,4 +67,5 @@ class GenerateSmartPresentationRequest(BaseModel):
         description="Previously uploaded Presenton file paths",
     )
     community_design_ids: Optional[List[int]] = None
-    export_as: Literal["pptx", "pdf"] = "pptx"
+    export_as: ExportFormat = "pptx"
+    image_export: Optional[ImageExportOptions] = None

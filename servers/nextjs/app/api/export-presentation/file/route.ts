@@ -3,13 +3,8 @@ import fsPromises from "fs/promises";
 import path from "path";
 import { Readable } from "stream";
 import { NextRequest, NextResponse } from "next/server";
+import { EXPORT_CONTENT_TYPES } from "@/lib/export-formats";
 import { authStatusForRequest } from "@/lib/server-auth-role";
-
-const CONTENT_TYPES: Record<string, string> = {
-  ".pdf": "application/pdf",
-  ".pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-  ".zip": "application/zip",
-};
 
 function getExportsDirectory(): string {
   const appDataDirectory = process.env.APP_DATA_DIRECTORY?.trim();
@@ -87,7 +82,7 @@ export async function GET(request: NextRequest) {
     const stream = Readable.toWeb(fs.createReadStream(resolvedFilePath));
     return new NextResponse(stream as unknown as BodyInit, {
       headers: {
-        "Content-Type": CONTENT_TYPES[ext] ?? "application/octet-stream",
+        "Content-Type": EXPORT_CONTENT_TYPES[ext] ?? "application/octet-stream",
         "Content-Disposition": contentDisposition(path.basename(filename)),
         "Content-Length": String(stats.size),
         "Cache-Control": "no-store",

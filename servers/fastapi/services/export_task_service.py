@@ -426,7 +426,7 @@ class ExportTaskService:
         self,
         url: str,
         title: str,
-        export_as: Literal["pdf", "pptx"],
+        export_as: Literal["pdf", "pptx", "png"],
         fastapi_url: str | None = None,
         cookie_header: str | None = None,
     ) -> PresentationExportTaskResult:
