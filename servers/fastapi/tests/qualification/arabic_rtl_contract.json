@@ -1,0 +1,107 @@
+{
+  "$comment": "The shared Arabic / RTL qualification contract. Both the Python suite (servers/fastapi/tests/qualification/test_arabic_rtl_qualification.py) and the TypeScript suite (servers/nextjs/tests/arabic-rtl-qualification.test.mjs) read this one table, so the two classifiers are checked against one declaration instead of two copies.",
+  "version": 1,
+  "script_ranges": {
+    "arabic": "[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]",
+    "latin": "[A-Za-z]",
+    "arabic_indic_digits": "[٠-٩]",
+    "western_digits": "[0-9]"
+  },
+  "evidence_classes": {
+    "model": "The classification of the text itself. Measured in both languages.",
+    "markup": "The contract the renderer emits. Measured in the markup, not in rendered pixels.",
+    "rendered": "Rendered pixels. NOT measured by this suite: no headless browser is available in servers/nextjs/tests."
+  },
+  "cases": [
+    {
+      "id": "arabic-only",
+      "surface": "text",
+      "text": "مرحبا بالعالم",
+      "expected_script_direction": "rtl",
+      "expected_base_direction": "rtl",
+      "evidence_class": "model+markup",
+      "assertion": "The element declares a base direction and the font stack names an Arabic-capable family."
+    },
+    {
+      "id": "english-only",
+      "surface": "text",
+      "text": "Hello world",
+      "expected_script_direction": "ltr",
+      "expected_base_direction": "ltr",
+      "evidence_class": "model+markup",
+      "assertion": "The regression guard: the font stack still leads with the design font, and the text is emitted verbatim."
+    },
+    {
+      "id": "mixed-arabic-english",
+      "surface": "text",
+      "text": "تقرير Report 2026",
+      "expected_script_direction": "mixed",
+      "expected_base_direction": "rtl",
+      "evidence_class": "model+markup",
+      "assertion": "One container, no inner dir, no run splitting: the browser's bidi algorithm owns the reordering."
+    },
+    {
+      "id": "arabic-with-latin-numerals",
+      "surface": "text",
+      "text": "الإيرادات 2026 من ٢٥٠٠",
+      "expected_script_direction": "rtl",
+      "expected_base_direction": "rtl",
+      "evidence_class": "model+markup",
+      "assertion": "Both numeral systems survive byte-for-byte, and the Arabic-Indic digits are not normalised."
+    },
+    {
+      "id": "arabic-in-table-cell",
+      "surface": "table-cell",
+      "text": "الإيرادات",
+      "expected_script_direction": "rtl",
+      "expected_base_direction": "rtl",
+      "evidence_class": "model+markup",
+      "assertion": "The table cell declares its own base direction."
+    },
+    {
+      "id": "arabic-in-chart-label",
+      "surface": "chart-label",
+      "text": "الإيرادات",
+      "expected_script_direction": "rtl",
+      "expected_base_direction": "rtl",
+      "evidence_class": "model",
+      "assertion": "The chart label text survives verbatim. Chart rendering is canvas-based; the label's rendered order is NOT asserted."
+    },
+    {
+      "id": "arabic-in-vector-shape",
+      "surface": "vector-text",
+      "text": "الإيرادات",
+      "expected_script_direction": "rtl",
+      "expected_base_direction": "rtl",
+      "evidence_class": "model",
+      "assertion": "The vector text survives verbatim. Vector text is laid out by an LTR segment engine in the canvas; the rendered order is NOT asserted."
+    },
+    {
+      "id": "arabic-in-speaker-note",
+      "surface": "speaker-note",
+      "text": "الإيرادات ارتفعت",
+      "expected_script_direction": "rtl",
+      "expected_base_direction": "rtl",
+      "evidence_class": "model",
+      "assertion": "The speaker note survives verbatim. A speaker note is not a rendered text element, so it is not containment-checked."
+    },
+    {
+      "id": "arabic-plus-english-in-one-table-row",
+      "surface": "table-row",
+      "text": "الإيرادات Revenue",
+      "expected_script_direction": "mixed",
+      "expected_base_direction": "rtl",
+      "evidence_class": "model+markup",
+      "assertion": "Each cell resolves its own direction; the row does not force one direction on the other."
+    },
+    {
+      "id": "long-arabic-with-diacritics",
+      "surface": "text",
+      "text": "اللُّغَةُ الْعَرَبِيَّةُ مِنْ أَجْمَلِ",
+      "expected_script_direction": "rtl",
+      "expected_base_direction": "rtl",
+      "evidence_class": "model+markup",
+      "assertion": "Diacritics survive byte-for-byte and no bidi control characters are injected into the output."
+    }
+  ]
+}

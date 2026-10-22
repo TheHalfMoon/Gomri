@@ -286,5 +286,7 @@ test("honors text-list item and marker gaps in HTML", () => {
 
   assert.match(listHtml, /column-gap:13px/);
   assert.match(listHtml, /<span aria-hidden="true">•<\/span>/);
-  assert.match(listHtml, /<li style="margin-top:11px;/);
+  // The list item carries its own base direction (W13), so the attribute
+  // precedes the style.
+  assert.match(listHtml, /<li dir="auto" style="margin-top:11px;/);
 });

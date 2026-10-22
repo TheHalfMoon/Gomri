@@ -22,6 +22,8 @@ import {
   localFontOptionsFromUnknown,
   renderLocalFontFaceCss,
 } from "@/components/slide-editor/text/local-fonts";
+import { cssFontFamilyStack } from "@/components/slide-editor/text/css-text";
+import { resolveBaseDirection } from "@/components/slide-editor/text/text-direction";
 
 type JsonRecord = Record<string, unknown>;
 type RenderMode = "absolute" | "flow";
@@ -305,6 +307,54 @@ function renderFontAssetTags(fonts: unknown): string {
   return css ? `<style>${escapeStyleText(css)}</style>` : "";
 }
 
+/**
+ * Resolve the base direction of an element from its own text.
+ *
+ * This is the first-strong-character rule that CSS `dir="auto"` implements,
+ * so the renderer and the browser agree. The attribute emitted on the element
+ * is `dir="auto"` itself: that resolves per paragraph, which is what a
+ * multi-paragraph text box needs, and it is what the export core understands.
+ */
+function elementTextDirection(item: JsonRecord): "rtl" | "ltr" {
+  let text = readString(item.text) ?? "";
+  for (const run of readArray(item.runs)) {
+    text += readString(readRecord(run).text) ?? "";
+  }
+  return resolveBaseDirection(text);
+}
+
+function listTextDirection(item: JsonRecord): "rtl" | "ltr" {
+  let text = "";
+  for (const entry of readArray(item.items)) {
+    if (typeof entry === "string") {
+      text += entry;
+      continue;
+    }
+    if (Array.isArray(entry)) {
+      for (const run of entry) text += readString(readRecord(run).text) ?? "";
+      continue;
+    }
+    const record = readRecord(entry);
+    text += readString(record.text) ?? "";
+    for (const run of readArray(record.runs)) {
+      text += readString(readRecord(run).text) ?? "";
+    }
+  }
+  return resolveBaseDirection(text);
+}
+
+function cellTextDirection(cellValue: unknown): "rtl" | "ltr" {
+  if (typeof cellValue === "string" || typeof cellValue === "number") {
+    return resolveBaseDirection(readStringValue(cellValue));
+  }
+  const cell = readRecord(cellValue);
+  let text = readString(cell.text) ?? "";
+  for (const run of readArray(cell.runs)) {
+    text += readString(readRecord(run).text) ?? "";
+  }
+  return resolveBaseDirection(text);
+}
+
 function renderItem(item: JsonRecord, mode: RenderMode): string {
   if (isComponent(item)) {
     const { size, ...component } = item;
@@ -401,15 +451,17 @@ function renderText(item: JsonRecord, mode: RenderMode): string {
     })
     .join("");
 
-  return `<div style="${frameStyle(item, mode)}${transformStyle(item)}${fontStyle(font, {
+  const direction = elementTextDirection(item);
+  return `<div dir="auto" style="${frameStyle(item, mode)}${transformStyle(item)}${fontStyle(font, {
     includeLineHeight: false,
     includeTextDecoration: false,
+    rtl: direction === "rtl",
   })}${textShadowStyle(item)}display:flex;align-items:${verticalAlign(
     vertical
   )};justify-content:${horizontalAlign(horizontal)};${lineHeightStyle(
     font,
     1.1
-  )}${textOverflowStyle()}text-align:${textAlign(horizontal)};"><span style="display:block;width:100%">${runHtml}</span></div>`;
+  )}${textOverflowStyle()}text-align:${textAlign(horizontal)};"><span style="display:block;width:100%;unicode-bidi:plaintext">${runHtml}</span></div>`;
 }
 
 function renderTextList(item: JsonRecord, mode: RenderMode): string {
@@ -434,20 +486,21 @@ function renderTextList(item: JsonRecord, mode: RenderMode): string {
           : "";
       if (usesCustomMarkers) {
         const markerText = marker === "number" ? `${index + 1}.` : "•";
-        return `<li style="${gapStyle}display:grid;grid-template-columns:max-content minmax(0,1fr);column-gap:${cssNumber(
+        return `<li dir="auto" style="${gapStyle}display:grid;grid-template-columns:max-content minmax(0,1fr);column-gap:${cssNumber(
           markerGap
-        )}px;${textOverflowStyle()}"><span aria-hidden="true">${markerText}</span><span>${html}</span></li>`;
+        )}px;${textOverflowStyle()}unicode-bidi:plaintext"><span aria-hidden="true">${markerText}</span><span>${html}</span></li>`;
       }
-      return `<li style="${gapStyle}${textOverflowStyle()}">${html}</li>`;
+      return `<li dir="auto" style="${gapStyle}${textOverflowStyle()}unicode-bidi:plaintext">${html}</li>`;
     })
     .join("");
   const hidesNativeMarkers = marker === "none" || usesCustomMarkers;
   const listStyle = `margin:0;padding-left:${hidesNativeMarkers ? 0 : 24}px;${hidesNativeMarkers ? "list-style-type:none;" : ""
     }`;
 
-  return `<div style="${frameStyle(item, mode)}${transformStyle(item)}${fontStyle(
+  const direction = listTextDirection(item);
+  return `<div dir="auto" style="${frameStyle(item, mode)}${transformStyle(item)}${fontStyle(
     font,
-    { includeTextDecoration: false }
+    { includeTextDecoration: false, rtl: direction === "rtl" }
   )}${textOverflowStyle()}"><${tag} style="${listStyle}">${entries}</${tag}></div>`;
 }
 
@@ -468,11 +521,12 @@ function renderTable(item: JsonRecord, mode: RenderMode): string {
       Array.from({ length: colCount }, (_, colIndex) => {
         const cell = row[colIndex] ?? {};
         const isHeader = rowIndex === 0;
-        return `<div style="${tableCellStyle(
+        return `<div dir="auto" style="${tableCellStyle(
           cell,
           isHeader,
-          tableFont
-        )}">${cellText(cell, tableFont, isHeader)}</div>`;
+          tableFont,
+          cellTextDirection(cell)
+        )}unicode-bidi:plaintext">${cellText(cell, tableFont, isHeader)}</div>`;
       })
     )
     .join("");
@@ -3490,7 +3544,11 @@ function transformStyle(item: JsonRecord): string {
 
 function fontStyle(
   fontValue: unknown,
-  options: { includeLineHeight?: boolean; includeTextDecoration?: boolean } = {}
+  options: {
+    includeLineHeight?: boolean;
+    includeTextDecoration?: boolean;
+    rtl?: boolean;
+  } = {}
 ): string {
   const font = readRecord(fontValue);
   let style = `color:${escapeCssColor(
@@ -3498,7 +3556,15 @@ function fontStyle(
   )};`;
   const family = readString(font.family);
   const size = readNumber(font.size);
-  if (family) style += `font-family:${escapeCssFont(family)};`;
+  if (family) {
+    // The fallback chain names an Arabic-capable family, so an Arabic glyph
+    // inside a Latin-design run lands on an Arabic face without splitting the
+    // run. For right-to-left content the portable families lead, so the font
+    // name recorded in an exported artifact covers the script actually used.
+    style += `font-family:${cssFontFamilyStack(family, {
+      rtl: options.rtl === true,
+    })};`;
+  }
   if (size != null) style += `font-size:${cssNumber(size)}px;`;
   if (hasOwn(font, "italic")) {
     style += readBoolean(font.italic) ? "font-style:italic;" : "font-style:normal;";
@@ -3559,7 +3625,8 @@ function tableBaseFont(item: JsonRecord): JsonRecord {
 function tableCellStyle(
   cellValue: unknown,
   header: boolean,
-  tableFont: JsonRecord
+  tableFont: JsonRecord,
+  direction: "rtl" | "ltr" = "ltr"
 ): string {
   const cell = readRecord(cellValue);
   const cellFont = tableCellFont(cellValue, tableFont);
@@ -3584,6 +3651,7 @@ function tableCellStyle(
     )};`;
   let style = `${fontStyle(cellFont, {
     includeTextDecoration: false,
+    rtl: direction === "rtl",
   })}display:flex;align-items:center;justify-content:${horizontalAlign(
     alignment
   )};${borderStyle}min-height:0;min-width:0;overflow:hidden;padding:4px 6px;text-align:${textAlign(
@@ -4065,10 +4133,18 @@ function verticalAlign(value: string | null): string {
       : "flex-start";
 }
 
+/**
+ * Logical alignment.
+ *
+ * `left`/`right` are physical, so an Arabic paragraph aligned "left" would
+ * sit on the wrong side. Mapping them onto `start`/`end` lets the element's
+ * own resolved direction decide, which is what the export core resolves
+ * against the computed style. For left-to-right content the computed value
+ * is unchanged.
+ */
 function textAlign(value: string | null): string {
-  return value === "center" || value === "right" || value === "justify"
-    ? value
-    : "left";
+  if (value === "center" || value === "justify") return value;
+  return value === "right" ? "end" : "start";
 }
 
 function cssAlignment(value: string | null, fallback: string): string {
