@@ -1,0 +1,75 @@
+{
+  "state": "Gomrey PR candidate f0fbf523ac2cabdf81cd91e94c84d31e19def648 on branch feature/rea/w4a-contrast-linter, base feature/rea/nextslide-gamma-wave1 at 6dde5b4a8faea32c64811ee818f053d5fc12dbe3. The change (a) adds servers/fastapi/templates/v2/quality.py, a deterministic WCAG AA theme legibility linter that reuses the existing templates.v2.theme.contrast_ratio rather than adding a second contrast formula; (b) wires it into template_theme_for_presentation as an additive 'legibility' key, leaving the five pre-existing theme keys unchanged; (c) adds 19 pytest assertions in servers/fastapi/tests/unit/test_template_quality.py; (d) adds a donor-derived fixture servers/fastapi/tests/fixtures/donor_nextslide_presets.json with a deterministic regenerator and provenance README; (e) adds the W3 implementation design to the research record. The linter performs no I/O, no network access, no filesystem access and no credential access. It is pure arithmetic over already-resolved theme colour tokens. Gates executed on this exact revision: root npm test 48/48, FastAPI pytest 1144 passed, Next.js node --test 101/101, Next.js eslint 0 errors, Next.js production build success, Electron gates pass, scan-secrets OK, check-fixtures OK, check-platform-support OK, validate-release-config OK, release-manifest OK, presentation-export runtime 1.0.34 verified. The first cut of the linter was corrected before shipping because it applied the 4.5:1 text threshold to the brand fill colour and to decorative borders, which produced false positives on standard design-system pairings such as #2563EB on #F8FAFC; the shipped version applies 4.5:1 only to body text on a card surface, 3:1 to graphical objects, and does not check decorative borders. The pre-existing integration test asserting the exact theme payload was updated to assert the additive key explicitly while keeping the original five-key equality assertion.",
+  "questions": {
+    "q1": {
+      "question": "Does the change violate a declared invariant of the project (docs/REVIEW_POLICY.md, docs/JEV_BUILD_POLICY.md, docs/SOURCE_LEDGER.md)?",
+      "instructions": "Does the change violate a declared invariant of the project (docs/REVIEW_POLICY.md, docs/JEV_BUILD_POLICY.md, docs/SOURCE_LEDGER.md)? Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q2": {
+      "question": "Is donor code copied beyond the authorized and admitted slice? The admitted slice is the donor's colour custom properties used as a test fixture, plus its 4.5:1 design rule as a specification for an original implementation.",
+      "instructions": "Is donor code copied beyond the authorized and admitted slice? The admitted slice is the donor's colour custom properties used as a test fixture, plus its 4.5:1 design rule as a specification for an original implementation. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q3": {
+      "question": "Is a deterministic check being replaced by an unnecessary model call?",
+      "instructions": "Is a deterministic check being replaced by an unnecessary model call? Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q4": {
+      "question": "Is failure/retry/idempotency behavior complete for this change? The change adds a pure function library and an additive payload key; it has no persistence, no jobs and no side effects.",
+      "instructions": "Is failure/retry/idempotency behavior complete for this change? The change adds a pure function library and an additive payload key; it has no persistence, no jobs and no side effects. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q5": {
+      "question": "Is any source, page, chunk or artifact silently dropped? The fixture ships with a generator, a provenance README and a deterministic regeneration command; the dropped 4MB render retains its sha256 in the manifest.",
+      "instructions": "Is any source, page, chunk or artifact silently dropped? The fixture ships with a generator, a provenance README and a deterministic regeneration command; the dropped 4MB render retains its sha256 in the manifest. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q6": {
+      "question": "Does the change weaken provenance or citation precision?",
+      "instructions": "Does the change weaken provenance or citation precision? Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q7": {
+      "question": "Does it add ambient network, filesystem or secret authority? The linter performs no I/O, no network access, no filesystem access and no credential access.",
+      "instructions": "Does it add ambient network, filesystem or secret authority? The linter performs no I/O, no network access, no filesystem access and no credential access. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q8": {
+      "question": "Is an agent tool result structured and idempotent? No agent tool was added or changed.",
+      "instructions": "Is an agent tool result structured and idempotent? No agent tool was added or changed. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q9": {
+      "question": "Is the claimed test and evidence applicable to the exact candidate revision f0fbf523ac2cabdf81cd91e94c84d31e19def648? All gates were executed on that exact revision.",
+      "instructions": "Is the claimed test and evidence applicable to the exact candidate revision f0fbf523ac2cabdf81cd91e94c84d31e19def648? All gates were executed on that exact revision. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q10": {
+      "question": "Is there a simpler already-admitted implementation in Gomrey that should be reused instead of this new module? The new module reuses the existing contrast_ratio function rather than reimplementing it.",
+      "instructions": "Is there a simpler already-admitted implementation in Gomrey that should be reused instead of this new module? The new module reuses the existing contrast_ratio function rather than reimplementing it. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    }
+  }
+}
