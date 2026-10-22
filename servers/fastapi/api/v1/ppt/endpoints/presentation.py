@@ -41,6 +41,12 @@ from models.presentation_with_slides import (
     PresentationWithSlides,
 )
 from services.documents_loader import DocumentsLoader
+from services.evidence_narrative import (
+    assert_artifact_exportable,
+    bind_plan_to_slides,
+    build_plan_from_request,
+    narrative_for_presentation,
+)
 from services.chat.slide_ui_helpers import _normalize_generated_image_fit
 from services.temp_file_service import TEMP_FILE_SERVICE
 from services.webhook_service import WebhookService
@@ -1618,6 +1624,10 @@ async def export_existing_presentation(
     if not presentation:
         raise HTTPException(404, "Presentation not found")
 
+    # W3: revalidate every persisted citation against the source IR
+    # immediately before the artifact is written to disk.
+    assert_artifact_exportable(presentation)
+
     presentation_and_path = await export_presentation(
         presentation.id,
         presentation.title or str(uuid.uuid4()),
@@ -2693,6 +2703,23 @@ async def generate_presentation_handler(
                     )
                 )
 
+            # W3: build the deterministic evidence plan BEFORE any prose exists.
+            # The plan is the only fact base the model may draw on, and it fixes
+            # the content slide count so that a plan node maps to exactly one
+            # rendered slide.
+            n_toc_slides = 0
+            evidence_plan = build_plan_from_request(
+                evidence_bundle=request.evidence_bundle,
+                source_ir=request.source_ir,
+                owner_id=get_current_owner_id(),
+                n_slides=n_slides_to_generate,
+            )
+            if evidence_plan is not None:
+                if n_slides_to_generate is None:
+                    n_slides_to_generate = evidence_plan.node_count
+                elif evidence_plan.node_count != n_slides_to_generate:
+                    n_slides_to_generate = evidence_plan.node_count
+
             outline_messages = get_outline_messages(
                 request.content,
                 n_slides_to_generate,
@@ -2703,6 +2730,7 @@ async def generate_presentation_handler(
                 request.instructions,
                 request.include_title_slide,
                 request.include_table_of_contents,
+                evidence_plan,
             )
             await MEM0_PRESENTATION_MEMORY_SERVICE.store_generation_context(
                 presentation_id=presentation_id,
@@ -2734,6 +2762,7 @@ async def generate_presentation_handler(
                 request.web_search,
                 request.include_table_of_contents,
                 disconnect_checker=disconnect_checker,
+                evidence=evidence_plan,
             ):
 
                 if isinstance(chunk, HTTPException):
@@ -3027,6 +3056,28 @@ async def generate_presentation_handler(
         for slide in slides:
             _hydrate_template_slide_ui(slide, layout_payload)
 
+        # W3: bind the plan nodes to the rendered slides and persist the
+        # evidence-bound narrative together with the source IR it resolves
+        # against, so every citation can be revalidated at export time.
+        if evidence_plan is not None:
+            bindings = bind_plan_to_slides(
+                evidence_plan,
+                slides,
+                toc_slides=n_toc_slides,
+                title_slide=request.include_title_slide,
+            )
+            for slide, binding in zip(slides, bindings):
+                merged = dict(slide.properties or {})
+                merged.update(binding)
+                slide.properties = merged
+            presentation.narrative = narrative_for_presentation(
+                evidence_plan,
+                artifact_id=str(presentation_id),
+                revision=1,
+                language=language_to_use,
+            )
+            presentation.source_ir = request.source_ir
+
         # 8. Save PresentationModel and Slides
         sql_session.add(presentation)
         sql_session.add_all(slides)
@@ -3039,6 +3090,9 @@ async def generate_presentation_handler(
             sql_session.add(async_status)
 
         # 9. Export
+        # W3: revalidate every persisted citation against the source IR
+        # immediately before the artifact is written to disk.
+        assert_artifact_exportable(presentation)
         presentation_and_path = await export_presentation(
             presentation_id,
             presentation.title or str(uuid.uuid4()),
