@@ -411,12 +411,23 @@ def template_theme_for_presentation(
 ) -> dict[str, Any] | None:
     if not isinstance(theme, dict):
         return None
+
+    # Imported here rather than at module scope: ``templates.v2.quality``
+    # depends on ``contrast_ratio`` from this module, so a top-level import
+    # would be circular.
+    from templates.v2.quality import evaluate_theme_legibility
+
+    legibility = evaluate_theme_legibility(theme).as_dict()
+
     return {
         "name": f"{template_name} Theme",
         "description": template_description or "Theme generated from the template",
         "data": json.loads(json.dumps(theme)),
         "source": "template",
         "template_id": template_id,
+        # Additive: the deterministic WCAG AA legibility report for the resolved
+        # theme. Consumers that ignore this key are unaffected.
+        "legibility": legibility,
     }
 
 

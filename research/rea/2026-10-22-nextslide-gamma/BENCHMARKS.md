@@ -101,14 +101,28 @@ layouts. Independently of the crash, this is disqualifying for an import path.
 ## 3a. Accessibility measurement — the donor's own presets fail WCAG AA
 
 The donor's design rules specify a 4.5:1 contrast requirement (`SKILL.md:276-341`). **That rule is
-never checked by the donor's own tooling.** Measured against the 18 presets:
+never checked by the donor's own tooling.** Two independent measurements were taken, at two different
+scopes. Both are recorded rather than merged:
 
-| Finding | Count |
-|---|---|
-| Token pairs failing the 4.5:1 contrast rule | **34 / 90** |
-| `--ns-text-muted` failing | **3 / 18** presets |
-| `--ns-primary` failing (drives real text) | **6 / 18** presets |
-| Hard-coded KPI-change colours failing | **14 / 18** presets, and **18 / 18** in the worst case |
+**Measurement A — wider matrix** (independent subagent survey): across a 90-pair token matrix,
+**34 / 90** pairs fail the 4.5:1 rule; `--ns-text-muted` fails in 3 presets, `--ns-primary` in 6,
+and the hard-coded KPI-change colours fail in 14 of 18 presets — 18 of 18 in the worst case.
+
+**Measurement B — text-on-background subset** (recomputed in this mission from the committed fixture
+`servers/fastapi/tests/fixtures/donor_nextslide_presets.json`, covering the three text roles against
+the slide background): **10 / 54** pairs fail.
+
+| Failing role | Presets | Count |
+|---|---|---|
+| `--ns-primary` (drives real text) | Minimal Clean, Soft Curves, Teal Serenity, Asymmetric, Bento Grid, Retro 90s, Prism Glow | **7** |
+| `--ns-text-muted` | Asymmetric, Botanical, Creative Studio | **3** |
+| `--ns-text` | none | **0** |
+
+> The two measurements disagree by one on the `--ns-primary` breakdown (6 vs 7) because they use
+> different pair matrices. **Measurement B is the authoritative one for this mission** because it is
+> reproducible from the committed fixture and pinned by a regression test
+> (`servers/fastapi/tests/unit/test_template_quality.py`). The committed fixture and its generator
+> are the ground truth; both numbers are reported rather than one being silently discarded.
 
 **Why this matters for Gomrey:** `F-P04` ("layout quality assurance beyond overflow") is a real
 Gomrey gap — `utils/smart_slide_layout.py` checks overflow, clipping and overlap but **not contrast**.

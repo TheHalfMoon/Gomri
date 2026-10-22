@@ -137,11 +137,11 @@ Each rejection cites a **measured** reason, not a preference.
 | Target Gomrey module | `servers/fastapi/services/slide_quality_rules.py` (new) — a deterministic contrast/legibility linter that runs on every resolved theme before export |
 | Dependencies | **None.** Pure arithmetic on already-resolved theme tokens. |
 | Required notices | `docs/donors/nextslide-skill/NOTICE.md` must record this slice when it lands. |
-| Adaptation strategy | **ADAPT.** The *rule* (4.5:1 for text) is an accessibility standard, not donor IP, and is implemented independently against Gomrey's own 16 semantic colours. The donor's *palette set* is not adopted — it fails its own rule in 34/90 pairs, and its presets carry Google Fonts network dependencies. |
+| Adaptation strategy | **ADAPT.** The *rule* (4.5:1 for text) is an accessibility standard, not donor IP, and is implemented independently against Gomrey's own 16 semantic colours. The donor's *palette set* is not adopted — it fails its own rule in 10/54 text-on-background pairs, and its presets carry Google Fonts network dependencies. |
 | Why this is high value | `F-P04` is a measured Gomrey gap: `utils/smart_slide_layout.py` checks overflow, clipping and overlap but **not contrast**. The donor supplies (a) the machine-checkable rule and (b) proof that a plausible-looking palette set violates it in 38 % of pairs — which is exactly the evidence needed to justify a linter that catches it before a user sees it. |
 | Tests | Deterministic: every resolved theme's foreground/background pairs are checked against 4.5:1 (and 3:1 for large text); a failing pair is reported with both hex values and the computed ratio; the linter is applied to the 18 donor presets as a *negative* fixture and must reject the 34 known-bad pairs. |
 | Rollback | Delete the new module. It is additive and gates nothing until wired. |
-| Status | **NOT YET IMPLEMENTED.** Listed here so the plan is auditable before execution. |
+| Status | **SHIPPED** — `servers/fastapi/templates/v2/quality.py`, 17 tests, wired into `template_theme_for_presentation` as an additive `legibility` key. |
 
 ---
 

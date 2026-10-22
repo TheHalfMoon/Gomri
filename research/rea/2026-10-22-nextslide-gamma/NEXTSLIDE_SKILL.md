@@ -135,9 +135,10 @@ read vs run-level storage) and all original layouts.
 ### 3.7 The donor's own 18 presets fail its own contrast rule
 
 `SKILL.md:276-341` specifies a 4.5:1 contrast requirement. **Nothing in the donor checks it.**
-Measured across the 18 presets: **34 of 90 token pairs fail**; `--ns-text-muted` fails in 3 presets,
-`--ns-primary` (which drives real text) in 6, and the hard-coded KPI-change colours in 14 of 18
-presets — 18 of 18 in the worst case.
+Measured across the 18 presets: **34 of 90 token pairs fail** in a wider matrix, and **10 of 54**
+text-on-background pairs fail in the narrower subset this mission recomputed from the committed
+fixture: `--ns-primary` (which drives real text) fails in **7** presets and `--ns-text-muted` in
+**3**; the hard-coded KPI-change colours fail in 14 of 18 presets — 18 of 18 in the worst case.
 
 This is simultaneously a **donor defect** and the **most valuable thing the donor contains for
 Gomrey**: a ready-made, machine-checkable rule plus proof that a plausible palette set violates it
