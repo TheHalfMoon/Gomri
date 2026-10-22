@@ -41,7 +41,12 @@ from models.presentation_with_slides import (
     PresentationWithSlides,
 )
 from services.documents_loader import DocumentsLoader
-from gomrey.narrative import plan_node_for_slide, plan_node_from_narrative
+from gomrey.narrative import (
+    check_plan_containment,
+    collect_rendered_text,
+    plan_node_for_slide,
+    plan_node_from_narrative,
+)
 from services.evidence_narrative import (
     assert_artifact_exportable,
     bind_plan_to_slides,
@@ -2969,6 +2974,8 @@ async def generate_presentation_handler(
 
         # 7. Generate slide content concurrently (batched), then build slides and fetch assets
         slides: List[SlideModel] = []
+        # W3: per-slide deterministic containment results, keyed by slide index.
+        containment_results: dict[int, dict] = {}
 
         slide_layout_indices = presentation_structure.slides
         slide_layouts = [layout_model.slides[idx] for idx in slide_layout_indices]
@@ -3011,6 +3018,24 @@ async def generate_presentation_handler(
             for offset, slide_content in enumerate(batch_contents):
                 i = start + offset
                 slide_layout = slide_layouts[i]
+
+                # W3: the plan constrains the provider by prompt; this is the
+                # deterministic counterpart. A rendered slide that states a
+                # figure the evidence does not carry is not grounded, whatever
+                # the prompt said. The speaker note is not checked: it is
+                # structural prose, and a count like "three key points" is not
+                # a factual claim.
+                if evidence_plan is not None:
+                    node = plan_node_for_slide(
+                        evidence_plan,
+                        i,
+                        toc_slides=n_toc_slides,
+                        title_slide=request.include_title_slide,
+                    )
+                    if node is not None:
+                        containment_results[i] = check_plan_containment(
+                            node, collect_rendered_text(slide_content)
+                        )
                 slide = SlideModel(
                     presentation=presentation_id,
                     layout_group=layout_model.name,
@@ -3098,6 +3123,18 @@ async def generate_presentation_handler(
             for slide, binding in zip(slides, bindings):
                 merged = dict(slide.properties or {})
                 merged.update(binding)
+                containment = containment_results.get(slide.index)
+                if containment is not None and not containment.get("ok", True):
+                    # The rendered slide states something the evidence does not
+                    # carry, so it cannot be asserted as grounded.
+                    merged["evidence_status"] = "abstained"
+                    merged["reasons"] = list(merged.get("reasons") or []) + list(
+                        containment.get("reasons") or []
+                    )
+                    merged["containment"] = {
+                        "missing_numbers": list(containment.get("missing_numbers") or []),
+                        "missing_dates": list(containment.get("missing_dates") or []),
+                    }
                 slide.properties = merged
             presentation.narrative = narrative_for_presentation(
                 evidence_plan,

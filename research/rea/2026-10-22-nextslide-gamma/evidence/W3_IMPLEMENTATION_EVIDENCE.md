@@ -226,6 +226,34 @@ The table-of-contents remap is now implemented **once**, in
 A unit test asserts that all three agree, and the binding tests assert the exact slide indices
 for the title, table-of-contents and content positions.
 
+## 8c. The containment gate — closing the q8 finding properly
+
+The second Jev review of the fixed candidate **still** returned q8 = 0.65. That was correct
+again, and it identified a deeper problem than the prompt wiring:
+
+> The plan constrains the provider by **prompt**. Nothing checked what the provider actually
+> produced. The rendered slide could state a figure the evidence does not carry, and the artifact
+> would still be marked `grounded`.
+
+W3 therefore adds the deterministic counterpart:
+
+- `gomrey.narrative.collect_rendered_text(value)` — a layout-agnostic collector of the
+  audience-facing prose of a rendered slide (identifiers, layout names, colours and URLs are not
+  prose and are ignored).
+- `gomrey.narrative.check_plan_containment(node, rendered_text)` — every number and date the
+  rendered slide states must already appear in a claim the plan verified. The comparison **reuses
+  the P09-G2 quantity gate**, so the product has exactly one number-and-date rule.
+- The endpoint runs the check per slide and, when it fails, the slide's persisted binding is
+  downgraded to `abstained` with reason `rendered-content-outside-plan` and the specific missing
+  numbers and dates recorded. The speaker note is deliberately **not** checked: it is structural
+  prose, and a count like "three key points" is not a factual claim.
+
+This is what makes "the provider renders, it never decides" structurally true rather than
+aspirational: a slide that asserts a figure the evidence does not carry cannot ship as grounded,
+whatever the prompt said.
+
+**Speaker-note boundary, stated:** the containment check covers the visible slide content only.
+
 ## 9. What is still open for W3
 
 | Item | State |

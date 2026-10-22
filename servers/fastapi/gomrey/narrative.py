@@ -55,7 +55,7 @@ from gomrey.citations import BrokenCitation, make_locator, resolve
 from gomrey.decisions import SYNTHESIS_ELIGIBLE, make_decision, synthesize
 from gomrey.evidence_bundle import sufficiency_check
 from gomrey.gateway import AdmissionError
-from gomrey.verification import verify_claim
+from gomrey.verification import check_quantity_agreement, verify_claim
 
 __all__ = [
     "ABSTENTION_MARKER",
@@ -71,6 +71,8 @@ __all__ = [
     "build_narrative_ir",
     "build_narrative_plan",
     "bind_slide_locators",
+    "check_plan_containment",
+    "collect_rendered_text",
     "narrative_digest",
     "plan_index_for_slide",
     "plan_node_for_slide",
@@ -666,6 +668,105 @@ def build_narrative_ir(
     if language:
         document["language"] = language
     return document
+
+
+#: Keys whose string values are audience-facing prose in a rendered slide.
+_PROSE_KEYS = frozenset(
+    {
+        "text",
+        "title",
+        "subtitle",
+        "heading",
+        "body",
+        "description",
+        "label",
+        "caption",
+        "quote",
+        "value",
+        "content",
+        "speaker_note",
+        "notes",
+    }
+)
+
+
+def collect_rendered_text(value: Any) -> str:
+    """Collect the audience-facing prose of a rendered slide.
+
+    The collector is layout-agnostic: it walks the generated slide content and
+    gathers the string values that a reader would see. Identifiers, layout
+    names, colours and URLs are not prose and are ignored.
+    """
+    parts: list[str] = []
+
+    def walk(node: Any, key: str | None) -> None:
+        if isinstance(node, str):
+            if key is not None and key in _PROSE_KEYS:
+                parts.append(node)
+            return
+        if isinstance(node, dict):
+            for child_key, child in node.items():
+                walk(child, str(child_key))
+            return
+        if isinstance(node, (list, tuple)):
+            for child in node:
+                walk(child, key)
+            return
+
+    walk(value, None)
+    return "\n".join(parts)
+
+
+def check_plan_containment(node: PlanNode, rendered_text: str) -> dict[str, Any]:
+    """Check that rendered slide text stays inside the plan's claim texts.
+
+    The plan constrains the provider by prompt. This is the deterministic
+    counterpart: every number and date the rendered slide states must already
+    appear in a claim the plan verified. A slide that states a figure the
+    evidence does not carry is not grounded, whatever the prompt said.
+
+    The comparison reuses the P09-G2 quantity gate, so there is exactly one
+    number-and-date rule in the product.
+    """
+    if node.status != GROUNDED_MARKER:
+        return {
+            "checked": False,
+            "ok": True,
+            "missing_numbers": [],
+            "missing_dates": [],
+            "reasons": ["node-not-grounded"],
+        }
+    if not node.claim_texts:
+        return {
+            "checked": False,
+            "ok": True,
+            "missing_numbers": [],
+            "missing_dates": [],
+            "reasons": ["no-claim-text"],
+        }
+    if not rendered_text.strip():
+        return {
+            "checked": False,
+            "ok": True,
+            "missing_numbers": [],
+            "missing_dates": [],
+            "reasons": ["no-rendered-text"],
+        }
+
+    agreement = check_quantity_agreement(rendered_text, list(node.claim_texts))
+    missing_numbers = list(agreement.get("missing_numbers") or [])
+    missing_dates = list(agreement.get("missing_dates") or [])
+    ok = not missing_numbers and not missing_dates
+    reasons: list[str] = []
+    if not ok:
+        reasons.append("rendered-content-outside-plan")
+    return {
+        "checked": True,
+        "ok": ok,
+        "missing_numbers": missing_numbers,
+        "missing_dates": missing_dates,
+        "reasons": reasons,
+    }
 
 
 def plan_index_for_slide(

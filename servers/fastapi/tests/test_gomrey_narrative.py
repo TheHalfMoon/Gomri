@@ -26,6 +26,8 @@ from gomrey.narrative import (
     build_narrative_ir,
     build_narrative_plan,
     bind_slide_locators,
+    check_plan_containment,
+    collect_rendered_text,
     narrative_digest,
     render_plan_context,
     render_plan_rules,
@@ -634,3 +636,93 @@ def test_a_stale_span_is_not_silently_treated_as_fresh() -> None:
     assert "stale-spans-present" in plan.sufficiency["reasons"]
     for node in plan.nodes:
         assert node.status != GROUNDED_MARKER
+
+
+# --------------------------------------------------------------------------- #
+# Containment: the rendered slide must stay inside the plan
+# --------------------------------------------------------------------------- #
+
+
+def _grounded_plan():
+    locator = _locator()
+    second = _locator("p1-s1")
+    bundle = _bundle(
+        [
+            _span(locator["citation_id"], "Retention rose to 91 percent in 2026."),
+            _span(
+                second["citation_id"],
+                "The sample covered 4000 accounts.",
+                unit_id="p1-s1",
+            ),
+        ]
+    )
+    return _plan(bundle, n_slides=1)
+
+
+def test_rendered_content_inside_the_plan_passes_containment() -> None:
+    plan = _grounded_plan()
+    node = next(n for n in plan.nodes if n.status == GROUNDED_MARKER)
+
+    result = check_plan_containment(node, "Retention rose to 91 percent in 2026.")
+
+    assert result["checked"] is True
+    assert result["ok"] is True
+    assert result["missing_numbers"] == []
+    assert result["missing_dates"] == []
+    assert result["reasons"] == []
+
+
+def test_rendered_content_outside_the_plan_fails_containment() -> None:
+    plan = _grounded_plan()
+    node = next(n for n in plan.nodes if n.status == GROUNDED_MARKER)
+
+    result = check_plan_containment(node, "Retention rose to 97 percent in 2026.")
+
+    assert result["checked"] is True
+    assert result["ok"] is False
+    assert "97" in result["missing_numbers"]
+    assert result["reasons"] == ["rendered-content-outside-plan"]
+
+
+def test_a_non_grounded_node_is_not_containment_checked() -> None:
+    # One claim but two nodes: the second node has no claim and is abstained.
+    bundle = _bundle(
+        [_span(_locator()["citation_id"], "Retention rose to 91 percent in 2026.")]
+    )
+    plan = _plan(bundle, n_slides=2)
+    node = next(n for n in plan.nodes if n.status == ABSTENTION_MARKER)
+
+    result = check_plan_containment(node, "Anything at all 1234.")
+    assert result["checked"] is False
+    assert result["ok"] is True
+    assert result["reasons"] == ["node-not-grounded"]
+
+
+def test_an_empty_rendered_slide_is_not_containment_checked() -> None:
+    plan = _grounded_plan()
+    node = next(n for n in plan.nodes if n.status == GROUNDED_MARKER)
+
+    result = check_plan_containment(node, "   ")
+    assert result["checked"] is False
+    assert result["ok"] is True
+    assert result["reasons"] == ["no-rendered-text"]
+
+
+def test_the_collector_gathers_prose_and_ignores_identifiers() -> None:
+    rendered = collect_rendered_text(
+        {
+            "layout": "title-body",
+            "id": "element-7",
+            "title": "Retention",
+            "runs": [{"text": "rose to 91 percent"}],
+            "fill": {"color": "#2563EB"},
+            "image": {"url": "https://example.test/a.png"},
+        }
+    )
+
+    assert "Retention" in rendered
+    assert "rose to 91 percent" in rendered
+    assert "element-7" not in rendered
+    assert "title-body" not in rendered
+    assert "#2563EB" not in rendered
+    assert "example.test" not in rendered
