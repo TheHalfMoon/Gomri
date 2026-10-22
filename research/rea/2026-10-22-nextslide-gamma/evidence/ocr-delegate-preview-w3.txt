@@ -1,0 +1,26 @@
+# Files (12 reviewable / 17 total)
+
+- mode: range
+- from: main
+- to: HEAD
+- merge_base: 5f299a7a6174ad3a1180f827778db5f4400a4d71
+- total_insertions: 4669
+- total_deletions: 37
+
+  - `contracts/v1/narrative-ir.schema.json` [modified] +83/-1
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/W3_DESIGN.md` [added] +1596/-0 (excluded: unsupported_ext)~~
+~~- `research/rea/2026-10-22-nextslide-gamma/evidence/W3_IMPLEMENTATION_EVIDENCE.md` [added] +275/-0 (excluded: unsupported_ext)~~
+  - `scripts/contracts.test.mjs` [modified] +95/-0
+  - `servers/fastapi/alembic/versions/9a3c1f7b2d40_add_evidence_narrative_to_presentations.py` [added] +49/-0
+  - `servers/fastapi/api/v1/ppt/endpoints/presentation.py` [modified] +120/-0
+  - `servers/fastapi/gomrey/__init__.py` [modified] +69/-24
+  - `servers/fastapi/gomrey/narrative.py` [added] +945/-0
+  - `servers/fastapi/migrations.py` [modified] +2/-1
+  - `servers/fastapi/models/generate_presentation_request.py` [modified] +43/-0
+  - `servers/fastapi/models/sql/presentation.py` [modified] +7/-0
+  - `servers/fastapi/services/evidence_narrative.py` [added] +144/-0
+~~- `servers/fastapi/tests/integration/test_evidence_narrative_pipeline.py` [added] +461/-0 (excluded: default_path)~~
+~~- `servers/fastapi/tests/test_gomrey_narrative.py` [added] +728/-0 (excluded: default_path)~~
+~~- `servers/fastapi/tests/unit/test_migrations.py` [modified] +16/-0 (excluded: default_path)~~
+  - `servers/fastapi/utils/llm_calls/generate_presentation_outlines.py` [modified] +15/-0
+  - `servers/fastapi/utils/llm_calls/generate_slide_content.py` [modified] +21/-11
