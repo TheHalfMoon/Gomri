@@ -1,0 +1,75 @@
+{
+  "state": "Gomrey candidate 690513e928c0546be6df415b5e834df667502ee3, branch feature/rea/w12-export-fidelity, base canonical main 5f299a7a6174ad3a1180f827778db5f4400a4d71. WHAT THE CHANGE DOES: adds an export-fidelity harness. It adds eight SYNTHETIC decks under servers/nextjs/tests/fixtures/export-fidelity/decks, a deterministic generator that produces them, a measurement script that runs the real export round trip (pptx-from-json then pptx-to-json, both browser-free) over those decks and writes a MEASURED expectations file, and a test that checks a later run still produces the same facts. The measurement is a pure fact extraction; the check is a deep-equality comparison against the recorded facts. It also adds a CI job that pins Node 22 and materialises the export runtime, and one package.json script. WHICH AGENT TOOLS IT ADDS OR MODIFIES: none. No MCP tool, tool schema, tool registry, tool result shape or tool invocation path is added, removed or modified. The MCP server is untouched. No language-model call is added or modified. WHAT THE HARNESS PINS, stated precisely: the re-imported JSON (element types, run text, font attributes, geometry in px, paragraph alignment) and the PPTX package part list. It does NOT pin the PPTX bytes, because two runs differ by a UUID file name and wall-clock ZIP timestamps. It does NOT assert rendered pixels, because the production export path is browser-bound and this harness is the deterministic tier beneath it. It does NOT assert that the re-imported JSON is Gomrey's own RawSlideLayouts, because the export core returns its own shape. BEHAVIOUR THAT IS CURRENTLY MEASURED AND PINNED AS THE CURRENT BEHAVIOUR: vertical_alignment middle comes back as top; line_height 1.2 comes back as 0.07; bullets are inlined as literal text; N paragraphs collapse into one run joined by a newline; autoshape type is ignored so an ellipse comes back as a rectangle polygon; rotation, stroke opacity, level, chart axis titles and table spans/borders/heights are dropped; decorative is always true; and a speaker note is written to ppt/notesSlides/notesSlide1.xml but is never re-imported. The last one is asserted TWO-SIDED: the note reached the archive AND it did not come back, so closing either side produces a visible behaviour-change notice rather than a silent change. THE EXPECTATIONS ARE MEASURED, NOT GUESSED: measure.mjs runs the real round trip over the committed decks and records what came back. Regenerating them is a deliberate act that means the export core's behaviour changed, and the diff has to be reviewed. They are pinned to export_core_version 1.0.34 and the harness asserts the runtime matches, so a third-party bump cannot silently change what the harness means. THE RUNTIME IS NOT COMMITTED: presentation-export/ is gitignored and is materialised by npm run sync:presentation-export, which fetches a PUBLIC release tarball. On a checkout without it every deck case reports a real skip with its reason, verified by hiding the runtime: 12 skipped, 3 passed, 0 failed. A skip is never reported as a pass. NO EXISTING CI GATE WAS REMOVED OR WEAKENED. The existing test-nextjs job is untouched; a new dedicated job pins Node 22, because the export core declares engines.node >= 22.12.0 while every existing Node job pins Node 20, where the export tasks cannot run. ASSET RIGHTS: every fixture is synthetic, with its source, licence, creation date and regeneration command recorded in PROVENANCE.md, as config/fixture-policy.json requires. No binary is committed. GATES ON THIS EXACT REVISION: Next.js node --test 88/88 (73 baseline + 15 harness); root npm test 48/48; FastAPI pytest 1125 passed (unchanged); the export-fidelity harness 15/15; scan-secrets, check-fixtures, check-platform-support, validate-release-config, release-manifest and validate-contracts all OK; the workflow parses and test-export-fidelity is registered.",
+  "questions": {
+    "q1": {
+      "question": "Does the change violate a declared invariant of the project (docs/REVIEW_POLICY.md, docs/JEV_BUILD_POLICY.md, docs/SOURCE_LEDGER.md)?",
+      "instructions": "Does the change violate a declared invariant of the project (docs/REVIEW_POLICY.md, docs/JEV_BUILD_POLICY.md, docs/SOURCE_LEDGER.md)? Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q2": {
+      "question": "Is donor code copied beyond the authorized and admitted slice? This change adds no donor code; it is original Gomrey code and synthetic fixtures.",
+      "instructions": "Is donor code copied beyond the authorized and admitted slice? This change adds no donor code; it is original Gomrey code and synthetic fixtures. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q3": {
+      "question": "Is a deterministic check being replaced by an unnecessary model call? The change adds no model call; the check is a deterministic comparison against recorded facts.",
+      "instructions": "Is a deterministic check being replaced by an unnecessary model call? The change adds no model call; the check is a deterministic comparison against recorded facts. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q4": {
+      "question": "Is failure/retry/idempotency behavior complete for this change? The harness runs a pure measurement and compares facts; it writes nothing into the product, and the fixtures and the expectations are regenerated deterministically. The new CI job is additive and no existing gate was removed.",
+      "instructions": "Is failure/retry/idempotency behavior complete for this change? The harness runs a pure measurement and compares facts; it writes nothing into the product, and the fixtures and the expectations are regenerated deterministically. The new CI job is additive and no existing gate was removed. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q5": {
+      "question": "Is any source, page, chunk or artifact silently dropped? The harness pins the current drops explicitly -- alignment, line height, bullets, paragraph merging, autoshape type, rotation, stroke opacity, level, chart axis titles, table spans and heights, decorative, and the speaker note -- so each one is a recorded, visible fact rather than a silent loss. The one gap the design proposed and this change did not deliver, a picture fixture, is recorded in the evidence file because the picture shape's model is undocumented and could not be constructed without guessing.",
+      "instructions": "Is any source, page, chunk or artifact silently dropped? The harness pins the current drops explicitly -- alignment, line height, bullets, paragraph merging, autoshape type, rotation, stroke opacity, level, chart axis titles, table spans and heights, decorative, and the speaker note -- so each one is a recorded, visible fact rather than a silent loss. The one gap the design proposed and this change did not deliver, a picture fixture, is recorded in the evidence file because the picture shape's model is undocumented and could not be constructed without guessing. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q6": {
+      "question": "Does the change weaken provenance or citation precision? The change does not touch citations, provenance or contracts.",
+      "instructions": "Does the change weaken provenance or citation precision? The change does not touch citations, provenance or contracts. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q7": {
+      "question": "Does it add ambient network, filesystem or secret authority? The change adds a test harness that reads committed fixtures, writes to a temporary directory, and loads an already-installed local package. It fetches nothing at test time; the runtime is materialised by the repository's existing script in the CI job.",
+      "instructions": "Does it add ambient network, filesystem or secret authority? The change adds a test harness that reads committed fixtures, writes to a temporary directory, and loads an already-installed local package. It fetches nothing at test time; the runtime is materialised by the repository's existing script in the CI job. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q8": {
+      "question": "Is an agent tool result structured and idempotent?",
+      "instructions": "Is an agent tool result structured and idempotent? Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q9": {
+      "question": "Is the claimed test and evidence applicable to the exact candidate revision 690513e928c0546be6df415b5e834df667502ee3? All gates were executed on that exact revision.",
+      "instructions": "Is the claimed test and evidence applicable to the exact candidate revision 690513e928c0546be6df415b5e834df667502ee3? All gates were executed on that exact revision. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q10": {
+      "question": "Is there a simpler already-admitted implementation in Gomrey that should be reused instead of this new code? The change reuses the repository's existing export runtime, its existing sync and check scripts, and its existing fixture-policy mechanism; the harness itself is the missing piece and there is no existing equivalent.",
+      "instructions": "Is there a simpler already-admitted implementation in Gomrey that should be reused instead of this new code? The change reuses the repository's existing export runtime, its existing sync and check scripts, and its existing fixture-policy mechanism; the harness itself is the missing piece and there is no existing equivalent. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    }
+  }
+}

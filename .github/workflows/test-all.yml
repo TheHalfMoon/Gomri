@@ -110,6 +110,39 @@ jobs:
       - name: Run Cypress component tests
         run: npx cypress run --component --browser electron
 
+  test-export-fidelity:
+    name: Test export fidelity
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: servers/nextjs
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # The export core declares `engines.node >= 22.12.0`. The other Node jobs
+      # pin Node 20, where the export tasks cannot run. This job therefore
+      # pins Node 22 explicitly rather than inheriting the default.
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: servers/nextjs/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Materialise the export runtime
+        run: npm run sync:presentation-export
+
+      - name: Verify the export runtime
+        run: npm run check:presentation-export
+
+      - name: Run the export-fidelity harness
+        run: node --test tests/export-fidelity.test.mjs
+
   test-electron:
     name: Test Electron
     runs-on: ubuntu-latest

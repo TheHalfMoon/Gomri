@@ -1,0 +1,50 @@
+{
+  "name": "05-chart",
+  "slides": [
+    {
+      "background": {
+        "color": "#FFFFFF",
+        "opacity": 1
+      },
+      "shapes": [
+        {
+          "shape_type": "chart",
+          "type": "bar",
+          "position": {
+            "left": 40,
+            "top": 40,
+            "width": 600,
+            "height": 300
+          },
+          "categories": [
+            "Q1",
+            "Q2",
+            "Q3"
+          ],
+          "datasets": [
+            {
+              "name": "Series A",
+              "values": [
+                10,
+                20,
+                30
+              ]
+            },
+            {
+              "name": "Series B",
+              "values": [
+                5,
+                15,
+                25
+              ]
+            }
+          ],
+          "title": "Quarterly revenue",
+          "show_legend": true,
+          "x_axis_title": "Quarter",
+          "y_axis_title": "Revenue"
+        }
+      ]
+    }
+  ]
+}
