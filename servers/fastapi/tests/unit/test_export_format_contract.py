@@ -201,9 +201,11 @@ def test_export_format_wins_over_the_image_options_format():
     assert options.format == "jpeg"
 
 
-def test_matching_export_and_option_formats_are_kept_as_is():
+def test_matching_export_and_option_formats_are_kept():
     options = ImageExportOptions(format="webp", quality=70)
-    assert _resolve_image_options("webp", options) is options
+    resolved = _resolve_image_options("webp", options)
+    assert resolved.format == "webp"
+    assert resolved.quality == 70
 
 
 def test_export_format_cannot_resurrect_an_illegal_option_combination():
@@ -212,6 +214,15 @@ def test_export_format_cannot_resurrect_an_illegal_option_combination():
             "png",
             ImageExportOptions(format="jpeg", quality=85),
         )
+
+
+def test_options_that_bypassed_the_model_cannot_reach_the_encoder():
+    bypassed = ImageExportOptions(format="jpeg", quality=85).model_copy(
+        update={"format": "png"}
+    )
+
+    with pytest.raises(ValueError):
+        _resolve_image_options("png", bypassed)
 
 
 def test_export_presentation_refuses_an_illegal_option_combination():

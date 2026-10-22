@@ -84,8 +84,6 @@ def _resolve_image_options(
     combination the model refuses can never reach the encoder.
     """
     options = image_options or ImageExportOptions()
-    if options.format == export_as:
-        return options
     return ImageExportOptions.model_validate(
         {**options.model_dump(), "format": export_as}
     )
@@ -129,9 +127,12 @@ async def _export_presentation_as_images(
             status_code=500,
             detail=f"Image export failed: {exc}",
         ) from exc
-    except Exception:
+    except Exception as exc:
         _remove_intermediate(rendered_path)
-        raise
+        raise HTTPException(
+            status_code=500,
+            detail=f"Image export failed: {exc}",
+        ) from exc
 
     if os.path.abspath(rendered_path) != os.path.abspath(archive.path):
         _remove_intermediate(rendered_path)

@@ -704,3 +704,100 @@ def test_entry_names_match_the_renderer_convention(tmp_path):
         "slide_001.png",
         "slide_002.png",
     ]
+
+
+def test_export_refuses_a_rendered_archive_that_is_not_a_zip(tmp_path):
+    not_a_zip = tmp_path / "rendered.zip"
+    not_a_zip.write_bytes(b"this is not a zip archive at all")
+
+    with pytest.raises(ImageExportValidationError):
+        build_image_archive(
+            str(not_a_zip),
+            options=ImageExportOptions(format="png"),
+            output_directory=str(tmp_path / "out"),
+            archive_basename="not-a-zip",
+        )
+
+
+def _png_declaring(width: int, height: int) -> bytes:
+    """A real PNG whose header declares a different canvas size."""
+    import struct
+    import zlib
+
+    payload = _png_bytes(8, 8, (1, 2, 3))
+    data = bytearray(payload)
+    header_type = data.find(b"IHDR")
+    struct.pack_into(">II", data, header_type + 4, width, height)
+    crc = zlib.crc32(bytes(data[header_type : header_type + 4 + 13])) & 0xFFFFFFFF
+    struct.pack_into(">I", data, header_type + 17, crc)
+    return bytes(data)
+
+
+def test_export_refuses_a_decompression_bomb_slide(tmp_path):
+    donor = _write_donor_archive(
+        str(tmp_path / "rendered.zip"),
+        {"slide_001.png": _png_declaring(20000, 20000)},
+    )
+
+    with pytest.raises(ImageExportBudgetError):
+        build_image_archive(
+            donor,
+            options=ImageExportOptions(format="png"),
+            output_directory=str(tmp_path / "out"),
+            archive_basename="bomb",
+        )
+
+
+def test_export_refuses_a_slide_beyond_the_pixel_budget_before_decoding(tmp_path):
+    donor = _write_donor_archive(
+        str(tmp_path / "rendered.zip"),
+        {"slide_001.png": _png_declaring(10000, 10000)},
+    )
+
+    with pytest.raises(ImageExportBudgetError):
+        build_image_archive(
+            donor,
+            options=ImageExportOptions(format="png"),
+            output_directory=str(tmp_path / "out"),
+            archive_basename="too-many-pixels",
+        )
+
+
+def test_export_refuses_an_unsupported_packaging(tmp_path):
+    donor = _write_donor_archive(
+        str(tmp_path / "rendered.zip"),
+        {"slide_001.png": _png_bytes(64, 36, (10, 20, 30))},
+    )
+    options = ImageExportOptions(format="png").model_copy(
+        update={"packaging": "individual"}
+    )
+
+    with pytest.raises(ImageExportValidationError):
+        build_image_archive(
+            donor,
+            options=options,
+            output_directory=str(tmp_path / "out"),
+            archive_basename="packaging",
+        )
+
+
+def test_the_staging_file_is_hidden_from_the_exports_listing(tmp_path):
+    donor = _write_donor_archive(
+        str(tmp_path / "rendered.zip"),
+        {"slide_001.png": _png_bytes(64, 36, (10, 20, 30))},
+    )
+    output_directory = tmp_path / "out"
+
+    build_image_archive(
+        donor,
+        options=ImageExportOptions(format="png"),
+        output_directory=str(output_directory),
+        archive_basename="staging",
+    )
+
+    assert [path.name for path in output_directory.iterdir()] == [
+        path.name
+        for path in output_directory.iterdir()
+        if not path.name.startswith(".")
+    ]
+    assert not any(path.name.endswith(".part") for path in output_directory.iterdir())

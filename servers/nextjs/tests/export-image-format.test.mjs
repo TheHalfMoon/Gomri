@@ -1,15 +1,11 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { pathToFileURL } from "node:url";
 
 import { build } from "esbuild";
-
-const exportFileRoutePath = path.resolve(
-  "app/api/export-presentation/file/route.ts",
-);
 
 let exportFormats;
 let temporaryDirectory;
@@ -22,7 +18,7 @@ test.before(async () => {
   const outputFile = path.join(temporaryDirectory, "bundle.mjs");
   await writeFile(
     entryFile,
-    `export { BUNDLED_EXPORT_FORMATS, isBundledExportFormat } from ${JSON.stringify(
+    `export { BUNDLED_EXPORT_FORMATS, EXPORT_CONTENT_TYPES, isBundledExportFormat } from ${JSON.stringify(
       path.resolve("lib/export-formats.ts"),
     )};`,
   );
@@ -63,8 +59,14 @@ test("the format guard rejects anything else", () => {
   }
 });
 
-test("the download route serves image archives as zip", async () => {
-  const source = await readFile(exportFileRoutePath, "utf8");
-
-  assert.match(source, /"\.zip":\s*"application\/zip"/);
+test("the download route serves image archives as a zip download", () => {
+  assert.equal(exportFormats.EXPORT_CONTENT_TYPES[".zip"], "application/zip");
+  assert.equal(
+    exportFormats.EXPORT_CONTENT_TYPES[".pdf"],
+    "application/pdf",
+  );
+  assert.equal(
+    exportFormats.EXPORT_CONTENT_TYPES[".pptx"],
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  );
 });

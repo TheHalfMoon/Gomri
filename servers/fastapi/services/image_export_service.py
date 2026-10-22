@@ -182,6 +182,10 @@ def _open_image(payload: bytes) -> Image.Image:
         raise ImageExportValidationError(
             "Rendered archive contains an unreadable PNG slide"
         ) from exc
+    except Image.DecompressionBombError as exc:
+        raise ImageExportBudgetError(
+            f"Rendered slide exceeds the {MAX_IMAGE_PIXELS} pixel budget"
+        ) from exc
     return image
 
 
@@ -288,16 +292,31 @@ def build_image_archive(
             "Rendered slide archive was not produced by the export runtime"
         )
 
+    if options.packaging != "zip":
+        raise ImageExportValidationError(
+            f"Unsupported image packaging: {options.packaging}"
+        )
+
     os.makedirs(output_directory, exist_ok=True)
     final_path = _archive_path(output_directory, archive_basename, options.format)
-    staging_path = f"{final_path}.part"
+    # The staging file is dot-prefixed so a partially written archive is not
+    # listed as a normal export artifact.
+    staging_path = os.path.join(
+        output_directory, f".{os.path.basename(final_path)}.part"
+    )
 
     extension = IMAGE_FILE_EXTENSIONS[options.format]
     media_type = IMAGE_MEDIA_TYPES[options.format]
     entries: list[ImageArchiveEntry] = []
 
     try:
-        with zipfile.ZipFile(rendered_archive_path, "r") as archive:
+        try:
+            rendered = zipfile.ZipFile(rendered_archive_path, "r")
+        except (zipfile.BadZipFile, OSError) as exc:
+            raise ImageExportValidationError(
+                "Rendered slide archive is not a readable ZIP"
+            ) from exc
+        with rendered as archive:
             members = [info for info in archive.infolist() if not info.is_dir()]
             if not members:
                 raise ImageExportValidationError(
@@ -315,6 +334,7 @@ def build_image_archive(
 
             ordered = sorted(members, key=lambda item: _slide_sort_key(item.filename))
             total = len(ordered)
+            written_bytes = 0
             with zipfile.ZipFile(staging_path, "w", compression=zipfile.ZIP_STORED) as out:
                 for position, info in enumerate(ordered, start=1):
                     _validate_entry_name(info.filename)
@@ -329,6 +349,15 @@ def build_image_archive(
                         resized = _resize(image, options.width)
                         encoded = _encode(resized, options.format, options)
                         width, height = resized.width, resized.height
+                    if len(encoded) > MAX_IMAGE_BYTES:
+                        raise ImageExportBudgetError(
+                            f"Exported slide exceeds the {MAX_IMAGE_BYTES} byte image budget"
+                        )
+                    written_bytes += len(encoded)
+                    if written_bytes > MAX_ARCHIVE_BYTES:
+                        raise ImageExportBudgetError(
+                            f"Exported archive exceeds the {MAX_ARCHIVE_BYTES} byte budget"
+                        )
                     filename = _slide_filename(position, total, extension)
                     out.writestr(filename, encoded)
                     entries.append(

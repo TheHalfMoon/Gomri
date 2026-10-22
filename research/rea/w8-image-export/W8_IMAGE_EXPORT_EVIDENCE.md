@@ -89,20 +89,31 @@ Image exports accept an optional `image_export` object:
 | Slide is unreadable or empty | Pillow open + size check | same |
 | Too many slides, or an oversized archive/image | budget constants in `image_export_service.py` | `ImageExportBudgetError` |
 | The rendered archive is missing | explicit check | `ImageExportValidationError` |
+| The rendered archive is not a readable ZIP | `zipfile.BadZipFile` is mapped to a contract error | `ImageExportValidationError` |
+| The slide is a decompression bomb | the pixel budget is checked before the decode; Pillow's own bomb error is mapped too | `ImageExportBudgetError` |
+| The exported bytes exceed the budget | the produced bytes are measured, not just the input | `ImageExportBudgetError` |
 
 ### 2.3 Output contract
 
 - The deliverable is a **ZIP** (`application/zip`) with one image per slide.
-- Entry names are `slide_01.<ext>`, `slide_02.<ext>`, … zero-padded to the slide count.
+- Entry names are `slide_001.<ext>`, `slide_002.<ext>`, … — the renderer's own convention, so the
+  FastAPI surface and the Next.js surface describe the same slides the same way.
 - Entry order is the **numeric slide index**, not the lexical order of the donor's file names.
-- The archive file name is `<title>_<format>.zip`, so exporting one deck as PNG and as JPEG
-  produces two distinct artifacts instead of one overwriting the other.
+- The archive file name is `<title>_<format>_<unique>.zip`. The unique suffix matters: a title is
+  not unique (two presentations can share one, and one presentation can be exported twice at the
+  same time), and without it the second export silently overwrote the first one's artifact.
+- The archive is written to a hidden staging file and published with an atomic rename, so a
+  downloader never observes a half-written ZIP and a concurrent export never truncates another.
 - PNG output is **byte-identical** to what the renderer produced (no re-encode), so PNG export
   adds zero lossy steps.
 - JPEG and WebP are re-encoded from the rendered PNG. JPEG flattens transparency onto the
-  requested background colour; PNG and WebP keep the alpha channel.
-- The rendered intermediate archive is deleted after the Gomrey archive is written, so exactly one
-  downloadable artifact survives.
+  requested background colour; PNG and WebP keep the alpha channel, including for palettised
+  PNGs.
+- Every rendered slide is **decoded** before it is accepted, so a truncated or corrupt slide is
+  refused rather than written into the delivered archive.
+- The rendered intermediate archive is deleted after the Gomrey archive is written — on the success
+  path and on every failure path — so exactly one downloadable artifact survives.
+- The budget is enforced on the input **and** on the produced bytes.
 
 ---
 
@@ -117,13 +128,15 @@ servers/fastapi/.venv/bin/python -m pytest tests/unit/test_image_export_service.
 
 | Area | Coverage |
 |---|---|
-| Format contract | The six formats split into disjoint document/image sets; unknown formats refused |
+| Format contract | The six formats split into disjoint document/image sets; unknown formats refused; the effective options are always rebuilt through the model, so an object that bypassed validation cannot reach the encoder |
 | Options model | Unknown format, unsupported packaging, quality-on-PNG, bad background, out-of-range width and quality all refused |
 | Archive layout | Deterministic entry names, numeric slide ordering, per-slide dimensions reported |
 | Fidelity | PNG output is byte-identical to the rendered slide; rendered pixel colour survives the JPEG path |
 | Alpha | Transparent PNG flattens onto the requested JPEG background |
 | Resolution | `width=640` on a 1280×720 slide yields 640×360; `width=1920` yields 1920×1080 |
-| Hostile input | Path traversal, absolute names, nested names, non-image entries, corrupt PNG, empty archive, over-budget slide count, missing archive |
+| Hostile input | Path traversal, absolute names, nested names, non-image entries, corrupt PNG, truncated PNG, empty archive, over-budget slide count, a rendered archive that is not a ZIP, a decompression-bomb slide, a missing archive |
+| Output budget | The produced bytes are measured against the image and archive budgets |
+| Concurrency | Two exports of one title produce two archives; a failed export leaves no staging file and no partial archive |
 | Distinctness | Exporting one deck as PNG and as JPEG yields two archives, not one overwritten |
 
 ### 3.2 Real end-to-end tests
@@ -180,6 +193,10 @@ correctly shaped and right-to-left, and the canvas is exactly 1280×720.
 - **The archive contains images only.** If a future donor revision adds a manifest to the PNG
   ZIP, the current service refuses that archive rather than silently dropping the entry. The
   guard is a deliberate, deterministic refusal.
+- **The Next.js export route accepts `pdf`, `pptx` and `png` only.** JPEG and WebP need the
+  re-encode step, which lives in the FastAPI service, so the Next.js route is the renderer
+  surface and the FastAPI surface is the image-export surface. Both use the same slide entry
+  names, so the two surfaces describe the same slides the same way.
 - **`D1_LOCAL_NOT_EXECUTED`.** See `TOOL_EXECUTION_MATRIX.md`.
 
 ---

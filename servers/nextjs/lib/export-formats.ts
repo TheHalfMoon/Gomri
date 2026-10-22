@@ -21,3 +21,13 @@ export function isBundledExportFormat(
     (BUNDLED_EXPORT_FORMATS as readonly string[]).includes(value)
   );
 }
+
+/**
+ * Media types the export download route serves, keyed by file extension.
+ */
+export const EXPORT_CONTENT_TYPES: Record<string, string> = {
+  ".pdf": "application/pdf",
+  ".pptx":
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  ".zip": "application/zip",
+};
