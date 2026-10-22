@@ -35,8 +35,8 @@ review record, its own PR. No node may start until its `needs` are satisfied.
               └────────────────────────┘                    │                       │ node IR     │
                                                            │                       │ (○)        │
    ┌───────────────────────────────────────┐               │                       └──────┬──────┘
-   │ W12 export fidelity harness (○)       │               │                              │
-   │ W13 Arabic/RTL qualification (○)     │               │              ┌───────────────┼───────────────┐
+   │ W12 export fidelity harness (● #83)  │               │                              │
+   │ W13 Arabic/RTL qualification (● #82) │               │              ┌───────────────┼───────────────┐
    │ W8  image export PNG/JPEG (○)        │               │              │               │               │
    │ W14 orphan layouts.json cleanup (○)  │               │      ┌───────▼──────┐ ┌──────▼──────┐ ┌──────▼───────┐
    │  ↑ all four have NO upstream dep.    │               │      │ W4 presets   │ │ W5 brand   │ │ W11 deck AI │
@@ -87,7 +87,7 @@ review record, its own PR. No node may start until its `needs` are satisfied.
 | Tests | Catalog-to-driver parity test: for every animation id, the Konva driver must produce the same start/end transform/opacity values as the CSS keyframes. |
 | Advances | `F-P08` (editor surface) |
 
-### ○ W3 — evidence-bound narrative → artifact producer **(highest value)**
+### ● W3 — evidence-bound narrative → artifact producer — **DONE** (PR #80, `a0d28fe`)
 
 | | |
 |---|---|
@@ -188,7 +188,7 @@ review record, its own PR. No node may start until its `needs` are satisfied.
 | Behaviour | Reorder / retitle / restyle / regenerate a slide, with attribution, revision safety and undo. Gamma's semantics to mirror: edits apply to existing nodes, cannot add nodes, one edit at a time, and the operation is flagged **destructive**. |
 | Advances | `F-P16` |
 
-### ○ W12 — export fidelity + round-trip regression suite
+### ● W12 — export fidelity + round-trip regression suite — **DONE** (PR #83, `690513e`)
 
 | | |
 |---|---|
@@ -198,7 +198,7 @@ review record, its own PR. No node may start until its `needs` are satisfied.
 | Tests | The suite itself is the test. |
 | Advances | `F-E09`, `F-I02`; satisfies an issue §F acceptance gate |
 
-### ○ W13 — Arabic / RTL / mixed-script qualification
+### ● W13 — Arabic / RTL / mixed-script qualification — **DONE** (PR #82, `b16eb0b`)
 
 | | |
 |---|---|
@@ -220,7 +220,8 @@ review record, its own PR. No node may start until its `needs` are satisfied.
 ## 2. Critical path and parallelism
 
 **Critical path:** `W1 → W2a → W2b` and `W6 → W5 / W9 / W10 / W11`.
-**Immediately available (no dependencies):** `W3`, `W4a`, `W12`, `W13`, `W8`, `W14`.
+**Immediately available (no dependencies):** `W8`, `W14`. **Delivered:** `W3` (#80), `W2a` (#81),
+`W13` (#82), `W12` (#83), `W4a` (#79), wave 1 (#78).
 
 **Recommended execution order** — start with the independent, high-value items, then work the spine:
 

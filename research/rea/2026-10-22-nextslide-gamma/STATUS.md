@@ -16,14 +16,23 @@
 > executed locally on the exact candidate and passed; the outstanding item is the canonical CI run,
 > which needs an owner action on GitHub billing.
 >
-> **Next dependency-ready task:** W2 — extend the slide model with an `animation` field and wire the
-> Wave 1 animation contract into the HTML renderer (`servers/nextjs/lib/template-v2-json-to-html.ts`),
-> so the contract stops being an unwired library. W2 is a small, independently testable grain.
+> **Waves delivered since the last update** (each on its own branch, each with its own
+> exact-candidate review record):
 >
-> **Highest-value task overall (not yet started):** W3 — evidence-bound narrative → artifact producer.
-> Gomrey's P08/P09 evidence fabric is complete but has **no call site in the presentation pipeline**.
-> This is the single gap that most distinguishes Gomrey from every competitor in this study, and it
-> requires **no donor code at all** — only in-repo modules that already pass their gates.
+> | Wave | What it delivers | PR | Base |
+> |---|---|---|---|
+> | **W3** | the evidence-bound narrative → artifact pipeline: the first production `app-layer → gomrey/` import edge, an additive contract extension at version 1, and export-time citation revalidation | [#80](https://github.com/TheHalfMoon/Gomrey/pull/80) | `main` |
+> | **W2a** | the `animation` field on the slide element model, wired into the HTML renderer | [#81](https://github.com/TheHalfMoon/Gomrey/pull/81) | wave 1 (#78) |
+> | **W13** | Arabic / RTL / mixed-script qualification: a shared classifier, direction and logical alignment in the export renderer, and a script-aware font chain | [#82](https://github.com/TheHalfMoon/Gomrey/pull/82) | `main` |
+> | **W12** | the export-fidelity harness: a browser-free export→import round trip with **measured** expectations and a versioned failure taxonomy | [#83](https://github.com/TheHalfMoon/Gomrey/pull/83) | `main` |
+>
+> **Next dependency-ready tasks:** W8 (image export — no dependency) and W4 (the named theme/style
+> preset layer, which needs the single token source W2a established). W6 (multi-node artifact IR)
+> remains the largest grain and is still schema-migration-bound.
+>
+> **Note on CI:** every PR above is open and MERGEABLE, and every one of them is blocked by the
+> **same account-level** billing condition. No CI result is claimed for any of them, and no gate
+> was bypassed.
 
 ---
 
@@ -41,7 +50,10 @@
 | R2 | Source-to-target transplant matrix | **DONE** | `TRANSPLANT_MATRIX.md` — 2 ADOPTED, 3 REJECT (measured), 3 DEFER, 5 BLOCKED_SOURCE, 1 REFERENCE |
 | R2 | Cross-donor feature matrix | **DONE** | `FEATURE_MATRIX.md` — 68 rows, each with a mandatory state |
 | R3 | **Wave 1 — NextSlide animation contract integrated** | **DONE** | `0c19896`; `servers/nextjs/lib/slide-animations/`; 28 tests; `docs/donors/nextslide-skill/NOTICE.md` |
-| R3 | Wave 2 — animation wired into slide model + HTML renderer | **NOT_STARTED** | next dependency-ready task |
+| R3 | Wave 2a — animation wired into the slide model + HTML renderer | **DONE** | `f5881ea` (PR #81); 20 tests; the canvas/export limitation is recorded, not hidden |
+| R3 | **Wave 3 — evidence-bound narrative → artifact producer** | **DONE** | `a0d28fe` (PR #80); the first production `app-layer → gomrey/` import edge; 41 new tests; units/entities are explicitly recorded as *not* gated |
+| R3 | **Wave 12 — export fidelity harness** | **DONE** | `690513e` (PR #83); a browser-free export→import round trip with measured expectations; 15 tests |
+| R3 | **Wave 13 — Arabic / RTL / mixed-script qualification** | **DONE** | `b16eb0b` (PR #82); a shared classifier in both languages, direction and logical alignment in the export renderer; 43 new tests |
 | R4 | Gamma capability wave | **PARTIAL** | contract donor admitted (`SOURCES.md` §3a); implementation not started |
 | R5 | Unified Gomrey studio experience | **NOT_STARTED** | depends on W6 (multi-node IR) |
 | R6 | Quality + benchmarking | **PARTIAL** | baseline + donor probe done; competitive same-case benchmark not started |
@@ -143,10 +155,10 @@ The following were **not** done and are stated here so no reader mistakes silenc
 
 | Order | Grain | Depends on | Est. size |
 |---|---|---|---|
-| 1 | **W2** — slide `animation` model field + wire the contract into the HTML renderer | Wave 1 (done) | small |
-| 2 | **W3** — evidence-bound narrative → artifact producer (P08/P09 → presentation pipeline) | in-repo only | medium |
-| 3 | **W12** — export fidelity + export→import round-trip regression suite | none (independent) | small-medium |
-| 4 | **W13** — Arabic / RTL / mixed-script qualification | none (independent) | medium |
+| ~~1~~ | ~~**W2** — slide `animation` model field + HTML renderer wiring~~ | wave 1 | **DONE** — PR #81 |
+| ~~2~~ | ~~**W3** — evidence-bound narrative → artifact producer~~ | in-repo only | **DONE** — PR #80 |
+| ~~3~~ | ~~**W12** — export fidelity round-trip suite~~ | none | **DONE** — PR #83 |
+| ~~4~~ | ~~**W13** — Arabic / RTL qualification~~ | none | **DONE** — PR #82 |
 | 5 | **W4** — named theme/style preset layer with machine-matchable keywords | W2 (token model) | medium |
 | 6 | **W6** — multi-node artifact IR (slides/cards/pages) | schema migration discipline | large |
 | 7 | **W5** — brand kit | W6 + asset-rights decision | medium |
@@ -154,4 +166,19 @@ The following were **not** done and are stated here so no reader mistakes silenc
 | 9 | **W8** — image export (PNG/JPEG/WebP) | none | small |
 | 10 | **W11** — deck-level AI editing | W6 + P09 semantics | medium |
 
-W2, W12, W13 and W8 have **no upstream dependency** and can proceed immediately.
+**W8** (image export) has **no upstream dependency** and can proceed immediately. **W4** (the named
+theme/style preset layer) now has its token source: W2a established that the animation contract and
+the element model share one vocabulary. **W6** remains the largest grain and is still
+schema-migration-bound.
+
+**Two gaps the delivered waves deliberately left open, and why:**
+
+- **W2a: the Konva canvas does not run animations.** The HTML renderer is the *preview* surface; the
+  editor surface and the PPTX/PDF export render through the canvas, where a CSS class has no effect.
+  A canvas animation needs a controller that drives the Konva node properties over time — the
+  wave-1 catalog already anticipates this with `SlideAnimationEngine = "css" | "controller"`.
+- **W13: the Konva canvas still lays Arabic out left-to-right** for table cells, chart labels and
+  vector text. The fix is either a bidi + shaping engine for canvas or routing every text-bearing
+  element to the DOM; the latter touches table cell selection, so it needs its own interactive check.
+
+**Both are recorded rather than hidden. Neither is claimed as delivered.**
