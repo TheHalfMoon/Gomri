@@ -5,6 +5,7 @@ from typing import Annotated, Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from utils.icon_weights import IconType
+from utils.schema_utils import remove_fields_from_schema
 
 from .elements import (
     ChartSeries,
@@ -793,9 +794,50 @@ class TextCapacityPlan(BaseModel):
         return self
 
 
+def _prune_unreferenced_defs(schema: dict[str, Any]) -> dict[str, Any]:
+    """Drop ``$defs`` entries that nothing references any more.
+
+    Removing a property from a schema can leave its definition orphaned. An
+    orphan is harmless but untidy, and an unreferenced definition invites the
+    belief that the field is still reachable.
+    """
+    defs = schema.get("$defs")
+    if not isinstance(defs, dict) or not defs:
+        return schema
+
+    referenced: set[str] = set()
+
+    def visit(node: Any) -> None:
+        if isinstance(node, dict):
+            ref = node.get("$ref")
+            if isinstance(ref, str) and ref.startswith("#/$defs/"):
+                referenced.add(ref[len("#/$defs/") :])
+            for value in node.values():
+                visit(value)
+        elif isinstance(node, list):
+            for value in node:
+                visit(value)
+
+    visit(schema)
+    schema["$defs"] = {
+        name: value for name, value in defs.items() if name in referenced
+    }
+    if not schema["$defs"]:
+        schema.pop("$defs")
+    return schema
+
+
 def slide_layout_llm_json_schema() -> dict:
-    """Return the SlideLayout output schema with LLM-only string length hints."""
-    schema = SlideLayout.model_json_schema()
+    """Return the SlideLayout output schema with LLM-only string length hints.
+
+    ``animation`` is a template-authoring decision, never a model decision, so
+    it is stripped from the schema the layout-generating model sees. The field
+    still exists on the element model, so a template that declares an animation
+    keeps it; the model simply cannot choose or change one.
+    """
+    schema = _prune_unreferenced_defs(
+        remove_fields_from_schema(SlideLayout.model_json_schema(), ["animation"])
+    )
 
     def add_length_hints(properties: dict) -> None:
         properties["id"].update(minLength=1, maxLength=80)

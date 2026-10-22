@@ -173,6 +173,20 @@ class Shadow(BaseModel):
     offset_y: Optional[float] = None
 
 
+class ElementAnimation(BaseModel):
+    """A slide animation applied to one element.
+
+    The animation name must be an id from the Gomrey slide animation catalog
+    (``servers/nextjs/lib/slide-animations/catalog.ts``). An unknown id is
+    ignored by the renderer rather than rendered as a broken animation, so the
+    model deliberately does not duplicate the catalog: one source of truth.
+    """
+
+    name: str = Field(min_length=1, max_length=64)
+    delay_ms: Optional[int] = Field(default=None, ge=0, le=10000)
+    duration: Optional[Literal["fast", "normal", "slow"]] = None
+
+
 class ChartSeries(BaseModel):
     name: str
     values: list[float]
@@ -207,6 +221,7 @@ class Text(BaseModel):
     rotation: Optional[float] = None
     flip_h: Optional[bool] = None
     flip_v: Optional[bool] = None
+    animation: Optional[ElementAnimation] = None
     font: Optional[Font] = None
     alignment: Optional[Alignment] = None
     fill: Optional[Fill] = None
@@ -244,6 +259,7 @@ class Image(BaseModel):  # Konva Image
     rotation: Optional[float] = None
     flip_h: Optional[bool] = None
     flip_v: Optional[bool] = None
+    animation: Optional[ElementAnimation] = None
     opacity: Optional[float] = None
     data: str
     fit: Optional[ImageFit] = None
@@ -269,6 +285,7 @@ class TextList(BaseModel):  # Konva Group
     rotation: Optional[float] = None
     flip_h: Optional[bool] = None
     flip_v: Optional[bool] = None
+    animation: Optional[ElementAnimation] = None
     font: Optional[Font] = None
     marker: Optional[Marker] = None
     gap: Optional[float] = None
@@ -306,6 +323,7 @@ class Table(BaseModel):
     rotation: Optional[float] = None
     flip_h: Optional[bool] = None
     flip_v: Optional[bool] = None
+    animation: Optional[ElementAnimation] = None
     columns: list[TableCell]
     rows: list[list[TableCell]]
 
@@ -352,6 +370,7 @@ class Vector(BaseModel):
     rotation: Optional[float] = None
     flip_h: Optional[bool] = None
     flip_v: Optional[bool] = None
+    animation: Optional[ElementAnimation] = None
     opacity: Optional[float] = None
     fill: Optional[Fill] = None
     stroke: Optional[Stroke] = None
@@ -365,6 +384,7 @@ class Chart(BaseModel):
     rotation: Optional[float] = None
     flip_h: Optional[bool] = None
     flip_v: Optional[bool] = None
+    animation: Optional[ElementAnimation] = None
     chart_type: ChartType
     title: Optional[str] = None
     title_color: Optional[str] = None
@@ -553,6 +573,7 @@ class Infographic(BaseModel):
     rotation: Optional[float] = None
     flip_h: Optional[bool] = None
     flip_v: Optional[bool] = None
+    animation: Optional[ElementAnimation] = None
     data: InfographicData
 
     # Design
@@ -645,6 +666,7 @@ for _model in (Container, Flex, Grid, Group):
 
 __all__ = [
     "Alignment",
+    "ElementAnimation",
     "BorderRadius",
     "Chart",
     "ChartSeries",
