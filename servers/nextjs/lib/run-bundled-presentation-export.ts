@@ -55,7 +55,14 @@ export async function bundledExportPackageAvailable(): Promise<boolean> {
   }
 }
 
-export type BundledPresentationExportFormat = "pdf" | "pptx";
+/**
+ * Formats the bundled export runtime can render.
+ *
+ * `png` renders one PNG per slide and packages them into a ZIP archive; the
+ * FastAPI service owns the image archive contract (entry names, ordering, and
+ * the JPEG/WebP re-encode) on top of that render.
+ */
+export type BundledPresentationExportFormat = "pdf" | "pptx" | "png";
 
 export type BundledPresentationExportResult = { path: string };
 

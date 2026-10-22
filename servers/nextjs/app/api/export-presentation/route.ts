@@ -10,7 +10,7 @@ import {
 import { authStatusForRequest } from "@/lib/server-auth-role";
 
 function isValidFormat(value: unknown): value is BundledPresentationExportFormat {
-  return value === "pdf" || value === "pptx";
+  return value === "pdf" || value === "pptx" || value === "png";
 }
 
 async function readExportRequestBody(req: NextRequest): Promise<{
