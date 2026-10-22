@@ -1,0 +1,71 @@
+{
+  "name": "01-text-runs-fonts",
+  "slides": [
+    {
+      "background": {
+        "color": "#FFFFFF",
+        "opacity": 1
+      },
+      "shapes": [
+        {
+          "shape_type": "textbox",
+          "position": {
+            "left": 40,
+            "top": 40,
+            "width": 600,
+            "height": 80
+          },
+          "text_wrap": true,
+          "vertical_alignment": "top",
+          "paragraphs": [
+            {
+              "alignment": "left",
+              "line_height": 1.2,
+              "letter_spacing": 0.5,
+              "font": {
+                "name": "Lato",
+                "size": 18,
+                "font_weight": 400,
+                "italic": false,
+                "color": "#111827"
+              },
+              "text_runs": [
+                {
+                  "text": "Hello ",
+                  "font": {
+                    "name": "Lato",
+                    "size": 18,
+                    "font_weight": 700,
+                    "italic": false,
+                    "color": "#111827"
+                  }
+                },
+                {
+                  "text": "world",
+                  "font": {
+                    "name": "Inter",
+                    "size": 18,
+                    "font_weight": 400,
+                    "italic": true,
+                    "color": "#333333",
+                    "underline": true
+                  }
+                }
+              ]
+            }
+          ],
+          "fill": {
+            "color": "#FFFFFF",
+            "opacity": 0
+          },
+          "stroke": {
+            "color": "#2563EB",
+            "thickness": 2,
+            "opacity": 1
+          }
+        }
+      ],
+      "note": "marker-note-01"
+    }
+  ]
+}
