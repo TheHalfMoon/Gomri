@@ -156,7 +156,7 @@ review record, its own PR. No node may start until its `needs` are satisfied.
 
 | | |
 |---|---|
-| Commit | `W8_CANDIDATE_SHA` (branch `feature/rea/w8-image-export`, base `main@5f299a7`) |
+| Commit | `6b3632a093efeb320878f6cfc16c7345cf16a1c1` (branch `feature/rea/w8-image-export`, base `main@5f299a7`) |
 | PR | [#84](https://github.com/TheHalfMoon/Gomrey/pull/84) |
 | Files | `servers/fastapi/enums/export_format.py`, `servers/fastapi/models/image_export_options.py`, `servers/fastapi/services/image_export_service.py`, `servers/fastapi/utils/export_utils.py`, `servers/fastapi/services/export_task_service.py`, `servers/fastapi/models/generate_presentation_request.py`, `servers/fastapi/models/presentation_from_template.py`, `servers/fastapi/api/v1/ppt/endpoints/presentation.py`, `servers/fastapi/api/v2/ppt/endpoints/presentation.py`, `servers/nextjs/lib/run-bundled-presentation-export.ts`, `servers/nextjs/app/api/export-presentation/route.ts` |
 | Donor | `@presenton/export-core` v1.0.34 open-source edition — its `export`/`html-to-any` task already renders one PNG per slide into a ZIP. **Copied and reused, not reimplemented.** |

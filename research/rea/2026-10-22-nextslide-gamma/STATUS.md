@@ -55,7 +55,7 @@
 | R3 | **Wave 3 — evidence-bound narrative → artifact producer** | **DONE** | `a0d28fe` (PR #80); the first production `app-layer → gomrey/` import edge; 41 new tests; units/entities are explicitly recorded as *not* gated |
 | R3 | **Wave 12 — export fidelity harness** | **DONE** | `690513e` (PR #83); a browser-free export→import round trip with measured expectations; 15 tests |
 | R3 | **Wave 13 — Arabic / RTL / mixed-script qualification** | **DONE** | `b16eb0b` (PR #82); a shared classifier in both languages, direction and logical alignment in the export renderer; 43 new tests |
-| R3 | **Wave 8 — image export (PNG / JPEG / WebP)** | **DONE** | `W8_CANDIDATE_SHA` (PR #84); the donor renderer is reused, not reimplemented; 40 unit + 7 real-browser end-to-end tests; the evidence tree is `research/rea/w8-image-export/` |
+| R3 | **Wave 8 — image export (PNG / JPEG / WebP)** | **DONE** | `6b3632a` (PR #84); the donor renderer is reused, not reimplemented; 62 unit + 7 real-browser end-to-end tests; two independent review rounds, 0 unresolved material findings; the evidence tree is `research/rea/w8-image-export/` |
 | R4 | Gamma capability wave | **PARTIAL** | contract donor admitted (`SOURCES.md` §3a); implementation not started |
 | R5 | Unified Gomrey studio experience | **NOT_STARTED** | depends on W6 (multi-node IR) |
 | R6 | Quality + benchmarking | **PARTIAL** | baseline + donor probe done; competitive same-case benchmark not started |
