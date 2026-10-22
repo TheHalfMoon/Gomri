@@ -13,6 +13,7 @@ from llmai.shared import (
     WebSearchTool,
 )
 
+from gomrey.narrative import NarrativePlan, render_plan_context, render_plan_rules
 from models.presentation_outline_model import PresentationOutlineModel
 from constants.presentation import MAX_NUMBER_OF_SLIDES, MAX_OUTLINE_CONTENT_WORDS
 from utils.get_dynamic_models import get_presentation_outline_model_with_n_slides
@@ -67,6 +68,7 @@ def get_system_prompt(
     verbosity: Optional[str] = None,
     include_title_slide: bool = True,
     include_table_of_contents: bool = False,
+    evidence: Optional[NarrativePlan] = None,
 ):
     verbosity_instruction = (
         "Slide content should be around 20 words but detailed enough to generate a good slide."
@@ -163,6 +165,11 @@ def get_system_prompt(
         "Prefer recent and authoritative sources, reconcile conflicting claims, and do not invent citations.\n"
     )
 
+    if evidence is not None:
+        # The evidence plan is authoritative and sits above every other rule
+        # in this prompt. It is the only fact base the model may draw on.
+        system = system + "\n" + render_plan_rules(evidence)
+
     return system
 
 
@@ -192,6 +199,7 @@ def get_user_prompt(
     instructions: Optional[str] = None,
     include_title_slide: bool = True,
     include_table_of_contents: bool = False,
+    evidence: Optional[NarrativePlan] = None,
 ):
     display_language = _resolve_prompt_language(language)
     display_slides = _resolve_prompt_n_slides(n_slides)
@@ -211,6 +219,7 @@ def get_user_prompt(
         "Instructions (apply as constraints; never quote as slide content): "
         f"{instructions or ''}\n"
         f"Context: {additional_context or 'None'}\n"
+        + (render_plan_context(evidence) + "\n" if evidence is not None else "")
     )
 
 
@@ -224,6 +233,7 @@ def get_messages(
     instructions: Optional[str] = None,
     include_title_slide: bool = True,
     include_table_of_contents: bool = False,
+    evidence: Optional[NarrativePlan] = None,
 ) -> list[Message]:
     return [
         SystemMessage(
@@ -231,6 +241,7 @@ def get_messages(
                 verbosity,
                 include_title_slide,
                 include_table_of_contents,
+                evidence,
             ),
         ),
         UserMessage(
@@ -243,6 +254,7 @@ def get_messages(
                 instructions,
                 include_title_slide,
                 include_table_of_contents,
+                evidence,
             ),
         ),
     ]
@@ -261,6 +273,8 @@ async def generate_ppt_outline(
     include_table_of_contents: bool = False,
     emit_statuses: bool = False,
     disconnect_checker: Optional[DisconnectChecker] = None,
+    *,
+    evidence: Optional[NarrativePlan] = None,
 ):
     model = get_model()
     response_model = (
@@ -383,6 +397,7 @@ async def generate_ppt_outline(
                     instructions,
                     include_title_slide,
                     include_table_of_contents,
+                    evidence,
                 ),
                 response_format=response_format,
                 tools=([WebSearchTool()] if use_search_tool else None),

@@ -158,3 +158,98 @@ test("validator implements the documented keyword subset", () => {
   assert.deepEqual(validateValue("a", { oneOf: [{ const: "a" }, { type: "string" }] }, {}).length, 1);
   assert.ok(validateValue("2026-10-07", { type: "string", format: "date-time" }, {}).length > 0);
 });
+
+test("narrative sections may carry citation locators and an evidence status", async () => {
+  const { schemas } = await loadSchemas();
+  const documentLocator = {
+    kind: "document",
+    citation_id: "cite-0123456789abcdef",
+    source_id: "s-1",
+    unit_id: "u-1",
+    page_no: 4,
+  };
+  const record = {
+    ...VALID.NarrativeIR,
+    verification_scope: { gated: ["numbers", "dates"], not_gated: ["units", "entities"] },
+    sections: [
+      {
+        heading: "Summary",
+        text: "Growth continued.",
+        claim_ids: ["c-1"],
+        citation_locators: [documentLocator],
+        evidence_status: "grounded",
+      },
+    ],
+  };
+  assert.deepEqual(validateValue(record, schemas.NarrativeIR, schemas.NarrativeIR), []);
+});
+
+test("a citation locator must carry the fields its source family requires", async () => {
+  const { schemas } = await loadSchemas();
+  const base = {
+    kind: "document",
+    citation_id: "cite-0123456789abcdef",
+    source_id: "s-1",
+    unit_id: "u-1",
+  };
+  const withoutPage = {
+    ...VALID.NarrativeIR,
+    sections: [
+      {
+        heading: "Summary",
+        text: "Growth continued.",
+        citation_locators: [base],
+        evidence_status: "grounded",
+      },
+    ],
+  };
+  const errors = validateValue(withoutPage, schemas.NarrativeIR, schemas.NarrativeIR);
+  assert.ok(errors.length > 0, "a document locator without page_no must be rejected");
+  assert.ok(
+    errors.some((message) => message.includes("oneOf")),
+    `no error reports the per-kind requirement: ${errors.join("; ")}`,
+  );
+
+  const webLocator = { ...base, kind: "web", canonical_url: "https://example.test/a", retrieved_at: WHEN };
+  const web = {
+    ...VALID.NarrativeIR,
+    sections: [
+      {
+        heading: "Summary",
+        text: "Growth continued.",
+        citation_locators: [webLocator],
+        evidence_status: "grounded",
+      },
+    ],
+  };
+  assert.deepEqual(validateValue(web, schemas.NarrativeIR, schemas.NarrativeIR), []);
+});
+
+test("an unknown evidence status is rejected", async () => {
+  const { schemas } = await loadSchemas();
+  const record = {
+    ...VALID.NarrativeIR,
+    sections: [
+      { heading: "Summary", text: "Growth continued.", evidence_status: "probably-fine" },
+    ],
+  };
+  const errors = validateValue(record, schemas.NarrativeIR, schemas.NarrativeIR);
+  assert.ok(errors.length > 0);
+  assert.ok(errors.some((message) => message.includes("must be one of")), errors.join("; "));
+});
+
+test("a narrative section may not carry an undeclared property", async () => {
+  const { schemas } = await loadSchemas();
+  const record = {
+    ...VALID.NarrativeIR,
+    sections: [
+      { heading: "Summary", text: "Growth continued.", confidence: 0.9 },
+    ],
+  };
+  const errors = validateValue(record, schemas.NarrativeIR, schemas.NarrativeIR);
+  assert.ok(errors.length > 0);
+  assert.ok(
+    errors.some((message) => message.includes("additional property confidence is not allowed")),
+    errors.join("; "),
+  );
+});

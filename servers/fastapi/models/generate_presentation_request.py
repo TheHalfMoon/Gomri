@@ -5,6 +5,34 @@ from enums.tone import Tone
 from enums.verbosity import Verbosity
 
 
+class EvidenceBundleInput(BaseModel):
+    """The evidence a caller supplies to ground a deck in its sources."""
+
+    bundle_id: str = Field(..., description="Stable identity of the bundle")
+    query: str = Field(..., description="The question the evidence answers")
+    source_revisions: List[dict] = Field(
+        default_factory=list,
+        description="The exact source revisions the spans came from",
+    )
+    spans: List[dict] = Field(
+        default_factory=list,
+        description="The evidence spans, each with a citation_id, text and locator",
+    )
+    retrieval_identities: List[str] = Field(
+        default_factory=list, description="Identities of the retrievers used"
+    )
+    contradictions: Optional[List[dict]] = Field(
+        default=None, description="Known contradictions between spans"
+    )
+    omissions: Optional[List[dict]] = Field(
+        default=None, description="Sources deliberately left out, with reasons"
+    )
+    dropped_without_reason: int = Field(
+        default=0,
+        description="Candidates dropped without a reason. Must be zero.",
+    )
+
+
 class GeneratePresentationRequest(BaseModel):
     content: str = Field(..., description="The content for generating the presentation")
     slides_markdown: Optional[List[str]] = Field(
@@ -43,6 +71,21 @@ class GeneratePresentationRequest(BaseModel):
     )
     trigger_webhook: bool = Field(
         default=False, description="Whether to trigger subscribed webhooks"
+    )
+    evidence_bundle: Optional[EvidenceBundleInput] = Field(
+        default=None,
+        description=(
+            "Optional evidence to ground the deck in. When present, every slide "
+            "is bound to resolvable citation locators and unresolved or "
+            "contradictory claims are surfaced explicitly."
+        ),
+    )
+    source_ir: Optional[dict] = Field(
+        default=None,
+        description=(
+            "The assembled source IR the evidence locators resolve against. "
+            "Required whenever evidence_bundle is supplied."
+        ),
     )
 
 
