@@ -26,14 +26,14 @@ review record, its own PR. No node may start until its `needs` are satisfied.
               ┌───────────▼────────────┐                    │                              │
               │ W2a animation model   │                    │                       ┌──────▼──────┐
               │ + HTML renderer wiring│                    │                       │ W3 evidence │
-              │ (○ needs W1)          │                    │                       │ → artifact  │
-              └───────────┬────────────┘                    │                       │ (○)        │
+              │ (● PR #81, needs W1)  │                    │                       │ → artifact  │
+              └───────────┬────────────┘                    │                       │ (● PR #80)  │
                           │                                 │                       └──────┬──────┘
               ┌───────────▼────────────┐                    │                              │
               │ W2b Konva animation    │                    │                       ┌──────▼──────┐
               │ twin (○ needs W2a)     │                    │                       │ W6 multi-   │
               └────────────────────────┘                    │                       │ node IR     │
-                                                           │                       │ (○)        │
+                                                           │                       │ (○)          │
    ┌───────────────────────────────────────┐               │                       └──────┬──────┘
    │ W12 export fidelity harness (● #83)  │               │                              │
    │ W13 Arabic/RTL qualification (● #82) │               │              ┌───────────────┼───────────────┐
