@@ -10,11 +10,18 @@
 
 ## 0. Current frontier
 
-> **Merge gate status:** PR #78 is open and **MERGEABLE**, but CI could not execute due to an account
-> billing/spending-limit condition (see §2.1). Per `docs/REVIEW_POLICY.md` §10 and the mission's
-> no-bypass rule, the PR is **not merged** until CI runs green on the exact candidate. Every gate was
-> executed locally on the exact candidate and passed; the outstanding item is the canonical CI run,
-> which needs an owner action on GitHub billing.
+> **Merge gate status:** two PRs are open and **MERGEABLE**, but CI could not execute on either due
+> to an account billing/spending-limit condition (see §2.1). Per `docs/REVIEW_POLICY.md` §10 and the
+> mission's no-bypass rule, **neither is merged** until CI runs green on the exact candidate. Every
+> gate was executed locally on the exact candidate and passed; the outstanding item is the canonical
+> CI run, which needs an owner action on GitHub billing.
+>
+> | PR | Branch | Candidate | Contains |
+> |---|---|---|---|
+> | **#78** | `feature/rea/nextslide-gamma-wave1` | `6dde5b4` | Wave 1 animation contract + the 13-mandated-document research record |
+> | **#79** | `feature/rea/w4a-contrast-linter` | `f0fbf52` (base: #78) | W4a legibility linter + corrected measurements + the W3 design |
+>
+> **Merge order:** #78 first, then rebase #79 onto `main`.
 >
 > **Next dependency-ready task:** W2 — extend the slide model with an `animation` field and wire the
 > Wave 1 animation contract into the HTML renderer (`servers/nextjs/lib/template-v2-json-to-html.ts`),
