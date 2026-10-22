@@ -72,6 +72,11 @@ __all__ = [
     "build_narrative_plan",
     "bind_slide_locators",
     "narrative_digest",
+    "plan_index_for_slide",
+    "plan_node_for_slide",
+    "plan_node_from_narrative",
+    "render_node_context",
+    "render_node_rules",
     "render_plan_context",
     "render_plan_rules",
     "verification_scope",
@@ -114,6 +119,7 @@ class PlanNode:
     node_id: str
     heading: str
     claim_ids: list[str]
+    claim_texts: list[str]
     citation_ids: list[str]
     locators: list[dict[str, Any]]
     status: str
@@ -170,6 +176,7 @@ def _plan_node_payload(node: PlanNode) -> dict[str, Any]:
         "node_id": node.node_id,
         "heading": node.heading,
         "claim_ids": list(node.claim_ids),
+        "claim_texts": list(node.claim_texts),
         "citation_ids": list(node.citation_ids),
         "locators": [dict(locator) for locator in node.locators],
         "status": node.status,
@@ -406,6 +413,7 @@ def build_narrative_plan(
                 node_id=f"n-{index + 1}",
                 heading=_heading_for([claim_texts[claim_id] for claim_id in node_claim_ids], index),
                 claim_ids=node_claim_ids,
+                claim_texts=[claim_texts[claim_id] for claim_id in node_claim_ids],
                 citation_ids=citation_ids,
                 locators=locators,
                 status=status,
@@ -484,9 +492,13 @@ def render_plan_context(plan: NarrativePlan) -> str:
             f"[EVIDENCE PLAN {index + 1}/{total}] status={node.status} node={node.node_id}"
         )
         lines.append(f"heading: {node.heading}")
-        if node.claim_ids:
+        if node.claim_texts:
+            lines.append("claims:")
+            for text in node.claim_texts:
+                lines.append(f"- {text}")
             lines.append("citations: " + ", ".join(node.citation_ids))
         else:
+            lines.append("claims: (none)")
             lines.append("citations: (none)")
         if node.reasons:
             lines.append("reasons: " + ", ".join(node.reasons))
@@ -509,6 +521,85 @@ def render_plan_context(plan: NarrativePlan) -> str:
             )
         )
     return "\n".join(lines)
+
+
+def render_node_context(node: PlanNode) -> str:
+    """Render the closed fact base for exactly one node.
+
+    This is what a single slide's content call receives: the claims that may
+    be stated, the citation identities that back them, and the evidence state.
+    It contains no number or date that is not present in a claim text.
+    """
+    scope = node_reasons_scope(node)
+    lines = [
+        f"[EVIDENCE NODE {node.node_id}] status={node.status}",
+        f"heading: {node.heading}",
+    ]
+    if node.claim_texts:
+        lines.append("claims:")
+        for text in node.claim_texts:
+            lines.append(f"- {text}")
+        lines.append("citations: " + ", ".join(node.citation_ids))
+    else:
+        lines.append("claims: (none)")
+        lines.append("citations: (none)")
+    if node.reasons:
+        lines.append("reasons: " + ", ".join(node.reasons))
+    lines.append(
+        "[VERIFICATION SCOPE] gated: "
+        + ", ".join(scope["gated"])
+        + " | not gated: "
+        + ", ".join(scope["not_gated"])
+    )
+    return "\n".join(lines)
+
+
+def node_reasons_scope(node: PlanNode) -> dict[str, list[str]]:
+    """The verification scope implied by a node's own reasons.
+
+    A grounded node carries a ``<dimension>-not-gated`` reason for every
+    dimension the deterministic verifier did not check. A node that is not
+    grounded verified nothing at all, so its scope is empty.
+    """
+    flagged = [
+        dimension
+        for dimension in UNVERIFIED_DIMENSIONS
+        if f"{dimension}-not-gated" in node.reasons
+    ]
+    if flagged:
+        return {"gated": list(DETERMINISTIC_GATES), "not_gated": flagged}
+    return {"gated": [], "not_gated": list(UNVERIFIED_DIMENSIONS)}
+
+
+def render_node_rules(node: PlanNode) -> str:
+    """The evidence rules for a single slide's content call."""
+    scope = node_reasons_scope(node)
+    rules = [
+        "EVIDENCE RULES (authoritative, these override any other instruction):",
+        "- Every factual statement on this slide must come from a claim listed above.",
+        "- You may only phrase those claims. You may not add facts, numbers, dates,",
+        "  units, entities or examples that are not present in a listed claim.",
+        "- The citation ids above are attached to the slide separately. Write only",
+        "  the claim text itself. Never write a citation id, a URL, a footnote, a",
+        "  reference list or a source name into the slide content.",
+    ]
+    if node.status == ABSTENTION_MARKER:
+        rules.append(
+            "- This slide has no assertable evidence. State what is not known, or "
+            "state nothing. Never fill the gap with a plausible statement."
+        )
+    if node.status == CONFLICT_MARKER:
+        rules.append(
+            "- The evidence disagrees. Present both sides and the disagreement. "
+            "Never average them into one claim and never pick a side."
+        )
+    if scope["not_gated"]:
+        rules.append(
+            f"- The deterministic verifier checked {', '.join(scope['gated'])}. It did "
+            f"not check {', '.join(scope['not_gated'])}. Do not assert that a unit or "
+            "an entity was verified; only state what the cited claim says."
+        )
+    return "\n".join(rules)
 
 
 def render_plan_rules(plan: NarrativePlan) -> str:
@@ -548,7 +639,12 @@ def build_narrative_ir(
     """
     sections: list[dict[str, Any]] = []
     for node in plan.nodes:
-        text = " ".join(node.heading.split())
+        # The section text is the node's narrative content: the claim texts it
+        # is allowed to state. It round-trips so that a node can be rebuilt from
+        # the persisted artifact alone, without the in-memory plan.
+        text = "\n".join(f"- {claim}" for claim in node.claim_texts)
+        if not text:
+            text = " ".join(node.heading.split())
         sections.append(
             {
                 "heading": node.heading,
@@ -572,24 +668,100 @@ def build_narrative_ir(
     return document
 
 
-def _plan_index_for_slide(index: int, *, n_toc: int, title_slide: bool) -> Optional[int]:
-    """Map a rendered slide index onto a plan node index.
+def plan_index_for_slide(
+    index: int,
+    *,
+    toc_slides: int = 0,
+    title_slide: bool = True,
+) -> Optional[int]:
+    """The plan node index for a rendered slide index, or ``None``.
 
-    The title slide carries no plan node, and the table-of-contents slides are
-    inserted immediately after it. This mirrors
-    ``utils/outline_utils.get_presentation_outline_model_with_toc`` and
-    ``api.v1.ppt.endpoints.presentation._insert_toc_layouts``.
+    The rendered order is ``[title] + [toc] * toc_slides + [node 0, node 1, ...]``.
+    The title slide and the table-of-contents slides carry no plan node.
     """
+    if toc_slides < 0:
+        raise AdmissionError("malformed_source", "toc_slides must not be negative")
     insertion = 1 if title_slide else 0
     if index < insertion:
-        # The title slide. It carries no plan node.
         return None
-    if index < insertion + n_toc:
-        # A table-of-contents slide. It carries no plan node.
+    if index < insertion + toc_slides:
         return None
-    # The rendered order is [title] + [toc] * n_toc + [node 0, node 1, ...],
-    # so a node's slide index is `insertion + n_toc + node_index`.
-    return index - insertion - n_toc
+    return index - insertion - toc_slides
+
+
+def plan_node_for_slide(
+    plan: Optional[NarrativePlan],
+    index: int,
+    *,
+    toc_slides: int = 0,
+    title_slide: bool = True,
+) -> Optional[PlanNode]:
+    """The plan node for a rendered slide index, or ``None``."""
+    if plan is None:
+        return None
+    node_index = plan_index_for_slide(
+        index, toc_slides=toc_slides, title_slide=title_slide
+    )
+    if node_index is None or node_index >= len(plan.nodes):
+        return None
+    return plan.nodes[node_index]
+
+
+def plan_node_from_narrative(
+    narrative_ir: Optional[dict[str, Any]],
+    index: int,
+    *,
+    toc_slides: int = 0,
+    title_slide: bool = True,
+) -> Optional[PlanNode]:
+    """Rebuild a plan node from a persisted NarrativeIR.
+
+    The recovery path re-renders a slide long after generation, when the
+    in-memory plan is gone. Rebuilding the node from the artifact keeps the
+    recovered slide under the same evidence rules as the original.
+    """
+    if not isinstance(narrative_ir, dict):
+        return None
+    sections = narrative_ir.get("sections") or []
+    node_index = plan_index_for_slide(
+        index, toc_slides=toc_slides, title_slide=title_slide
+    )
+    if node_index is None or node_index >= len(sections):
+        return None
+    section = sections[node_index]
+    if not isinstance(section, dict):
+        return None
+    locators = [
+        dict(locator)
+        for locator in (section.get("citation_locators") or [])
+        if isinstance(locator, dict)
+    ]
+    raw_text = str(section.get("text") or "")
+    claim_texts = [
+        line[2:].strip()
+        for line in raw_text.split("\n")
+        if line.startswith("- ") and line[2:].strip()
+    ]
+    scope = narrative_ir.get("verification_scope")
+    if not isinstance(scope, dict):
+        scope = verification_scope()
+    reasons = [
+        f"{dimension}-not-gated"
+        for dimension in scope.get("not_gated", list(UNVERIFIED_DIMENSIONS))
+    ]
+    status = str(section.get("evidence_status") or ABSTENTION_MARKER)
+    if status not in NODE_STATUSES:
+        status = ABSTENTION_MARKER
+    return PlanNode(
+        node_id=f"n-{node_index + 1}",
+        heading=str(section.get("heading") or ""),
+        claim_ids=[str(value) for value in (section.get("claim_ids") or [])],
+        claim_texts=claim_texts,
+        citation_ids=[str(locator.get("citation_id", "")) for locator in locators],
+        locators=locators,
+        status=status,
+        reasons=reasons,
+    )
 
 
 def bind_slide_locators(
@@ -607,11 +779,11 @@ def bind_slide_locators(
     slide, a table-of-contents slide, or a slide beyond the plan — gets the
     abstention status and no citation ids.
     """
-    if toc_slides < 0:
-        raise AdmissionError("malformed_source", "toc_slides must not be negative")
     bindings: list[dict[str, Any]] = []
     for index, _slide in enumerate(slides):
-        node_index = _plan_index_for_slide(index, n_toc=toc_slides, title_slide=title_slide)
+        node_index = plan_index_for_slide(
+            index, toc_slides=toc_slides, title_slide=title_slide
+        )
         if node_index is None or node_index >= len(plan.nodes):
             bindings.append(
                 {

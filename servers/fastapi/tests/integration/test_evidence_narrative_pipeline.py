@@ -18,7 +18,12 @@ import pathlib
 import pytest
 
 from gomrey.citations import BrokenCitation, make_locator
-from gomrey.narrative import ABSTENTION_MARKER, GROUNDED_MARKER
+from gomrey.narrative import (
+    ABSTENTION_MARKER,
+    GROUNDED_MARKER,
+    plan_node_from_narrative,
+    render_plan_context,
+)
 from models.generate_presentation_request import (
     EvidenceBundleInput,
     GeneratePresentationRequest,
@@ -30,6 +35,9 @@ from services.evidence_narrative import (
     narrative_for_presentation,
 )
 from utils.llm_calls.generate_presentation_outlines import get_messages
+from utils.llm_calls.generate_slide_content import (
+    get_messages as get_slide_content_messages,
+)
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[4]
 NARRATIVE_SCHEMA = (
@@ -345,3 +353,109 @@ def test_an_artifact_without_a_narrative_is_not_checked() -> None:
         source_ir = None
 
     assert_artifact_exportable(_Presentation())
+
+
+# --------------------------------------------------------------------------- #
+# The fact base reaches the slide content call, not only the outline
+# --------------------------------------------------------------------------- #
+
+
+def test_the_fact_base_carries_the_claim_texts_not_only_the_citation_ids() -> None:
+    plan = _plan()
+    context = render_plan_context(plan)
+
+    assert "claims:" in context
+    for node in plan.nodes:
+        for claim_text in node.claim_texts:
+            assert claim_text in context
+
+
+def test_the_slide_content_call_receives_the_nodes_fact_base() -> None:
+    """The slide content call is the last place prose is written.
+
+    Without the plan node, the outline would be evidence-constrained but the
+    rendered slide could still assert something the evidence does not carry.
+    """
+    plan = _plan()
+    node = plan.nodes[0]
+
+    messages = get_slide_content_messages(
+        "## Retention",
+        "en",
+        None,
+        None,
+        None,
+        None,
+        slide_number=1,
+        evidence_node=node,
+    )
+
+    system = messages[0].content
+    user = messages[1].content
+
+    assert "EVIDENCE RULES" in system
+    assert "EVIDENCE NODE" in user
+    for claim_text in node.claim_texts:
+        assert claim_text in user
+    assert node.citation_ids[0] in user
+    # The scope travels with the slide content call too.
+    assert "did not check" in system
+    assert "units" in system
+
+
+def test_without_a_node_the_slide_content_prompt_is_unchanged() -> None:
+    messages = get_slide_content_messages(
+        "## Retention", "en", None, None, None, None, slide_number=1
+    )
+    assert "EVIDENCE RULES" not in messages[0].content
+    assert "EVIDENCE NODE" not in messages[1].content
+
+
+def test_a_node_is_rebuilt_from_the_persisted_artifact_alone() -> None:
+    """The recovery path re-renders a slide long after the plan is gone."""
+    plan = _plan()
+    document = narrative_for_presentation(
+        plan, artifact_id="a-1", revision=1, language="en"
+    )
+
+    rebuilt = plan_node_from_narrative(
+        document, 0, toc_slides=0, title_slide=False
+    )
+    assert rebuilt is not None
+    assert rebuilt.status == plan.nodes[0].status
+    assert rebuilt.citation_ids == plan.nodes[0].citation_ids
+    assert rebuilt.claim_texts == plan.nodes[0].claim_texts
+    assert "units-not-gated" in rebuilt.reasons
+    assert "entities-not-gated" in rebuilt.reasons
+
+
+def test_a_rebuilt_node_respects_the_table_of_contents_remap() -> None:
+    plan = _plan()
+    document = narrative_for_presentation(
+        plan, artifact_id="a-1", revision=1, language="en"
+    )
+
+    # Slide 0 is the title and slide 1 is the table of contents: neither
+    # carries a node.
+    assert plan_node_from_narrative(
+        document, 0, toc_slides=1, title_slide=True
+    ) is None
+    assert plan_node_from_narrative(
+        document, 1, toc_slides=1, title_slide=True
+    ) is None
+    # Slide 2 carries node 0.
+    assert plan_node_from_narrative(
+        document, 2, toc_slides=1, title_slide=True
+    ).citation_ids == plan.nodes[0].citation_ids
+
+
+def test_a_rebuilt_node_round_trips_through_the_artifact() -> None:
+    plan = _plan()
+    document = narrative_for_presentation(
+        plan, artifact_id="a-1", revision=1, language="en"
+    )
+    rebuilt = plan_node_from_narrative(
+        document, 0, toc_slides=0, title_slide=False
+    )
+    assert rebuilt.claim_texts == [claim for claim in plan.nodes[0].claim_texts]
+    assert rebuilt.locators[0]["citation_id"] == plan.nodes[0].locators[0]["citation_id"]

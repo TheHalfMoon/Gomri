@@ -41,6 +41,7 @@ from models.presentation_with_slides import (
     PresentationWithSlides,
 )
 from services.documents_loader import DocumentsLoader
+from gomrey.narrative import plan_node_for_slide, plan_node_from_narrative
 from services.evidence_narrative import (
     assert_artifact_exportable,
     bind_plan_to_slides,
@@ -2283,6 +2284,17 @@ async def stream_presentation(
 
     image_generation_service = ImageGenerationService(get_images_directory())
 
+    # W3: the number of table-of-contents slides is needed to map a rendered
+    # slide back onto its plan node. It is recomputed with the same helper
+    # the generation path used, from the persisted presentation row.
+    recovery_toc_slides = 0
+    if presentation.include_table_of_contents:
+        recovery_toc_slides = get_no_of_toc_required_for_n_outlines(
+            n_outlines=len(outline.slides) if outline else 0,
+            title_slide=presentation.include_title_slide,
+            target_total_slides=presentation.n_slides,
+        )
+
     async def inner():
         icon_weight = layout.icon_weight
         image_urls_for_slides = get_images_for_slides_from_outline(outline.slides)
@@ -2328,6 +2340,15 @@ async def stream_presentation(
                     presentation.verbosity,
                     presentation.instructions,
                     slide_number=i + 1,
+                    # W3: this is the recovery path. The in-memory plan is gone,
+                    # so the node is rebuilt from the persisted NarrativeIR and
+                    # the recovered slide stays under the same evidence rules.
+                    evidence_node=plan_node_from_narrative(
+                        presentation.narrative,
+                        i,
+                        toc_slides=recovery_toc_slides,
+                        title_slide=presentation.include_title_slide,
+                    ),
                 )
             except HTTPException as e:
                 yield SSEErrorResponse(detail=e.detail).to_string()
@@ -2972,6 +2993,14 @@ async def generate_presentation_handler(
                     request.instructions,
                     slide_number=i + 1,
                     disconnect_checker=disconnect_checker,
+                    # W3: the slide content call is the last place prose is
+                    # written, so it receives the plan node for this slide.
+                    evidence_node=plan_node_for_slide(
+                        evidence_plan,
+                        i,
+                        toc_slides=n_toc_slides,
+                        title_slide=request.include_title_slide,
+                    ),
                 )
                 for i in range(start, end)
             ]

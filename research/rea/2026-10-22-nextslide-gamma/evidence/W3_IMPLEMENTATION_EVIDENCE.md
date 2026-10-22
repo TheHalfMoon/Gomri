@@ -181,13 +181,58 @@ confirms no `gomrey/` module imports `api/`, `utils/`, `models/` or `services/`.
 | Release config | `node scripts/validate-release-config.mjs` | OK |
 | Release manifest | `node scripts/generate-release-manifest.mjs --check-only` | OK |
 
+## 8a. The Jev q8 finding and its fix
+
+The first Jev build review of this candidate returned **q8 = 0.65 — concern present**: *"Is an agent
+tool result structured and idempotent?"*.
+
+That finding was correct and material. The plan was constraining the **outline** generation, but
+the per-slide **content** is written by a second LLM call
+(`get_slide_content_from_type_and_outline`) that never saw the plan. So the outline was
+evidence-constrained while the rendered slide could still assert something the evidence did not
+carry. "The provider renders, it never decides" was not yet true end to end.
+
+Three fixes followed, all regression-tested:
+
+1. **The slide content call now receives the plan node.**
+   `get_slide_content_from_type_and_outline(..., evidence_node=...)` injects the node's closed fact
+   base and its evidence rules into the content prompt. Without a node the prompt is unchanged.
+
+2. **The fact base now carries the claim texts.**
+   `PlanNode` gained `claim_texts`, and `render_plan_context` now emits the claims themselves. A
+   fact base that lists citation ids but not the facts is not a fact base.
+
+3. **The recovery path rebuilds the node from the persisted artifact.**
+   The section text of the NarrativeIR now holds the node's claim texts, so
+   `plan_node_from_narrative()` can rebuild the node when the in-memory plan is gone — which is
+   exactly the situation of the streaming/recovery path. That path now re-renders a recovered slide
+   under the same evidence rules as the original.
+
+A fourth bug was found by the new tests while fixing the third: `node_reasons_scope` had inverted
+the meaning of the `<dimension>-not-gated` flag, so a grounded node reported an **empty** gated
+list. Corrected: a grounded node reports `gated = (numbers, dates)` and `not_gated = (units,
+entities)`; a node that is not grounded verified nothing at all and reports both lists empty of
+gating.
+
+## 8b. The single shared slide-to-node rule
+
+The table-of-contents remap is now implemented **once**, in
+`gomrey.narrative.plan_index_for_slide`, and consumed by:
+
+- `bind_slide_locators` — the persisted per-slide binding;
+- `plan_node_for_slide` — the content call in the generation path;
+- `plan_node_from_narrative` — the content call in the recovery path.
+
+A unit test asserts that all three agree, and the binding tests assert the exact slide indices
+for the title, table-of-contents and content positions.
+
 ## 9. What is still open for W3
 
 | Item | State |
 |---|---|
-| The `outlines.py` review path (`GET /outlines/stream/{id}`) | **Not wired.** It calls `generate_ppt_outline` and would accept the plan, but the request model there is separate and the binding path is not wired. Recorded rather than silently omitted. |
+| The `outlines.py` review path (`GET /outlines/stream/{id}`) | **Not wired.** It calls `generate_ppt_outline` and would accept the plan, but its request model is separate and the binding path is not wired. Recorded rather than silently omitted. |
 | The smart-generation pipeline | **Not covered.** It is a separate pipeline that does not go through `generate_ppt_outline`. |
-| Outline re-validation after a user edits the outline on the review page | **Not wired.** The export-time assertion covers export; the *prepare* path still accepts client outlines without re-checking them against the evidence. This is the design's risk #4 and it remains open. |
+| Outline re-validation after a user edits the outline on the review page | **Not wired.** The export-time assertion covers export; the *prepare* path still accepts client outlines without re-checking them against the evidence. This is the design's risk #4 and it remains open. It is the highest-priority follow-up because a user-edited outline can reach a slide without passing the plan. |
 | `providers` / `tools` MCP surface | Not changed. |
 | Arabic / RTL | Not covered by W3; it is wave `W13`. |
 
