@@ -4,7 +4,8 @@
 **Repository:** `github.com/TheHalfMoon/Gomrey`
 **Branch:** `feature/rea/w8-image-export`
 **Base commit:** `5f299a7a6174ad3a1180f827778db5f4400a4d71` (`main`)
-**Candidate commit:** `6b3632a093efeb320878f6cfc16c7345cf16a1c1`
+**Candidate commit:** `6b3632a093efeb320878f6cfc16c7345cf16a1c1` (the implementation commit)
+**Final branch head:** one commit after the implementation commit. It only reverts `servers/nextjs/next-env.d.ts`, a Next.js build artifact that the production build rewrote; no reviewed source file differs from `6b3632a`. The full suite was re-run on the final head.
 **Policy:** `docs/REVIEW_POLICY.md`
 **Recorded (UTC):** 2026-10-22
 
@@ -16,7 +17,7 @@
 |---|---|
 | Repository | `github.com/TheHalfMoon/Gomrey` |
 | Base commit/tree | `5f299a7a6174ad3a1180f827778db5f4400a4d71` (`main`) |
-| Candidate commit/tree | `6b3632a093efeb320878f6cfc16c7345cf16a1c1` |
+| Candidate commit/tree | `6b3632a093efeb320878f6cfc16c7345cf16a1c1` (implementation commit; the final branch head adds only a build-artifact revert) |
 | Review range | `git diff 5f299a7a6174ad3a1180f827778db5f4400a4d71..6b3632a093efeb320878f6cfc16c7345cf16a1c1` |
 | Merge base | `5f299a7a6174ad3a1180f827778db5f4400a4d71` |
 | Diff size | 16 reviewable files of 29 changed; +2977 / −32 |
