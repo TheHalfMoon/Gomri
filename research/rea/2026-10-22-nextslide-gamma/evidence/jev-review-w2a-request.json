@@ -1,0 +1,75 @@
+{
+  "state": "Gomrey candidate f5881ea, branch feature/rea/w2a-animation-wiring, base feature/rea/nextslide-gamma-wave1 at 6dde5b4a8faea32c64811ee818f053d5fc12dbe3. W2a depends on wave 1, which introduced the slide animation contract at servers/nextjs/lib/slide-animations/ (catalog, stylesheet, index). WHAT THE CHANGE DOES: adds an ElementAnimation model (name, optional delay_ms, optional duration) to servers/fastapi/templates/v2/models/elements.py and declares an animation field on the animatable element types (text, text-list, table, vector, chart, infographic, image). Structural containers (container, flex, grid, group) are deliberately excluded. It adds a strip of the animation field from the layout-generation JSON schema, plus a prune of the $defs entry that removal orphans, in servers/fastapi/templates/v2/models/layouts.py. It adds the animation class emission and the conditional inlining of the animation stylesheet to servers/nextjs/lib/template-v2-json-to-html.ts. It adds 20 tests: 10 in servers/fastapi/tests/test_slide_animation_model.py and 10 in servers/nextjs/tests/slide-animations-rendering.test.mjs. WHICH AGENT TOOLS IT ADDS OR MODIFIES: none. No MCP tool, tool schema, tool registry, tool result shape or tool invocation path is added, removed or modified. The MCP server is untouched. No language-model call is added or modified. WHY THE FIELD IS DECLARED ON THE ELEMENT MODEL: the template's elements are parsed as SlideElement and pydantic's default is to ignore extra fields, so had the animation been added only to the renderer it would have been dropped at parse time with no error. There is a regression test for that. THE ANIMATION IS A TEMPLATE-AUTHORING DECISION: the content schema is built from a per-type whitelist in templates/v2/schema.py so it cannot leak; the layout-generation schema strips it explicitly; and the template application deep-copies the template element and replaces only the content fields, so a model-supplied animation could never win. GATES ON THIS EXACT REVISION: FastAPI pytest 1135 passed (1125 baseline + 10 new); root npm test 48/48; Next.js node --test 111/111 (101 wave-1 baseline + 10 new); scan-secrets, check-fixtures, check-platform-support, validate-release-config, release-manifest and validate-contracts all OK.",
+  "questions": {
+    "q1": {
+      "question": "Does the change violate a declared invariant of the project (docs/REVIEW_POLICY.md, docs/JEV_BUILD_POLICY.md, docs/SOURCE_LEDGER.md)?",
+      "instructions": "Does the change violate a declared invariant of the project (docs/REVIEW_POLICY.md, docs/JEV_BUILD_POLICY.md, docs/SOURCE_LEDGER.md)? Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q2": {
+      "question": "Is donor code copied beyond the authorized and admitted slice? This change adds no donor code; it wires the already-admitted wave-1 animation contract.",
+      "instructions": "Is donor code copied beyond the authorized and admitted slice? This change adds no donor code; it wires the already-admitted wave-1 animation contract. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q3": {
+      "question": "Is a deterministic check being replaced by an unnecessary model call? The change adds no model call at all.",
+      "instructions": "Is a deterministic check being replaced by an unnecessary model call? The change adds no model call at all. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q4": {
+      "question": "Is failure/retry/idempotency behavior complete for this change? The change adds a model field and a renderer branch; an unknown animation id is ignored rather than rendered broken, and a deck without animations carries no animation CSS.",
+      "instructions": "Is failure/retry/idempotency behavior complete for this change? The change adds a model field and a renderer branch; an unknown animation id is ignored rather than rendered broken, and a deck without animations carries no animation CSS. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q5": {
+      "question": "Is any source, page, chunk or artifact silently dropped? The canvas and export limitation is recorded explicitly: animations run in the HTML preview only, not in the Konva editor surface, the PPTX export or the PDF export.",
+      "instructions": "Is any source, page, chunk or artifact silently dropped? The canvas and export limitation is recorded explicitly: animations run in the HTML preview only, not in the Konva editor surface, the PPTX export or the PDF export. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q6": {
+      "question": "Does the change weaken provenance or citation precision? The change does not touch citations, provenance or contracts.",
+      "instructions": "Does the change weaken provenance or citation precision? The change does not touch citations, provenance or contracts. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q7": {
+      "question": "Does it add ambient network, filesystem or secret authority? The change adds a model field and a pure renderer branch. No new I/O, no network, no filesystem, no credential access.",
+      "instructions": "Does it add ambient network, filesystem or secret authority? The change adds a model field and a pure renderer branch. No new I/O, no network, no filesystem, no credential access. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q8": {
+      "question": "Is an agent tool result structured and idempotent?",
+      "instructions": "Is an agent tool result structured and idempotent? Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q9": {
+      "question": "Is the claimed test and evidence applicable to the exact candidate revision f5881ea? All gates were executed on that exact revision.",
+      "instructions": "Is the claimed test and evidence applicable to the exact candidate revision f5881ea? All gates were executed on that exact revision. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q10": {
+      "question": "Is there a simpler already-admitted implementation in Gomrey that should be reused instead of this new code? The change reuses the wave-1 animation catalog, stylesheet generator and class-name contract, and the existing remove_fields_from_schema helper.",
+      "instructions": "Is there a simpler already-admitted implementation in Gomrey that should be reused instead of this new code? The change reuses the wave-1 animation catalog, stylesheet generator and class-name contract, and the existing remove_fields_from_schema helper. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    }
+  }
+}
