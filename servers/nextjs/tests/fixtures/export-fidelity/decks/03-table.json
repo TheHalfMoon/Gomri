@@ -1,0 +1,52 @@
+{
+  "name": "03-table",
+  "slides": [
+    {
+      "background": {
+        "color": "#FFFFFF",
+        "opacity": 1
+      },
+      "shapes": [
+        {
+          "shape_type": "table",
+          "position": {
+            "left": 40,
+            "top": 40,
+            "width": 600,
+            "height": 200
+          },
+          "rows": 2,
+          "cols": 2,
+          "row_heights": [
+            40,
+            60
+          ],
+          "col_widths": [
+            300,
+            300
+          ],
+          "cells": [
+            {
+              "text": "Header A",
+              "bold": true,
+              "color": "#FFFFFF",
+              "fill": "#1F2937"
+            },
+            {
+              "text": "Header B",
+              "bold": true,
+              "color": "#FFFFFF",
+              "fill": "#1F2937"
+            },
+            {
+              "text": "Cell A1"
+            },
+            {
+              "text": "Cell B1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "name": "06-fills-and-background",
+  "slides": [
+    {
+      "background": {
+        "color": "#F3F4F6",
+        "opacity": 1
+      },
+      "shapes": [
+        {
+          "shape_type": "autoshape",
+          "type": "rect",
+          "position": {
+            "left": 40,
+            "top": 40,
+            "width": 300,
+            "height": 200
+          },
+          "fill": {
+            "color": "#2563EB",
+            "opacity": 0.35
+          },
+          "stroke": {
+            "color": "#1F2937",
+            "thickness": 2,
+            "opacity": 0.8
+          }
+        },
+        {
+          "shape_type": "textbox",
+          "position": {
+            "left": 40,
+            "top": 260,
+            "width": 300,
+            "height": 60
+          },
+          "text_wrap": true,
+          "vertical_alignment": "top",
+          "paragraphs": [
+            {
+              "alignment": "center",
+              "font": {
+                "name": "Lato",
+                "size": 18,
+                "font_weight": 400,
+                "italic": false,
+                "color": "#111827"
+              },
+              "text": "filled shape"
+            }
+          ],
+          "fill": {
+            "color": "#FFFFFF",
+            "opacity": 0.6
+          }
+        }
+      ]
+    }
+  ]
+}

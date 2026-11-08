@@ -1,0 +1,362 @@
+{
+  "version": 1,
+  "export_core_version": "1.0.34",
+  "generated_by": "servers/nextjs/tests/fixtures/export-fidelity/measure.mjs",
+  "decks": {
+    "01-text-runs-fonts": {
+      "layout_count": 1,
+      "element_types": [
+        "vector",
+        "vector",
+        "text"
+      ],
+      "text_runs": [
+        "Hello ",
+        "world"
+      ],
+      "run_families": [
+        {
+          "family": "Lato",
+          "bold": true,
+          "italic": false,
+          "color": "#111827",
+          "size": 18
+        },
+        {
+          "family": "Inter",
+          "bold": false,
+          "italic": true,
+          "color": "#333333",
+          "size": 18
+        }
+      ],
+      "positions": [
+        {
+          "x": 40,
+          "y": 40,
+          "width": 600,
+          "height": 80
+        }
+      ],
+      "alignments": [
+        "left"
+      ],
+      "vertical_alignments": [
+        "top"
+      ],
+      "decorative": [
+        true
+      ],
+      "has_notes_key": false,
+      "pptx_entries": null,
+      "pptx_package": {
+        "has_notes_slide": true,
+        "has_chart": false,
+        "has_media": false,
+        "slide_count": 1
+      }
+    },
+    "02-alignment-bullets": {
+      "layout_count": 1,
+      "element_types": [
+        "vector",
+        "text"
+      ],
+      "text_runs": [
+        "centered\n",
+        "1. numbered\n• justified"
+      ],
+      "run_families": [
+        {
+          "family": "Lato",
+          "bold": false,
+          "italic": false,
+          "color": "#111827",
+          "size": 18
+        },
+        {
+          "family": "Lato",
+          "bold": false,
+          "italic": false,
+          "color": "#111827",
+          "size": 18
+        }
+      ],
+      "positions": [
+        {
+          "x": 40,
+          "y": 40,
+          "width": 600,
+          "height": 200
+        }
+      ],
+      "alignments": [
+        "left"
+      ],
+      "vertical_alignments": [
+        "top"
+      ],
+      "decorative": [
+        true
+      ],
+      "has_notes_key": false,
+      "pptx_entries": null,
+      "pptx_package": {
+        "has_notes_slide": false,
+        "has_chart": false,
+        "has_media": false,
+        "slide_count": 1
+      }
+    },
+    "03-table": {
+      "layout_count": 1,
+      "element_types": [
+        "vector",
+        "table"
+      ],
+      "text_runs": [],
+      "run_families": [],
+      "positions": [
+        {
+          "x": 40,
+          "y": 40,
+          "width": 600,
+          "height": 200
+        }
+      ],
+      "alignments": [],
+      "vertical_alignments": [],
+      "decorative": [],
+      "has_notes_key": false,
+      "pptx_entries": null,
+      "pptx_package": {
+        "has_notes_slide": false,
+        "has_chart": false,
+        "has_media": false,
+        "slide_count": 1
+      }
+    },
+    "04-vectors": {
+      "layout_count": 1,
+      "element_types": [
+        "vector",
+        "vector",
+        "vector"
+      ],
+      "text_runs": [],
+      "run_families": [],
+      "positions": [],
+      "alignments": [],
+      "vertical_alignments": [],
+      "decorative": [],
+      "has_notes_key": false,
+      "pptx_entries": null,
+      "pptx_package": {
+        "has_notes_slide": false,
+        "has_chart": false,
+        "has_media": false,
+        "slide_count": 1
+      }
+    },
+    "05-chart": {
+      "layout_count": 1,
+      "element_types": [
+        "vector",
+        "chart"
+      ],
+      "text_runs": [],
+      "run_families": [],
+      "positions": [
+        {
+          "x": 40,
+          "y": 40,
+          "width": 600,
+          "height": 300
+        }
+      ],
+      "alignments": [],
+      "vertical_alignments": [],
+      "decorative": [],
+      "has_notes_key": false,
+      "pptx_entries": null,
+      "pptx_package": {
+        "has_notes_slide": false,
+        "has_chart": true,
+        "has_media": false,
+        "slide_count": 1
+      }
+    },
+    "06-fills-and-background": {
+      "layout_count": 1,
+      "element_types": [
+        "vector",
+        "vector",
+        "vector",
+        "text"
+      ],
+      "text_runs": [
+        "filled shape"
+      ],
+      "run_families": [
+        {
+          "family": "Lato",
+          "bold": false,
+          "italic": false,
+          "color": "#111827",
+          "size": 18
+        }
+      ],
+      "positions": [
+        {
+          "x": 40,
+          "y": 260,
+          "width": 300,
+          "height": 60
+        }
+      ],
+      "alignments": [
+        "left"
+      ],
+      "vertical_alignments": [
+        "top"
+      ],
+      "decorative": [
+        true
+      ],
+      "has_notes_key": false,
+      "pptx_entries": null,
+      "pptx_package": {
+        "has_notes_slide": false,
+        "has_chart": false,
+        "has_media": false,
+        "slide_count": 1
+      }
+    },
+    "07-speaker-notes": {
+      "layout_count": 1,
+      "element_types": [
+        "vector",
+        "text"
+      ],
+      "text_runs": [
+        "slide body"
+      ],
+      "run_families": [
+        {
+          "family": "Lato",
+          "bold": false,
+          "italic": false,
+          "color": "#111827",
+          "size": 18
+        }
+      ],
+      "positions": [
+        {
+          "x": 40,
+          "y": 40,
+          "width": 600,
+          "height": 80
+        }
+      ],
+      "alignments": [
+        "left"
+      ],
+      "vertical_alignments": [
+        "top"
+      ],
+      "decorative": [
+        true
+      ],
+      "has_notes_key": false,
+      "pptx_entries": null,
+      "pptx_package": {
+        "has_notes_slide": true,
+        "has_chart": false,
+        "has_media": false,
+        "slide_count": 1
+      }
+    },
+    "08-adversarial": {
+      "layout_count": 2,
+      "element_types": [
+        "vector",
+        "text",
+        "text",
+        "text",
+        "vector",
+        "vector"
+      ],
+      "text_runs": [
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "missing font",
+        "مرحبا 🌍 mixed"
+      ],
+      "run_families": [
+        {
+          "family": "Lato",
+          "bold": false,
+          "italic": false,
+          "color": "#111827",
+          "size": 18
+        },
+        {
+          "family": "NoSuchFontXYZ",
+          "bold": false,
+          "italic": false,
+          "color": "#111827",
+          "size": 18
+        },
+        {
+          "family": "Lato",
+          "bold": false,
+          "italic": false,
+          "color": "#111827",
+          "size": 18
+        }
+      ],
+      "positions": [
+        {
+          "x": 40,
+          "y": 40,
+          "width": 40,
+          "height": 20
+        },
+        {
+          "x": 100,
+          "y": 100,
+          "width": 200,
+          "height": 40
+        },
+        {
+          "x": 100,
+          "y": 160,
+          "width": 200,
+          "height": 40
+        }
+      ],
+      "alignments": [
+        "left",
+        "left",
+        "left"
+      ],
+      "vertical_alignments": [
+        "top",
+        "top",
+        "top"
+      ],
+      "decorative": [
+        true,
+        true,
+        true
+      ],
+      "has_notes_key": false,
+      "pptx_entries": null,
+      "pptx_package": {
+        "has_notes_slide": false,
+        "has_chart": false,
+        "has_media": false,
+        "slide_count": 2
+      }
+    }
+  }
+}

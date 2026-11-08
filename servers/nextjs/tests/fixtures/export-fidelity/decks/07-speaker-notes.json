@@ -1,0 +1,38 @@
+{
+  "name": "07-speaker-notes",
+  "slides": [
+    {
+      "background": {
+        "color": "#FFFFFF",
+        "opacity": 1
+      },
+      "shapes": [
+        {
+          "shape_type": "textbox",
+          "position": {
+            "left": 40,
+            "top": 40,
+            "width": 600,
+            "height": 80
+          },
+          "text_wrap": true,
+          "vertical_alignment": "top",
+          "paragraphs": [
+            {
+              "alignment": "left",
+              "font": {
+                "name": "Lato",
+                "size": 18,
+                "font_weight": 400,
+                "italic": false,
+                "color": "#111827"
+              },
+              "text": "slide body"
+            }
+          ]
+        }
+      ],
+      "note": "marker-note-07"
+    }
+  ]
+}
