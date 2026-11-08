@@ -390,13 +390,20 @@ def test_generate_presentation_handler_uses_template_layout():
         "template_id": template_id,
     }
     assert presentation.fonts == {"Inter": "https://example.com/inter.css"}
-    assert presentation.theme == {
+    theme = dict(presentation.theme)
+    legibility = theme.pop("legibility")
+    assert theme == {
         "name": "Custom V2 Theme",
         "description": "Theme generated from the template",
         "data": _template_theme_data(),
         "source": "template",
         "template_id": template_id,
     }
+    # The theme payload additionally carries the deterministic WCAG AA
+    # legibility report for the resolved theme.
+    assert legibility["ok"] is True
+    assert legibility["violations"] == []
+    assert legibility["checked_pairs"] > 0
     assert slide.layout_group == template_id
     assert slide.ui["components"][0]["elements"][0]["runs"][0]["text"] == "V2 headline"
 

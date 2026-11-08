@@ -98,15 +98,15 @@ review record, its own PR. No node may start until its `needs` are satisfied.
 | Security | No new network authority. No new provider registry. No silent omission: every source unit must be accounted for or explicitly marked omitted. |
 | Advances | `F-R07`, `F-R08`, `F-R09` — the delta that most distinguishes Gomrey |
 
-### ○ W4a — deterministic contrast / legibility linter **(new, high value)**
+### ● W4a — deterministic contrast / legibility linter **(SHIPPED)**
 
 | | |
 |---|---|
 | **Needs** | nothing — **independent, can start now** |
-| Donor input | `T-108` — `SKILL.md:276-341` (the 4.5:1 rule) + the measured 34/90 failing-pair data |
+| Donor input | `T-108` — `SKILL.md:276-341` (the 4.5:1 rule) + the measured failing-pair data |
 | Files | new `servers/fastapi/services/slide_quality_rules.py`; integrate into `utils/smart_slide_layout.py` |
 | Behaviour | Every resolved theme is checked before export. Foreground/background pairs are compared against WCAG AA 4.5:1 (3:1 for large text). A failing pair is reported with both hex values, the computed ratio and the offending token names. Non-contrast legibility checks (density, reading order) may follow in the same module. |
-| Why now | `F-P04` is a measured Gomrey gap — `smart_slide_layout.py` checks overflow, clipping and overlap but **not contrast**. The donor's own 18 presets fail their own rule in 34/90 pairs, which is the evidence that a linter earns its place. |
+| Why now | `F-P04` is a measured Gomrey gap — `smart_slide_layout.py` checks overflow, clipping and overlap but **not contrast**. The donor's own 18 presets fail their own rule in 10/54 text-on-background pairs, which is the evidence that a linter earns its place. |
 | Tests | Deterministic contrast arithmetic against known ratios (black-on-white = 21:1, `#767676` on white = 4.54:1, `#777777` on white = 4.48:1 → fail). The 18 donor presets act as a **negative** fixture: the linter must reject the 34 known-bad pairs and accept the rest. |
 | Security | Pure arithmetic on already-resolved tokens. No I/O, no network. |
 | Advances | `F-P04` — and it strengthens `F-P06` (presets) by making an unusable palette *fail loudly* instead of shipping |
