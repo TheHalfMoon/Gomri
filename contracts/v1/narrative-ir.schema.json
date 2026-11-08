@@ -12,6 +12,16 @@
     "tenant_id": { "type": "string", "minLength": 1, "maxLength": 128 },
     "workspace_id": { "type": "string", "minLength": 1, "maxLength": 128 },
     "language": { "type": "string", "pattern": "^[a-z]{2}(-[A-Z]{2})?$" },
+    "verification_scope": {
+      "type": "object",
+      "description": "Which dimensions the deterministic verifier actually gated, and which it did not. A narrative must never be read as fully verified when units or entities were not checked.",
+      "required": ["gated", "not_gated"],
+      "additionalProperties": false,
+      "properties": {
+        "gated": { "type": "array", "items": { "type": "string" } },
+        "not_gated": { "type": "array", "items": { "type": "string" } }
+      }
+    },
     "sections": {
       "type": "array",
       "items": {
@@ -21,9 +31,81 @@
         "properties": {
           "heading": { "type": "string", "maxLength": 500 },
           "text": { "type": "string", "maxLength": 20000 },
-          "claim_ids": { "type": "array", "items": { "type": "string", "maxLength": 128 } }
+          "claim_ids": { "type": "array", "items": { "type": "string", "maxLength": 128 } },
+          "citation_locators": {
+            "type": "array",
+            "description": "Citation locators for this section, in the shape gomrey.citations.make_locator produces. Every locator must resolve against the source IR before the artifact may be exported.",
+            "items": { "$ref": "#/$defs/CitationLocator" }
+          },
+          "evidence_status": {
+            "type": "string",
+            "description": "The evidence state of this section. 'grounded' means the deterministic gates passed for every claim and every locator resolved; it does NOT mean units or entities were verified.",
+            "enum": ["grounded", "abstained", "conflicted"]
+          }
         }
       }
+    }
+  },
+  "$defs": {
+    "CitationLocatorBase": {
+      "type": "object",
+      "required": ["kind", "citation_id", "source_id", "unit_id"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "type": "string", "enum": ["document", "web", "video", "spreadsheet", "image"] },
+        "citation_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "source_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "unit_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "page_no": { "type": "integer" },
+        "canonical_url": { "type": "string" },
+        "retrieved_at": { "type": "string" },
+        "video_id": { "type": "string" },
+        "start": { "type": "number" },
+        "end": { "type": "number" },
+        "workbook": { "type": "string" },
+        "sheet": { "type": "string" },
+        "cell": { "type": "string" },
+        "bbox": { "type": "array", "items": { "type": "number" } },
+        "paragraph": { "type": "string" },
+        "table_cell": { "type": "string" },
+        "region_bbox": { "type": "array", "items": { "type": "number" } },
+        "section": { "type": "string" },
+        "transcript_segment_id": { "type": "string" },
+        "scene_id": { "type": "string" },
+        "keyframe_id": { "type": "string" },
+        "range": { "type": "string" },
+        "table": { "type": "string" }
+      }
+    },
+    "CitationLocator": {
+      "description": "A citation locator. The per-kind required fields mirror gomrey.citations.make_locator, so a locator that would not mint is rejected by the contract as well as by the code.",
+      "allOf": [
+        { "$ref": "#/$defs/CitationLocatorBase" },
+        {
+          "oneOf": [
+            {
+              "properties": { "kind": { "const": "document" } },
+              "required": ["kind", "page_no"]
+            },
+            {
+              "properties": { "kind": { "const": "web" } },
+              "required": ["kind", "canonical_url", "retrieved_at"]
+            },
+            {
+              "properties": { "kind": { "const": "video" } },
+              "required": ["kind", "video_id", "start", "end"]
+            },
+            {
+              "properties": { "kind": { "const": "spreadsheet" } },
+              "required": ["kind", "workbook", "sheet", "cell"]
+            },
+            {
+              "properties": { "kind": { "const": "image" } },
+              "required": ["kind", "bbox"]
+            }
+          ]
+        }
+      ]
     }
   }
 }

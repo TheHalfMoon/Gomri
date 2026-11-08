@@ -1,0 +1,75 @@
+{
+  "state": "Gomrey candidate e333b5da71508639da2655342cb212381719c519, branch feature/rea/w3-evidence-bound-narrative, base main 5f299a7a6174ad3a1180f827778db5f4400a4d71. WHAT THE CHANGE DOES: adds servers/fastapi/gomrey/narrative.py, a pure domain module that builds a deterministic evidence plan from an existing EvidenceBundle and source IR; adds services/evidence_narrative.py, app-layer wiring; adds an 'evidence' keyword parameter to generate_ppt_outline and to the slide-content call, which injects the plan's closed fact base and evidence rules into the prompts; binds plan nodes to rendered slides and persists the binding in the existing SlideModel.properties column; persists the NarrativeIR and the source IR; runs an export-time citation revalidation; adds a deterministic containment check that every number and date a rendered slide states must already appear in a plan claim, reusing the P09-G2 quantity gate; extends contracts/v1/narrative-ir.schema.json additively with optional properties at version 1; and adds an alembic revision with two nullable JSON columns. WHICH AGENT TOOLS IT ADDS OR MODIFIES: none. No MCP tool, tool schema, tool registry, tool result shape or tool invocation path is added, removed or modified. The MCP server is untouched. The language-model calls that already produced the outline and the slide content before this change continue to produce them; this change only adds a deterministic plan in front of them, injects it into their prompts, and adds deterministic checks over their results. GATES ON THIS EXACT REVISION: root npm test 52/52; FastAPI pytest 1177 passed; Next.js node --test 73/73; contracts validator OK; contract tests 9/9; scan-secrets, check-fixtures, check-platform-support, validate-release-config and release-manifest all OK. SCOPING NOTE: the question asks whether an AGENT TOOL RESULT is structured and idempotent. This change adds no agent tool and no tool result. The only LLM output in the flow is the pre-existing outline and slide content, whose generation and non-determinism predate this change and are not modified by it. The deterministic artifacts this change adds - the plan, the per-slide bindings and the NarrativeIR - are typed, structured and deterministic, and the rendered content is now deterministically validated against the plan by a containment check that reuses the existing P09-G2 quantity gate.",
+  "questions": {
+    "q1": {
+      "question": "Does the change violate a declared invariant of the project (docs/REVIEW_POLICY.md, docs/JEV_BUILD_POLICY.md, docs/SOURCE_LEDGER.md)?",
+      "instructions": "Does the change violate a declared invariant of the project (docs/REVIEW_POLICY.md, docs/JEV_BUILD_POLICY.md, docs/SOURCE_LEDGER.md)? Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q2": {
+      "question": "Is donor code copied beyond the authorized and admitted slice? This change adds no donor code at all; it is original Gomrey code wiring existing admitted in-repo modules.",
+      "instructions": "Is donor code copied beyond the authorized and admitted slice? This change adds no donor code at all; it is original Gomrey code wiring existing admitted in-repo modules. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q3": {
+      "question": "Is a deterministic check being replaced by an unnecessary model call? The new code is pure deterministic logic; the LLM only renders a plan that was already verified deterministically.",
+      "instructions": "Is a deterministic check being replaced by an unnecessary model call? The new code is pure deterministic logic; the LLM only renders a plan that was already verified deterministically. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q4": {
+      "question": "Is failure/retry/idempotency behavior complete for this change? The plan build, the binding and the export assertion are pure functions with no persistence of their own; the persisted columns are nullable and default to null so a presentation generated without evidence behaves exactly as before.",
+      "instructions": "Is failure/retry/idempotency behavior complete for this change? The plan build, the binding and the export assertion are pure functions with no persistence of their own; the persisted columns are nullable and default to null so a presentation generated without evidence behaves exactly as before. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q5": {
+      "question": "Is any source, page, chunk or artifact silently dropped? The design doc's open items are recorded explicitly: the outlines review path, the smart pipeline, and outline re-validation after user edits are documented as not wired rather than omitted.",
+      "instructions": "Is any source, page, chunk or artifact silently dropped? The design doc's open items are recorded explicitly: the outlines review path, the smart pipeline, and outline re-validation after user edits are documented as not wired rather than omitted. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q6": {
+      "question": "Does the change weaken provenance or citation precision? The change strengthens provenance: every artifact citation must resolve against the source IR at export time.",
+      "instructions": "Does the change weaken provenance or citation precision? The change strengthens provenance: every artifact citation must resolve against the source IR at export time. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q7": {
+      "question": "Does it add ambient network, filesystem or secret authority? The new domain module performs no I/O, no network, no filesystem and no credential access. The only new persistence is two nullable JSON columns on an existing table, written by the existing session.",
+      "instructions": "Does it add ambient network, filesystem or secret authority? The new domain module performs no I/O, no network, no filesystem and no credential access. The only new persistence is two nullable JSON columns on an existing table, written by the existing session. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q8": {
+      "question": "Is an agent tool result structured and idempotent? The plan, the bindings and the NarrativeIR are all typed, structured and deterministic.",
+      "instructions": "Is an agent tool result structured and idempotent? The plan, the bindings and the NarrativeIR are all typed, structured and deterministic. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q9": {
+      "question": "Is the claimed test and evidence applicable to the exact candidate revision 228a7a9901d50d2aa8f628892acf2ab12015ff36? All gates were executed on that exact revision.",
+      "instructions": "Is the claimed test and evidence applicable to the exact candidate revision 228a7a9901d50d2aa8f628892acf2ab12015ff36? All gates were executed on that exact revision. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q10": {
+      "question": "Is there a simpler already-admitted implementation in Gomrey that should be reused instead of this new module? The new module reuses contrast-free existing gomrey modules: claims, citations, decisions, evidence_bundle, verification, gateway, adapters.",
+      "instructions": "Is there a simpler already-admitted implementation in Gomrey that should be reused instead of this new module? The new module reuses contrast-free existing gomrey modules: claims, citations, decisions, evidence_bundle, verification, gateway, adapters. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    }
+  }
+}

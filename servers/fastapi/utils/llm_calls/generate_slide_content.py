@@ -5,6 +5,7 @@ from typing import Optional
 from llmai import get_client
 from llmai.shared import JSONSchemaResponse, Message, SystemMessage, UserMessage
 
+from gomrey.narrative import PlanNode, render_node_context, render_node_rules
 from models.presentation_layout import SlideLayoutModel
 from models.presentation_outline_model import SlideOutlineModel
 from utils.llm_client_error_handler import handle_llm_client_exceptions
@@ -175,20 +176,27 @@ def get_messages(
     response_schema: Optional[dict] = None,
     *,
     slide_number: Optional[int] = None,
+    evidence_node: Optional[PlanNode] = None,
 ) -> list[Message]:
 
+    system_prompt = get_system_prompt(
+        tone,
+        verbosity,
+        instructions,
+        response_schema,
+    )
+    user_prompt = get_user_prompt(outline, language, slide_number)
+
+    if evidence_node is not None:
+        # The slide content call is the last place prose is written. Without
+        # this, the plan would constrain only the outline and the rendered
+        # slide could still assert something the evidence does not carry.
+        system_prompt = system_prompt + "\n" + render_node_rules(evidence_node)
+        user_prompt = user_prompt + "\n" + render_node_context(evidence_node)
+
     return [
-        SystemMessage(
-            content=get_system_prompt(
-                tone,
-                verbosity,
-                instructions,
-                response_schema,
-            ),
-        ),
-        UserMessage(
-            content=get_user_prompt(outline, language, slide_number),
-        ),
+        SystemMessage(content=system_prompt),
+        UserMessage(content=user_prompt),
     ]
 
 
@@ -236,6 +244,7 @@ async def get_slide_content_from_type_and_outline(
     *,
     slide_number: Optional[int] = None,
     disconnect_checker: Optional[DisconnectChecker] = None,
+    evidence_node: Optional[PlanNode] = None,
 ):
     response_schema = _prepare_response_schema(slide_layout.json_schema)
     if response_schema is None:
@@ -258,6 +267,7 @@ async def get_slide_content_from_type_and_outline(
             instructions,
             response_schema,
             slide_number=slide_number,
+            evidence_node=evidence_node,
         )
 
         return await generate_structured_with_schema_retries(

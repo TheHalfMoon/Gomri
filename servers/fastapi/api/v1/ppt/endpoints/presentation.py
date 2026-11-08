@@ -41,6 +41,18 @@ from models.presentation_with_slides import (
     PresentationWithSlides,
 )
 from services.documents_loader import DocumentsLoader
+from gomrey.narrative import (
+    check_plan_containment,
+    collect_rendered_text,
+    plan_node_for_slide,
+    plan_node_from_narrative,
+)
+from services.evidence_narrative import (
+    assert_artifact_exportable,
+    bind_plan_to_slides,
+    build_plan_from_request,
+    narrative_for_presentation,
+)
 from services.chat.slide_ui_helpers import _normalize_generated_image_fit
 from services.temp_file_service import TEMP_FILE_SERVICE
 from services.webhook_service import WebhookService
@@ -1618,6 +1630,10 @@ async def export_existing_presentation(
     if not presentation:
         raise HTTPException(404, "Presentation not found")
 
+    # W3: revalidate every persisted citation against the source IR
+    # immediately before the artifact is written to disk.
+    assert_artifact_exportable(presentation)
+
     presentation_and_path = await export_presentation(
         presentation.id,
         presentation.title or str(uuid.uuid4()),
@@ -2273,6 +2289,17 @@ async def stream_presentation(
 
     image_generation_service = ImageGenerationService(get_images_directory())
 
+    # W3: the number of table-of-contents slides is needed to map a rendered
+    # slide back onto its plan node. It is recomputed with the same helper
+    # the generation path used, from the persisted presentation row.
+    recovery_toc_slides = 0
+    if presentation.include_table_of_contents:
+        recovery_toc_slides = get_no_of_toc_required_for_n_outlines(
+            n_outlines=len(outline.slides) if outline else 0,
+            title_slide=presentation.include_title_slide,
+            target_total_slides=presentation.n_slides,
+        )
+
     async def inner():
         icon_weight = layout.icon_weight
         image_urls_for_slides = get_images_for_slides_from_outline(outline.slides)
@@ -2318,6 +2345,15 @@ async def stream_presentation(
                     presentation.verbosity,
                     presentation.instructions,
                     slide_number=i + 1,
+                    # W3: this is the recovery path. The in-memory plan is gone,
+                    # so the node is rebuilt from the persisted NarrativeIR and
+                    # the recovered slide stays under the same evidence rules.
+                    evidence_node=plan_node_from_narrative(
+                        presentation.narrative,
+                        i,
+                        toc_slides=recovery_toc_slides,
+                        title_slide=presentation.include_title_slide,
+                    ),
                 )
             except HTTPException as e:
                 yield SSEErrorResponse(detail=e.detail).to_string()
@@ -2693,6 +2729,23 @@ async def generate_presentation_handler(
                     )
                 )
 
+            # W3: build the deterministic evidence plan BEFORE any prose exists.
+            # The plan is the only fact base the model may draw on, and it fixes
+            # the content slide count so that a plan node maps to exactly one
+            # rendered slide.
+            n_toc_slides = 0
+            evidence_plan = build_plan_from_request(
+                evidence_bundle=request.evidence_bundle,
+                source_ir=request.source_ir,
+                owner_id=get_current_owner_id(),
+                n_slides=n_slides_to_generate,
+            )
+            if evidence_plan is not None:
+                if n_slides_to_generate is None:
+                    n_slides_to_generate = evidence_plan.node_count
+                elif evidence_plan.node_count != n_slides_to_generate:
+                    n_slides_to_generate = evidence_plan.node_count
+
             outline_messages = get_outline_messages(
                 request.content,
                 n_slides_to_generate,
@@ -2703,6 +2756,7 @@ async def generate_presentation_handler(
                 request.instructions,
                 request.include_title_slide,
                 request.include_table_of_contents,
+                evidence_plan,
             )
             await MEM0_PRESENTATION_MEMORY_SERVICE.store_generation_context(
                 presentation_id=presentation_id,
@@ -2734,6 +2788,7 @@ async def generate_presentation_handler(
                 request.web_search,
                 request.include_table_of_contents,
                 disconnect_checker=disconnect_checker,
+                evidence=evidence_plan,
             ):
 
                 if isinstance(chunk, HTTPException):
@@ -2919,6 +2974,8 @@ async def generate_presentation_handler(
 
         # 7. Generate slide content concurrently (batched), then build slides and fetch assets
         slides: List[SlideModel] = []
+        # W3: per-slide deterministic containment results, keyed by slide index.
+        containment_results: dict[int, dict] = {}
 
         slide_layout_indices = presentation_structure.slides
         slide_layouts = [layout_model.slides[idx] for idx in slide_layout_indices]
@@ -2943,6 +3000,14 @@ async def generate_presentation_handler(
                     request.instructions,
                     slide_number=i + 1,
                     disconnect_checker=disconnect_checker,
+                    # W3: the slide content call is the last place prose is
+                    # written, so it receives the plan node for this slide.
+                    evidence_node=plan_node_for_slide(
+                        evidence_plan,
+                        i,
+                        toc_slides=n_toc_slides,
+                        title_slide=request.include_title_slide,
+                    ),
                 )
                 for i in range(start, end)
             ]
@@ -2953,6 +3018,24 @@ async def generate_presentation_handler(
             for offset, slide_content in enumerate(batch_contents):
                 i = start + offset
                 slide_layout = slide_layouts[i]
+
+                # W3: the plan constrains the provider by prompt; this is the
+                # deterministic counterpart. A rendered slide that states a
+                # figure the evidence does not carry is not grounded, whatever
+                # the prompt said. The speaker note is not checked: it is
+                # structural prose, and a count like "three key points" is not
+                # a factual claim.
+                if evidence_plan is not None:
+                    node = plan_node_for_slide(
+                        evidence_plan,
+                        i,
+                        toc_slides=n_toc_slides,
+                        title_slide=request.include_title_slide,
+                    )
+                    if node is not None:
+                        containment_results[i] = check_plan_containment(
+                            node, collect_rendered_text(slide_content)
+                        )
                 slide = SlideModel(
                     presentation=presentation_id,
                     layout_group=layout_model.name,
@@ -3027,6 +3110,40 @@ async def generate_presentation_handler(
         for slide in slides:
             _hydrate_template_slide_ui(slide, layout_payload)
 
+        # W3: bind the plan nodes to the rendered slides and persist the
+        # evidence-bound narrative together with the source IR it resolves
+        # against, so every citation can be revalidated at export time.
+        if evidence_plan is not None:
+            bindings = bind_plan_to_slides(
+                evidence_plan,
+                slides,
+                toc_slides=n_toc_slides,
+                title_slide=request.include_title_slide,
+            )
+            for slide, binding in zip(slides, bindings):
+                merged = dict(slide.properties or {})
+                merged.update(binding)
+                containment = containment_results.get(slide.index)
+                if containment is not None and not containment.get("ok", True):
+                    # The rendered slide states something the evidence does not
+                    # carry, so it cannot be asserted as grounded.
+                    merged["evidence_status"] = "abstained"
+                    merged["reasons"] = list(merged.get("reasons") or []) + list(
+                        containment.get("reasons") or []
+                    )
+                    merged["containment"] = {
+                        "missing_numbers": list(containment.get("missing_numbers") or []),
+                        "missing_dates": list(containment.get("missing_dates") or []),
+                    }
+                slide.properties = merged
+            presentation.narrative = narrative_for_presentation(
+                evidence_plan,
+                artifact_id=str(presentation_id),
+                revision=1,
+                language=language_to_use,
+            )
+            presentation.source_ir = request.source_ir
+
         # 8. Save PresentationModel and Slides
         sql_session.add(presentation)
         sql_session.add_all(slides)
@@ -3039,6 +3156,9 @@ async def generate_presentation_handler(
             sql_session.add(async_status)
 
         # 9. Export
+        # W3: revalidate every persisted citation against the source IR
+        # immediately before the artifact is written to disk.
+        assert_artifact_exportable(presentation)
         presentation_and_path = await export_presentation(
             presentation_id,
             presentation.title or str(uuid.uuid4()),

@@ -342,6 +342,10 @@ def test_async_task_status_migration_maps_processing_to_pending(tmp_path):
                     """
                 )
             )
+            # The evidence-narrative revision at the head adds columns to
+            # `presentations`, so that table must exist in this simulated
+            # schema.
+            connection.execute(text("CREATE TABLE presentations (id TEXT PRIMARY KEY)"))
             connection.execute(
                 text("CREATE TABLE alembic_version (version_num VARCHAR(32) NOT NULL)")
             )
@@ -532,6 +536,10 @@ def test_upgrade_from_template_v2_revision_adds_slide_ui(tmp_path):
     try:
         with engine.begin() as connection:
             connection.execute(text("CREATE TABLE slides (id TEXT PRIMARY KEY)"))
+            # The evidence-narrative revision at the head adds columns to
+            # `presentations`, so that table must exist in this simulated
+            # schema.
+            connection.execute(text("CREATE TABLE presentations (id TEXT PRIMARY KEY)"))
             connection.execute(
                 text("CREATE TABLE alembic_version (version_num VARCHAR(32) NOT NULL)")
             )
@@ -653,6 +661,10 @@ def test_upgrade_from_font_uploads_revision_converts_template_v2_ids_to_strings(
                     """
                 )
             )
+            # The evidence-narrative revision at the head adds columns to
+            # `presentations`, so that table must exist in this simulated
+            # schema.
+            connection.execute(text("CREATE TABLE presentations (id TEXT PRIMARY KEY)"))
             connection.execute(
                 text("CREATE TABLE alembic_version (version_num VARCHAR(32) NOT NULL)")
             )
@@ -854,6 +866,10 @@ def test_upgrade_from_previous_head_adds_template_v2_theme(tmp_path):
             connection.execute(
                 text("CREATE TABLE template_v2 (id VARCHAR PRIMARY KEY)")
             )
+            # The evidence-narrative revision at the head adds columns to
+            # `presentations`, so that table must exist in this simulated
+            # schema.
+            connection.execute(text("CREATE TABLE presentations (id TEXT PRIMARY KEY)"))
             connection.execute(
                 text("CREATE TABLE alembic_version (version_num VARCHAR(32) NOT NULL)")
             )
