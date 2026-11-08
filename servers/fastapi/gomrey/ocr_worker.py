@@ -38,10 +38,19 @@ PADDLE_ADOPTION = {
     "forbidden": "no weights vendored and no lockfile change in this grain",
 }
 
-ARABIC_RE = re.compile(r"[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF]")
-LATIN_RE = re.compile(r"[A-Za-z]")
-ARABIC_INDIC_RE = re.compile(r"[\u0660-\u0669]")
-WESTERN_DIGIT_RE = re.compile(r"[0-9]")
+# The script ranges live in one shared module so that this worker and the
+# TypeScript renderer cannot drift apart. They are re-exported here because
+# this is where every existing caller imports them from.
+from gomrey.text_direction import (  # noqa: E402
+    ARABIC_INDIC_RE,
+    ARABIC_RE,
+    LATIN_RE,
+    SCRIPT_RANGES,
+    WESTERN_DIGIT_RE,
+    ScriptProfile,
+    resolve_base_direction,
+    script_profile,
+)
 
 ARABIC_P0_CASES = (
     "arabic-only",
@@ -64,29 +73,6 @@ class OCRRegion:
     confidence: float = 1.0
     rotation_degrees: float = 0.0
     degraded: tuple[str, ...] = ()
-
-
-@dataclass(frozen=True)
-class ScriptProfile:
-    arabic: bool
-    latin: bool
-    arabic_indic_digits: bool
-    western_digits: bool
-    direction: str
-
-
-def script_profile(text: str) -> ScriptProfile:
-    """Observe script and numeral systems present in a region's text."""
-    arabic = ARABIC_RE.search(text) is not None
-    latin = LATIN_RE.search(text) is not None
-    direction = "rtl" if arabic and not latin else ("mixed" if arabic and latin else "ltr")
-    return ScriptProfile(
-        arabic=arabic,
-        latin=latin,
-        arabic_indic_digits=ARABIC_INDIC_RE.search(text) is not None,
-        western_digits=WESTERN_DIGIT_RE.search(text) is not None,
-        direction=direction,
-    )
 
 
 def validate_region(region: OCRRegion) -> OCRRegion:

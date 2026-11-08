@@ -1,0 +1,15 @@
+import { chromium } from 'playwright';
+const url = process.argv[2];
+const out = process.argv[3];
+const browser = await chromium.launch();
+const ctx = await browser.newContext({ userAgent:'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', viewport:{width:1440,height:1000} });
+const page = await ctx.newPage();
+const resp = await page.goto(url, { waitUntil:'domcontentloaded', timeout:60000 });
+console.log('STATUS', resp && resp.status());
+console.log('FINAL_URL', page.url());
+await page.waitForTimeout(4000);
+const text = await page.evaluate(()=> document.body.innerText);
+console.log('=== TEXT ===');
+console.log(text);
+await page.screenshot({ path: out, fullPage: true });
+await browser.close();

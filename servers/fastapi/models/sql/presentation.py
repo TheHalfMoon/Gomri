@@ -79,6 +79,11 @@ class PresentationModel(SQLModel, table=True):
     community_design_ids: Optional[List[int]] = Field(
         sa_column=Column(JSON), default=None
     )
+    # The evidence-bound NarrativeIR produced by the W3 grain, and the source
+    # IR it resolves against. Both are needed to revalidate every citation at
+    # export time, long after generation.
+    narrative: Optional[dict] = Field(sa_column=Column(JSON), default=None)
+    source_ir: Optional[dict] = Field(sa_column=Column(JSON), default=None)
 
     def get_new_presentation(self):
         return PresentationModel(
@@ -103,6 +108,8 @@ class PresentationModel(SQLModel, table=True):
             fonts=copy.deepcopy(self.fonts),
             generation_mode=self.generation_mode,
             community_design_ids=copy.deepcopy(self.community_design_ids),
+            narrative=copy.deepcopy(self.narrative),
+            source_ir=copy.deepcopy(self.source_ir),
         )
 
     def get_presentation_outline(self):

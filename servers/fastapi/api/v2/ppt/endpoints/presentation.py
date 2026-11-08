@@ -2,7 +2,7 @@ import json
 import logging
 import uuid
 from datetime import datetime
-from typing import Literal, Optional
+from typing import Optional
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -21,7 +21,9 @@ from api.v1.ppt.endpoints.presentation import (
     stream_smart_presentation,
 )
 from enums.async_task_status import AsyncTaskStatus
+from enums.export_format import ExportFormat
 from models.api_error_model import APIErrorModel
+from models.image_export_options import ImageExportOptions
 from models.generate_presentation_request import GenerateSmartPresentationRequest
 from models.presentation_and_path import PresentationPathAndEditPath
 from models.sql.async_task import AsyncTaskModel
@@ -87,10 +89,11 @@ async def _create_smart_presentation(
 async def _generate_and_export_smart_presentation(
     presentation: PresentationModel,
     *,
-    export_as: Literal["pptx", "pdf"],
+    export_as: ExportFormat,
     export_cookie_header: Optional[str],
     sql_session: AsyncSession,
     task_id: str | None = None,
+    image_export: Optional[ImageExportOptions] = None,
 ) -> PresentationPathAndEditPath:
     total_slides = resolve_smart_slide_count(presentation.n_slides)
     stream_response = await stream_smart_presentation(presentation, sql_session)
@@ -141,6 +144,7 @@ async def _generate_and_export_smart_presentation(
         presentation.title or str(presentation.id),
         export_as,
         cookie_header=export_cookie_header,
+        image_options=image_export,
     )
     return PresentationPathAndEditPath(
         presentation_id=presentation.id,
@@ -152,9 +156,10 @@ async def _generate_and_export_smart_presentation(
 async def run_generate_smart_presentation_task(
     task_id: str,
     presentation_id: uuid.UUID,
-    export_as: Literal["pptx", "pdf"],
+    export_as: ExportFormat,
     export_cookie_header: Optional[str],
     owner_id: uuid.UUID | None,
+    image_export: Optional[ImageExportOptions] = None,
 ) -> None:
     owner_token = set_current_owner_id(owner_id)
     admin_token = set_current_owner_is_admin(False)
@@ -179,6 +184,7 @@ async def run_generate_smart_presentation_task(
                 export_cookie_header=export_cookie_header,
                 sql_session=sql_session,
                 task_id=task_id,
+                image_export=image_export,
             )
 
             task = await sql_session.get(AsyncTaskModel, task_id)
@@ -244,6 +250,7 @@ async def generate_smart_presentation_sync(
             export_as=request.export_as,
             export_cookie_header=build_export_cookie_header(request_http),
             sql_session=sql_session,
+            image_export=request.image_export,
         )
         return response.model_copy(
             update=absolute_mcp_result_links(
@@ -294,5 +301,6 @@ async def generate_smart_presentation_async(
         request.export_as,
         build_export_cookie_header(request_http),
         get_current_owner_id(),
+        request.image_export,
     )
     return task

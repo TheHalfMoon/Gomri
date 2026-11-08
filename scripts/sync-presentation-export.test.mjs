@@ -9,6 +9,7 @@ const require = createRequire(import.meta.url);
 const {
   getRuntimePlatformArch,
   validateSharpRuntime,
+  resolveNpmInvocation,
 } = require("./sync-presentation-export.cjs");
 
 function writePackage(root, packageName, packageJson) {
@@ -84,6 +85,39 @@ test("validateSharpRuntime accepts matching native and libvips packages", () => 
       ok: true,
       sharpVersion: "0.35.3",
     });
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("Windows npm invocation uses the npm CLI through Node, not npm.cmd", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "gomri-npm-cli-"));
+  const npmCli = path.join(root, "npm-cli.js");
+  try {
+    fs.writeFileSync(npmCli, "// fixture only\n", "utf8");
+    assert.deepEqual(
+      resolveNpmInvocation("win32", process.execPath, npmCli),
+      { command: process.execPath, prefixArgs: [npmCli] },
+    );
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("POSIX npm execution remains an ordinary executable invocation", () => {
+  assert.deepEqual(resolveNpmInvocation("linux", "/usr/bin/node", null), {
+    command: "npm",
+    prefixArgs: [],
+  });
+});
+
+test("Windows npm invocation fails closed if npm-cli.js is not found", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "gomri-missing-npm-"));
+  try {
+    assert.throws(
+      () => resolveNpmInvocation("win32", path.join(root, "node.exe"), null),
+      /Cannot locate npm-cli\.js/,
+    );
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
