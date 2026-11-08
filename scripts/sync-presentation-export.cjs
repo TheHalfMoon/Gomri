@@ -252,6 +252,36 @@ function clearDirectoryContents(directory) {
   }
 }
 
+
+/**
+ * Run npm's JavaScript CLI directly on Windows, avoiding cmd.exe.
+ * Node 24 rejects spawnSync("npm.cmd") with EINVAL on Windows.
+ */
+function resolveNpmInvocation(
+  platform = process.platform,
+  nodeExecutable = process.execPath,
+  npmExecPath = process.env.npm_execpath,
+) {
+  if (platform !== "win32") return { command: "npm", prefixArgs: [] };
+  const candidates = [
+    npmExecPath,
+    path.join(path.dirname(nodeExecutable), "node_modules", "npm", "bin", "npm-cli.js"),
+  ];
+  for (const candidate of candidates) {
+    if (
+      typeof candidate === "string" &&
+      path.isAbsolute(candidate) &&
+      /npm-cli\.js$/i.test(candidate) &&
+      fs.existsSync(candidate)
+    ) {
+      return { command: nodeExecutable, prefixArgs: [candidate] };
+    }
+  }
+  throw new Error(
+    "Cannot locate npm-cli.js for Windows; run through npm or install npm alongside Node.js.",
+  );
+}
+
 function installRuntime(version, archivePath) {
   // Keep the root directory because Docker may mount a named volume here.
   // Removing a mount point fails with EBUSY; clearing its contents is portable.
@@ -269,10 +299,11 @@ function installRuntime(version, archivePath) {
       2,
     )}\n`,
   );
-  const npm = process.platform === "win32" ? "npm.cmd" : "npm";
+  const { command: npm, prefixArgs } = resolveNpmInvocation();
   execFileSync(
     npm,
     [
+      ...prefixArgs,
       "install",
       "--omit=dev",
       "--ignore-scripts",
@@ -337,6 +368,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+  resolveNpmInvocation,
   clearDirectoryContents,
   getRuntimePlatformArch,
   validateSharpRuntime,
