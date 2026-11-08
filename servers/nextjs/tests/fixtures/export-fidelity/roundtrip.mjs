@@ -15,7 +15,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
 import zlib from "node:zlib";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(HERE, "../../../../..");
@@ -68,7 +68,7 @@ export async function loadExportCore() {
       "run `npm run sync:presentation-export` to materialise the export runtime",
     );
   }
-  return import(entry);
+  return import(pathToFileURL(entry).href);
 }
 
 /** Run one deck through the round trip and return what came back. */
