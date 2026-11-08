@@ -1,17 +1,25 @@
-# Vision
+# Gomri Vision
 
-Presenton exists to make local AI visual asset generation simple, powerful, and private.
+**Gomri makes research-backed creation beautiful, editable, verifiable, and controllable.**
 
-AI should not only produce unstructured text blobs. It should generate structured, beautiful visual documents with layout, hierarchy, themes, diagrams, and design systems built in from the start.
+A single brief can become a compelling presentation, report, document, graphic, or website. But Gomri will not confuse attractive pixels with a trustworthy artifact: the reasoning, sources, editable structure, and final export must remain inspectable.
 
-Visual asset generation must not require surrendering data to external platforms. It must run locally. It must work inside private networks. It must remain usable in controlled and air gapped environments.
+## The product we are building
 
-Users should be free to choose their models. Local models. Open models. Proprietary providers. Hybrid setups. Text models and image models working together. Systems such as Ollama or any compatible runtime. No lock in.
+**Research:** Attach a few sources or a large corpus; retain exact provenance and clearly show gaps, contradictions, and freshness.
 
-Templates and Designs are first class citizens. Users should be able to create them, modify them, package them, share them internally, and distribute them publicly. Themes and Asset packs can be configured manually.
+**Story:** Turn verified findings into an audience-aware narrative, with editable structure and explicit claim/source links.
 
-Presenton is an open source document engine, not a closed design platform. It is infrastructure for AI native visual workflows. Portable. Extensible. Model agnostic. Private by default.
+**Design:** Offer distinctive visual directions, responsive composition and real element-level control—not a static screenshot marketed as a presentation.
 
-Our ambition is to become the open foundation for local, private, AI powered visual document generation.
+**Create and edit:** Move seamlessly between prompt-driven editing, a structured drag-and-drop studio, and agent/API operations. Every substantive edit should be versioned and reversible.
 
-Beautiful visual assets. Generated locally. Owned by the user.
+**Export and share:** Produce high-fidelity editable files; disclose font substitution, unsupported effects, and object rasterization. Offer deliberate publish/revoke controls.
+
+**Trust:** Keep local/self-hosted use first-class; separate human policy authority from model suggestions, and require independently observed quality evidence before release claims.
+
+## Competitive promise
+
+Gomri aims to beat Gamma and NextSlide-class creation workflows on the combined measure of **visual quality × verifiable research × native editability × user/agent control**—demonstrated through frozen, blind, reproducible comparisons rather than marketing assertions.
+
+The original Presenton vision is preserved in donor documentation. Internal `Gomrey` names remain temporarily for compatibility pending a separately reviewed migration.
