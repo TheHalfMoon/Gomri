@@ -1,0 +1,75 @@
+{
+  "state": "Gomrey PR candidate 4e24d73e187efd08c142abeb5963808f358d6619 on branch feature/rea/nextslide-gamma-wave1, base main 5f299a7a6174ad3a1180f827778db5f4400a4d71. The change (a) adds a Gomrey-owned slide-animation catalog and deterministic stylesheet generator at servers/nextjs/lib/slide-animations/ adapted from the MIT-licensed donor 0xRafie/nextslide @ 90a46f933b3056d27460400c915ef268a9ec3f56, re-namespaced from the donor's animate-*/ns-* to gs-anim-*/gs-keyframe-*/--gs-ease-*; (b) adds 28 deterministic node:test assertions in servers/nextjs/tests/slide-animations.test.mjs; (c) adds docs/donors/nextslide-skill/{LICENSE,NOTICE.md,UPSTREAM_README.md} and a docs/SOURCE_LEDGER.md admission record; (d) adds a research record under research/rea/2026-10-22-nextslide-gamma/. The module performs no I/O, no network access, no filesystem access and no credential access. It is not yet wired into any rendering surface. Gates executed on this exact revision: root npm test 48/48, FastAPI pytest 1125 passed, Next.js node --test 101/101, Next.js eslint 0 errors, Next.js production build success, Electron typecheck/build/main-globals/path-migration pass, scan-secrets OK, check-fixtures OK, check-platform-support OK, validate-release-config OK, generate-release-manifest --check-only OK, presentation-export runtime 1.0.34 verified. The donor's wildcard selector [class*=\"animate-\"] was deliberately NOT adopted because it matches Tailwind CSS v4 animate-spin/animate-pulse/animate-bounce/animate-ping utilities and would blank product spinners to opacity:0; the donor's animate-counter-up has no @keyframes and was reclassified as engine:controller with hidesUntilStart false so it is never permanently hidden.",
+  "questions": {
+    "q1": {
+      "question": "Does the change violate a declared invariant of the project (docs/REVIEW_POLICY.md, docs/JEV_BUILD_POLICY.md, docs/SOURCE_LEDGER.md)?",
+      "instructions": "Does the change violate a declared invariant of the project (docs/REVIEW_POLICY.md, docs/JEV_BUILD_POLICY.md, docs/SOURCE_LEDGER.md)? Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q2": {
+      "question": "Is donor code copied beyond the authorized and admitted slice? The admitted slice is animation-library.md keyframes, easings, stagger delays, duration modifiers and reduced-motion policy from 0xRafie/nextslide @ 90a46f933b3056d27460400c915ef268a9ec3f56 (MIT).",
+      "instructions": "Is donor code copied beyond the authorized and admitted slice? The admitted slice is animation-library.md keyframes, easings, stagger delays, duration modifiers and reduced-motion policy from 0xRafie/nextslide @ 90a46f933b3056d27460400c915ef268a9ec3f56 (MIT). Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q3": {
+      "question": "Is a deterministic check being replaced by an unnecessary model call?",
+      "instructions": "Is a deterministic check being replaced by an unnecessary model call? Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q4": {
+      "question": "Is failure/retry/idempotency behaviour incomplete for this change? The change adds a pure library with no persistence, no jobs and no side effects.",
+      "instructions": "Is failure/retry/idempotency behaviour incomplete for this change? The change adds a pure library with no persistence, no jobs and no side effects. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q5": {
+      "question": "Is any source, page, chunk or artifact silently dropped? The research record declares a sha256 manifest for every raw artifact including one dropped 4MB render, and declares the donor artifacts deliberately not adopted, with reasons.",
+      "instructions": "Is any source, page, chunk or artifact silently dropped? The research record declares a sha256 manifest for every raw artifact including one dropped 4MB render, and declares the donor artifacts deliberately not adopted, with reasons. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q6": {
+      "question": "Does the change weaken provenance or citation precision?",
+      "instructions": "Does the change weaken provenance or citation precision? Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q7": {
+      "question": "Does it add ambient network, filesystem or secret authority? The new module performs no I/O, no network access, no filesystem access and no credential access.",
+      "instructions": "Does it add ambient network, filesystem or secret authority? The new module performs no I/O, no network access, no filesystem access and no credential access. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q8": {
+      "question": "Is an agent tool result structured and idempotent? No agent tool was added or changed.",
+      "instructions": "Is an agent tool result structured and idempotent? No agent tool was added or changed. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q9": {
+      "question": "Is the claimed test and evidence applicable to the exact candidate revision 4e24d73e187efd08c142abeb5963808f358d6619? All 16 gates were executed on that exact revision.",
+      "instructions": "Is the claimed test and evidence applicable to the exact candidate revision 4e24d73e187efd08c142abeb5963808f358d6619? All 16 gates were executed on that exact revision. Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    },
+    "q10": {
+      "question": "Is there a simpler already-admitted implementation in Gomrey that should be reused instead of this new module?",
+      "instructions": "Is there a simpler already-admitted implementation in Gomrey that should be reused instead of this new module? Answer true only if the concern is present.",
+      "type": "noul",
+      "true": "The concern IS present in this change.",
+      "false": "The concern is NOT present in this change."
+    }
+  }
+}

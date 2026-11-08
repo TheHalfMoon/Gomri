@@ -53,6 +53,20 @@ No donor becomes canonical merely because it is available. Before copied/adapted
   - other modules only where direct comparison proves them stronger than the Presenton-derived path.
 - Gate: **no Gamma code is copied until an exact source snapshot, permission scope, third-party/asset boundary, and provenance record exist.** A public `gamma.app` URL is not a source archive.
 
+### NextSlide OpenCode slide skill
+
+- Repository: `0xRafie/nextslide`
+- Exact revision observed 2026-10-22: `90a46f933b3056d27460400c915ef268a9ec3f56`
+- Public license observed: MIT; `Copyright (c) 2026 Danish Rafie Ekaputra`
+- Required NOTICE boundary: verbatim upstream LICENSE preserved at `docs/donors/nextslide-skill/LICENSE` (sha256 `e8aa250f23393942b2c952d0c45109926b1bffc6e5e9b3d6a3f09abe691bd7a9`); upstream README preserved at `docs/donors/nextslide-skill/UPSTREAM_README.md`
+- Mode: `ADAPT` behind Gomrey-owned interfaces
+- Full admission record: `docs/donors/nextslide-skill/NOTICE.md`
+- Candidate value and current disposition:
+  - slide animation contract (20 entrance + 4 emphasis animations, easing curves, stagger delays, duration modifiers, reduced-motion policy) — **ADAPTED and qualified** as `servers/nextjs/lib/slide-animations/`;
+  - style presets, layouts, single-file HTML engine, presenter mode, PPTX import/extraction, editable PPTX export — **DEFERRED or REJECTED pending measured comparison** against Gomrey's existing template, editor, presenter, PPTX-import and `@presenton/export-core` paths (see `docs/donors/nextslide-skill/NOTICE.md` §5).
+- Rule: the donor's wildcard `[class*="animate-"]` selector and its `animate-*` class names must never be adopted verbatim, because they collide with Tailwind CSS v4 `animate-spin`/`animate-pulse`/`animate-bounce`/`animate-ping` utilities and would blank unrelated product UI. Adopted material must live under the Gomrey `gs-anim-*` namespace with explicitly enumerated selectors.
+- Identity boundary: this repository is distinct from the commercial `nextslide.ai` product (observation-only, `SOURCE_NOT_AVAILABLE`) and from `nextslide.io` (an unrelated presentation clicker, not a donor).
+
 ## 3. Knowledge/RAG donors
 
 ### RAGFlow

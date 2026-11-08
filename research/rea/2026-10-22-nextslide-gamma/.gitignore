@@ -1,0 +1,13 @@
+# Research workspace ignores.
+# Generated tool trees, browser downloads and heavyweight scratch artifacts must never be committed.
+node_modules/
+browsers/
+*.log
+.DS_Store
+
+# Raw captured pages can be large; only bounded excerpts are committed.
+evidence/raw/*.map
+
+# Probe tooling artifacts (playwright install) are not committed.
+package.json
+package-lock.json
