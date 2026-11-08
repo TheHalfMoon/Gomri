@@ -24,6 +24,11 @@ import {
 } from "@/components/slide-editor/text/local-fonts";
 import { cssFontFamilyStack } from "@/components/slide-editor/text/css-text";
 import { resolveBaseDirection } from "@/components/slide-editor/text/text-direction";
+import {
+  buildSlideAnimationStylesheet,
+  slideAnimationClassAttribute,
+  type SlideAnimationDurationKey,
+} from "@/lib/slide-animations";
 
 type JsonRecord = Record<string, unknown>;
 type RenderMode = "absolute" | "flow";
@@ -115,6 +120,7 @@ interface TemplateV2RenderPayload {
   height: number;
   fonts?: unknown;
   background: string;
+  hasAnimations: boolean;
 }
 
 const ELEMENT_TYPES = new Set([
@@ -212,6 +218,7 @@ function templateV2RenderPayload(
     height,
     fonts: options.fonts,
     background,
+    hasAnimations: items.some((item) => hasSlideAnimation(readRecord(item))),
   };
 }
 
@@ -255,11 +262,14 @@ function jsonToHtml(
   const records = items.map(readRecord);
   const chartScripts = records.some(hasChartItem) ? renderChartScripts() : "";
   const fontAssetTags = renderFontAssetTags(fonts);
+  const animationStyles = records.some((item) => hasSlideAnimation(item))
+    ? `<style>${escapeStyleText(buildSlideAnimationStylesheet({ mode: "auto" }))}</style>`
+    : "";
   const bg = escapeCssColor(background);
   const slideRoot = renderSlideRoot(records, width, height, bg);
 
   return `<!doctype html>
-<html><head><meta charset="utf-8">${fontAssetTags}<style>
+<html><head><meta charset="utf-8">${fontAssetTags}${animationStyles}<style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:${bg}}
 body{font-family:Arial,Helvetica,sans-serif}
 *,*::before,*::after{box-sizing:border-box}
@@ -276,8 +286,11 @@ function jsonToHtmlFragment(
 ): string {
   const records = items.map(readRecord);
   const bg = escapeCssColor(background);
+  const animationStyles = records.some((item) => hasSlideAnimation(item))
+    ? `<style>${escapeStyleText(buildSlideAnimationStylesheet({ mode: "auto" }))}</style>`
+    : "";
 
-  return `${renderFontAssetTags(fonts)}<style>${TEMPLATE_V2_MATH_CSS}</style>${renderSlideRoot(
+  return `${renderFontAssetTags(fonts)}${animationStyles}<style>${TEMPLATE_V2_MATH_CSS}</style>${renderSlideRoot(
     records,
     width,
     height,
@@ -356,6 +369,10 @@ function cellTextDirection(cellValue: unknown): "rtl" | "ltr" {
 }
 
 function renderItem(item: JsonRecord, mode: RenderMode): string {
+  return applySlideAnimation(renderItemByType(item, mode), item);
+}
+
+function renderItemByType(item: JsonRecord, mode: RenderMode): string {
   if (isComponent(item)) {
     const { size, ...component } = item;
     void size;
@@ -397,6 +414,72 @@ function renderItem(item: JsonRecord, mode: RenderMode): string {
       if (readRecordOrNull(item.child)) return renderContainer(item, mode);
       return "";
   }
+}
+
+/**
+ * Reads the animation an element declares, if any.
+ *
+ * The animation is a template-authoring decision: the model that writes the
+ * slide content never sees this field, and the template application keeps the
+ * template's own value. An unknown animation id is ignored rather than
+ * rendered as a broken animation.
+ */
+function readSlideAnimation(item: JsonRecord): {
+  id: string;
+  delayMs?: number;
+  duration?: SlideAnimationDurationKey;
+} | null {
+  const animation = readRecordOrNull(item.animation);
+  if (!animation) return null;
+  const id = readString(animation.name);
+  if (!id) return null;
+  const delayMs = readNumber(animation.delay_ms);
+  const duration = readString(animation.duration) as SlideAnimationDurationKey | null;
+  return {
+    id,
+    ...(delayMs !== null ? { delayMs } : {}),
+    ...(duration ? { duration } : {}),
+  };
+}
+
+function hasSlideAnimation(item: JsonRecord): boolean {
+  return readSlideAnimation(item) !== null;
+}
+
+const SLIDE_ANIMATION_ROOT_TAG = /^<([a-z][a-z0-9]*)(\s[^>]*)?>/i;
+
+function applySlideAnimation(html: string, item: JsonRecord): string {
+  const animation = readSlideAnimation(item);
+  if (!animation || !html) return html;
+  const classAttribute = slideAnimationClassAttribute(animation.id, {
+    delayMs: animation.delayMs,
+    duration: animation.duration,
+  });
+  if (!classAttribute) return html;
+
+  const match = html.match(SLIDE_ANIMATION_ROOT_TAG);
+  if (!match) return html;
+  const tag = match[1];
+  const attributes = match[2] ?? "";
+  const rest = html.slice(match[0].length);
+  const existing = attributes.match(/\sclass="([^"]*)"/i);
+  if (existing) {
+    const merged = `${existing[1]} ${classAttribute}`.trim();
+    const replaced = attributes.replace(
+      /\sclass="([^"]*)"/i,
+      ` class="${escapeHtmlAttribute(merged)}"`
+    );
+    return `<${tag}${replaced}>${rest}`;
+  }
+  return `<${tag} class="${escapeHtmlAttribute(classAttribute)}"${attributes}>${rest}`;
+}
+
+function escapeHtmlAttribute(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 
 function renderImage(item: JsonRecord, mode: RenderMode): string {
