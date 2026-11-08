@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 /**
  * The export-fidelity harness (W12).
@@ -47,7 +47,7 @@ const {
   measureFacts,
   measurePackage,
   roundTrip,
-} = await import(path.join(FIXTURES, "roundtrip.mjs"));
+} = await import(pathToFileURL(path.join(FIXTURES, "roundtrip.mjs")).href);
 
 // The expectations are read synchronously at module scope: the deck list is
 // needed to register the cases, and registration happens before any hook runs.
