@@ -25,9 +25,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 from constants.presentation import MAX_NUMBER_OF_SLIDES
 from enums.async_task_status import AsyncTaskStatus
+from enums.export_format import ExportFormat
 from enums.webhook_event import WebhookEvent
 from models.api_error_model import APIErrorModel
 from models.generate_presentation_request import GeneratePresentationRequest
+from models.image_export_options import ImageExportOptions
 from models.presentation_and_path import PresentationPathAndEditPath
 from models.presentation_from_template import EditPresentationRequest
 from models.presentation_outline_model import (
@@ -1608,7 +1610,8 @@ async def duplicate_presentation(
 async def export_existing_presentation(
     id: uuid.UUID,
     request_http: Request,
-    export_as: Annotated[Literal["pptx", "pdf"], Body(embed=True)] = "pptx",
+    export_as: Annotated[ExportFormat, Body(embed=True)] = "pptx",
+    image_export: Annotated[Optional[ImageExportOptions], Body(embed=True)] = None,
     sql_session: AsyncSession = Depends(get_async_session),
 ):
     """Export a presentation that already exists.
@@ -1625,6 +1628,9 @@ async def export_existing_presentation(
     call, keyed on an existing presentation id, so an interrupted export can be
     retried without regenerating. It also makes the self-hosted v1 API
     consistent with the hosted v3 API, which offers `POST /presentation/export`.
+
+    Image exports (`png`, `jpeg`, `webp`) additionally accept `image_export`
+    options describing the image format, resolution, and encoder quality.
     """
     presentation = await sql_session.get(PresentationModel, id)
     if not presentation:
@@ -1639,6 +1645,7 @@ async def export_existing_presentation(
         presentation.title or str(uuid.uuid4()),
         export_as,
         cookie_header=build_export_cookie_header(request_http),
+        image_options=image_export,
     )
 
     return PresentationPathAndEditPath(
@@ -3164,6 +3171,7 @@ async def generate_presentation_handler(
             presentation.title or str(uuid.uuid4()),
             request.export_as,
             cookie_header=export_cookie_header,
+            image_options=request.image_export,
         )
 
         response = PresentationPathAndEditPath(
@@ -3402,6 +3410,7 @@ async def edit_presentation_with_new_content(
         presentation.title or str(uuid.uuid4()),
         data.export_as,
         cookie_header=build_export_cookie_header(request_http),
+        image_options=data.image_export,
     )
 
     return PresentationPathAndEditPath(
@@ -3446,6 +3455,7 @@ async def derive_presentation_from_existing_one(
         new_presentation.title or str(uuid.uuid4()),
         data.export_as,
         cookie_header=build_export_cookie_header(request_http),
+        image_options=data.image_export,
     )
 
     return PresentationPathAndEditPath(
