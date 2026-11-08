@@ -138,3 +138,28 @@ Use identical briefs/source bundles and fixed budgets to compare Gomri versus Ga
 - https://github.com/loro-dev/loro
 - https://github.com/tldraw/tldraw/blob/main/LICENSE.md
 - First-party canonical phase documents: `docs/MASTER_PLAN.md`, `docs/SOURCE_LEDGER.md`, `docs/evidence/P01_PRESENTON_IMPORT.md`, `P06_EXIT.md`, `P08_EXIT.md`, `P09_EXIT.md`.
+
+
+## Addendum — Open REA implementation PR inventory (verified 2026-11-09)
+
+The default branch alone understated actual progress. **Eight previous REA PRs (#78–#85) are OPEN and unmerged.** Their precise code and review packets were inspected. Existing work should be qualified/merged rather than recreated. The PRs describe local passing test evidence, but their October 22 GitHub Actions jobs were blocked at runner admission by an account billing/spending-limit condition; this is **not a CI PASS**. The new docs PR #86 was still QUEUED on GitHub Actions run `42531699780` when this addendum was prepared.
+
+| PR | Actual branch work | Integration consequence |
+|---|---|---|
+| [#78](https://github.com/TheHalfMoon/Gomri/pull/78) | Deep REA evidence, imported bounded MIT NextSlide *skill* donor `0xRafie/nextslide@90a46f9...`, 24-animation catalog, deterministic stylesheet | Animation catalog is NOT the proprietary `nextslide.ai` source; review donor attribution separately. Base branch = `main` |
+| [#79](https://github.com/TheHalfMoon/Gomri/pull/79) | WCAG contrast/legibility checks, with fixture audit of 18 upstream skill palettes | **Stacked on #78**; GitHub reported CONFLICTING as of 2026-11-09. Must land/reconcile #78 first and resolve conflicts without unreviewed rebases |
+| [#80](https://github.com/TheHalfMoon/Gomri/pull/80) | Actual app integration of P08/P09 evidence into `POST /presentation/generate`, narrative IR, citation identity and containment gates | **High-value P10/P11 bridge**; do not describe grounded-deck workflow as absent from every branch. Independent `main` branch |
+| [#81](https://github.com/TheHalfMoon/Gomri/pull/81) | Animation field on slide element model and Next.js HTML renderer wiring | Requires wave-1 catalog (#78); check declared dependency graph and retest after #78 |
+| [#82](https://github.com/TheHalfMoon/Gomri/pull/82) | Arabic/RTL script direction and renderer/export qualification | High priority for genuine bilingual deck quality; independent `main` branch |
+| [#83](https://github.com/TheHalfMoon/Gomri/pull/83) | Deterministic PPTX export→re-import regression harness | Measured drops documented: notes not reimported, stroke/table/rotation/shape-type fidelity; does NOT prove visual/pixel round-trip. Independent `main` branch |
+| [#84](https://github.com/TheHalfMoon/Gomri/pull/84) | PNG/JPEG/WebP slide-image ZIP export via current `@presenton/export-core` renderer; API/OpenAPI tests | Existing renderer reused; independent `main` branch |
+| [#85](https://github.com/TheHalfMoon/Gomri/pull/85) | Delete unused root `layouts.json` and add orphan-file guard tests | Repo hygiene only; independent `main` branch |
+
+**Live merge recommendation:**
+1. Confirm the account-side GitHub Actions billing limit and restore runner admission at no unapproved cost.
+2. Requalify exact current heads for the independent PRs #80, #82, #83, #84, #85; check for intersecting files/migration conflicts; merge them in a tested dependency order, with post-merge regression and reviews.
+3. Qualify #78 and then carefully reconcile #79 and #81 on top, respecting the canonical merge/CI policy. Do not force-merge #79 while CONFLICTING.
+4. Integrate surviving changes with S0 Gomri identity migration and the donor adoption/benchmark plan; rerun tests on the integrated tree. Product capability is not complete while sitting in a detached PR.
+5. The March/October REA packets are historical, not substitutes for a fresh QA run. No part of the current study asserts GitHub CI success or a finished feature based only on PR body claims.
+
+**Revision to previous audit summary:** P10–P16 lack merged phase exit evidence on `main`, **but there are substantive unmerged executable candidates implementing parts of the P10/P11 gap**. Baseline truth and active work truth must both be considered.
