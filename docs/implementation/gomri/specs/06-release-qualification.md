@@ -4,32 +4,32 @@
 
 ## Zero-cost tools actually observed
 
-- Alibaba \`ocr\` CLI version **1.13.6** (Windows/amd64), installed as \`@alibaba-group/open-code-review\`; local binary supports \`delegate preview\` and \`delegate rule\` with **no OCR-managed LLM key**.
-- The local Gomri feature branch is a Git repository with an existing \`origin/main\` reference and PR #88 candidate; using OCR on the git diff does not write product code.
-- \`ps-review\` and \`ps-close\` are already installed as PStack skills.
+- Alibaba `ocr` CLI version **1.13.6** (Windows/amd64), installed as `@alibaba-group/open-code-review`; local binary supports `delegate preview` and `delegate rule` with **no OCR-managed LLM key**.
+- The local Gomri feature branch is a Git repository with an existing `origin/main` reference and PR #88 candidate; using OCR on the git diff does not write product code.
+- `ps-review` and `ps-close` are already installed as PStack skills.
 - Full OpenCode free-labelled model availability/network/account permissions are **not guaranteed**; an agent model may be remote even when free. Do not call an expensive hosted OCR model by default; user asked free **locally**.
 
 ## Exact OCR process (review happens only after machine gate)
 
 Run from an isolated checked-out feature worktree that contains the actual candidate SHA:
 
-\`\`\`powershell
+```powershell
 # First test diffs/formats/TS/backend suite/E2E and ensure head is exact.
 $base = 'origin/main'
 $head = 'HEAD'
 ocr --version
 ocr delegate preview --from $base --to $head --format json > .review\ocr-selection.json
 ocr delegate rule 'servers/fastapi/api/v1/ppt/endpoints/presentation.py' 'servers/nextjs/components/slide-editor/model/model.ts' --format json > .review\ocr-rules.json
-\`\`\`
+```
 
 The reviewable file inventory and resolved rules can run locally **without a model**; it is **not by itself a code review**. To satisfy the actual reviewer gate:
 1. Feed exact diff, relevant full files, ORM/auth and source/OOXML negative-control tests, resolved rules and branch commit to a fresh independent local review model.
 2. If a local model is not installed, either (a) use an explicit zero-price, authorized remote model through OpenCode with network/provider disclosure, or (b) keep **AI_REVIEW_BLOCKED** and perform a documented manual source reviewer. Never claim fully offline when using a free hosted route.
 3. Require **line-specific bug findings**, priority BLOCKER/MAJOR/MINOR, reproduction/negative control, fix proof and reviewer disposition, not generic praise.
 4. Open a new review context after each material fix; re-run deterministic tests at the new exact head. Do not rely on a prior model run.
-5. PStack \`/ps-review\` must independently test correctness, parsimony and security; \`/ps-close\` is allowed only after the code/tests/rights gates pass.
+5. PStack `/ps-review` must independently test correctness, parsimony and security; `/ps-close` is allowed only after the code/tests/rights gates pass.
 
-For advanced \`ocr review\` (OCR-managed LLM) do not run until the configured provider is proven local or approved zero-charge. OCR Delegation is the default.
+For advanced `ocr review` (OCR-managed LLM) do not run until the configured provider is proven local or approved zero-charge. OCR Delegation is the default.
 
 ## Full technical gate
 
@@ -45,9 +45,9 @@ For advanced \`ocr review\` (OCR-managed LLM) do not run until the configured pr
 ## Branch and merge protocol
 
 One feature or donor transplant per draft PR with:
-\`phase_id, base_sha, donor_commit, modified_paths, tests_red_then_green,
+`phase_id, base_sha, donor_commit, modified_paths, tests_red_then_green,
  CI_URL, E2E_video/hash, OCR selection/rules + review report, reviewer dispositions,
- license/NOTICE, rollback, user-visible known limitations.\`
+ license/NOTICE, rollback, user-visible known limitations.`
 
 Do not merge without independent reviewer and exact-head checks; **do not auto-publish**. Reviewers may be separate agent contexts, but a model that implemented the patch may not count as independent review without a new context and source evidence. No open BLOCKER/MAJOR in the release scope.
 
