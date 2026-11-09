@@ -1,4 +1,4 @@
-# Gomri: EGM Converged Plan v3 — An Editable, Evidence-Grounded Presentation Engine
+# Gomri: EGM Converged Plan v4 — An Editable, Evidence-Grounded Presentation Engine
 
 **Status:** EGM REVISED v4 — **P0a source inspection COMPLETE pending independent acceptance; P0b CONDITIONAL on isolation preflight; P1/P2 NO-GO**. 2026-11-09, main at `5f299a7`, PRs #88–#92 unmerged. Independent Google EGM-role review sessions were used through OpenCode, not the full official orchestrator. This is a Draft plan, not released product code.
 
@@ -27,8 +27,8 @@ Gomri's original October 5 master plan describes a large agent-first knowledge a
 ## 2. Evidence and baselines (facts versus pending branches)
 
 - main at **5f299a7** contains Presenton-derived Next.js presentation editor, an existing Konva/Template V2 surface, text/table editing, selection/transforms, Redux history, FastAPI generation and source/claim contracts, and bundled export runtime.
-- Existing code paths checked on main: \`servers/nextjs/components/slide-editor/surface/TemplateV2KonvaSlide.tsx\`; \`servers/nextjs/components/slide-editor/model/model.ts\`; \`servers/nextjs/components/slide-editor/selection/transformSession.ts\`; \`servers/nextjs/app/(presentation-generator)/presentation/hooks/PresentationUndoRedo.ts\`; \`servers/nextjs/store/slices/undoRedoSlice.ts\`; \`servers/nextjs/lib/run-bundled-presentation-export.ts\`; \`contracts/v1/design-ir.schema.json\`; \`contracts/v1/artifact-revision.schema.json\`.
-- The current DesignIR schema **does not yet define a rich scene graph**: it stores identity, a \`layout\` string, string token map, and components with \`component_id\`, \`component_type\`, \`citation_ids\`. Do not invent typed spatial/content fields inside that existing v1 schema without an explicit versioned migration.
+- Existing code paths checked on main: `servers/nextjs/components/slide-editor/surface/TemplateV2KonvaSlide.tsx`; `servers/nextjs/components/slide-editor/model/model.ts`; `servers/nextjs/components/slide-editor/selection/transformSession.ts`; `servers/nextjs/app/(presentation-generator)/presentation/hooks/PresentationUndoRedo.ts`; `servers/nextjs/store/slices/undoRedoSlice.ts`; `servers/nextjs/lib/run-bundled-presentation-export.ts`; `contracts/v1/design-ir.schema.json`; `contracts/v1/artifact-revision.schema.json`.
+- The current DesignIR schema **does not yet define a rich scene graph**: it stores identity, a `layout` string, string token map, and components with `component_id`, `component_type`, `citation_ids`. Do not invent typed spatial/content fields inside that existing v1 schema without an explicit versioned migration.
 - ArtifactRevision v1 has artifact_id, revision, tenant_id, workspace_id, parent_revision, content_digest, evidence_bundle_id, verification_state, author_principal_id and idempotency_key. A revision concept exists; this does **not** establish a deployed atomic compare-and-swap endpoint for individual slide edits.
 - Open **Draft PR #88** at d4362c6d968d2746d499630d8498d3111c98c90b contains integrated source-linked narrative, animation, RTL and native export fidelity work. Its earlier local Windows tests were reported (root 55, Next.js 148, PPTX fixture 15) but full FastAPI, end-to-end UI and exact-head GitHub CI were **not verified as complete**. Treat it as a candidate baseline, never a release.
 - Open **Draft PRs #89–#92** are research. Beautiful.ai first-party public Apache/MIT docs/source, VistaCreate/Crello legacy utility source and Craft Anything captures are **reference and donor candidates**, not running Gomri features or competitors' private engines.
@@ -39,9 +39,9 @@ Gomri's original October 5 master plan describes a large agent-first knowledge a
 
 **G1.** Begin with 8 frozen synthetic 16:9 fixtures covering citations, charts, tables, Arabic/English bidi, long headlines, rights and numeric claims; expand to 30 only after one qualified native PPTX journey. Record exact semantic expectations and hashes.
 
-**G2.** Four initial SmartLayout families, not 73 template clones: \`headline-hero\`, \`stat-chart\`, \`comparison\`, \`timeline-process\`. These must reuse the existing Template V2 scene/editor, preserve stable IDs and provide explicit fit errors, not rasterized thumbnails pretending to be elements.
+**G2.** Four initial SmartLayout families, not 73 template clones: `headline-hero`, `stat-chart`, `comparison`, `timeline-process`. These must reuse the existing Template V2 scene/editor, preserve stable IDs and provide explicit fit errors, not rasterized thumbnails pretending to be elements.
 
-**G3.** No silently dropped \`component_id\`, citation IDs, chart series values/labels, table cells, speaker notes, document identity or revision during supported edits, layout swaps or format exports. Unsupported content is retained in canonical state and flagged in a loss receipt.
+**G3.** No silently dropped `component_id`, citation IDs, chart series values/labels, table cells, speaker notes, document identity or revision during supported edits, layout swaps or format exports. Unsupported content is retained in canonical state and flagged in a loss receipt.
 
 **G4.** Selected AI edit is a typed proposal/preview/commit, with user scope, base revision and server-enforced permissions, immutable source references, and Undo/Redo semantics. Conflicting concurrent writes and revoked access fail closed.
 
@@ -55,11 +55,11 @@ Gomri's original October 5 master plan describes a large agent-first knowledge a
 
 ## 4. Non-goals for first release
 
-Do not reproduce every Gamma/Beautiful.ai/VistaCreate feature, 200K commercial templates, social scheduler, print marketplace, paid stock catalog, third-party private server or model weights, full online collaboration, multi-agent plugin marketplace, simultaneous 16-product support, AI-created vector paths from arbitrary photos, or an entirely new editor state store. Do not imply \`nextslide\` public animations are NextSlide.ai private code. Do not build Object Grabber, MP4 rendering, ROI sliders, interactive maps or background removal before a source-to-editable-PPTX journey passes. Those remain separate P1/P2 research hypotheses.
+Do not reproduce every Gamma/Beautiful.ai/VistaCreate feature, 200K commercial templates, social scheduler, print marketplace, paid stock catalog, third-party private server or model weights, full online collaboration, multi-agent plugin marketplace, simultaneous 16-product support, AI-created vector paths from arbitrary photos, or an entirely new editor state store. Do not imply `nextslide` public animations are NextSlide.ai private code. Do not build Object Grabber, MP4 rendering, ROI sliders, interactive maps or background removal before a source-to-editable-PPTX journey passes. Those remain separate P1/P2 research hypotheses.
 
 ## 5. Proposed system shape and state ownership
 
-\`\`\`text
+```text
 User files / URLs / prompt  -> Source Gateway / unit accounting
                                   |
                            SourceIR + claim/citation evidence
@@ -78,13 +78,13 @@ User files / URLs / prompt  -> Source Gateway / unit accounting
                   proposed patch -> compare/recheck -> commit
                                   |
                          revision + undo + receipt
-\`\`\`
+```
 
-**Authority rule:** Existing Presenton/Template V2 editor and its persisted model remain authoritative for supported editing today. The new SmartLayout role/layout pass is a pure, deterministic adapter over a **versioned, small typed metadata envelope**; it must neither silently rewrite existing DesignIR v1 nor create a separate competing global canvas. New \`DesignIR v2\` may be introduced later behind explicit migration and rollback tests, only if v1 cannot encode required semantics safely.
+**Authority rule:** Existing Presenton/Template V2 editor and its persisted model remain authoritative for supported editing today. The new SmartLayout role/layout pass is a pure, deterministic adapter over a **versioned, small typed metadata envelope**; it must neither silently rewrite existing DesignIR v1 nor create a separate competing global canvas. New `DesignIR v2` may be introduced later behind explicit migration and rollback tests, only if v1 cannot encode required semantics safely.
 
 **Identity:** Persist stable slideId, componentId, sourceId, citationId, revision and content digest in a canonical transaction. Render geometry, text measurements, thumbnails and candidate scores are **rebuildable derived data**; never let renderer caches overwrite authoritative chart values or text.
 
-**No-loss semantics:** A layout attempt returns \`{candidate, diagnostics, lossReceipt}\` conceptually. For hard violation (dropped data, unapproved citation mutation, invalid grid cell, unreadable min font), return a typed error and keep previous canonical slide unchanged. Unsupported interactive content remains stored with a declared export fallback.
+**No-loss semantics:** A layout attempt returns `{candidate, diagnostics, lossReceipt}` conceptually. For hard violation (dropped data, unapproved citation mutation, invalid grid cell, unreadable min font), return a typed error and keep previous canonical slide unchanged. Unsupported interactive content remains stored with a declared export fallback.
 
 **Concurrency:** UI spinner/agent edit mark is not a lock. A server-side commit must authenticate principal/tenant/workspace from server-held session context, recompute the proposed hash and target IDs, and atomically compare the persisted revision while writing the new canonical content/revision in one transaction. Stale state returns 409/412 without mutation. Neither the legacy v1 save route nor the browser autosave currently demonstrates this behavior; see P0 audit.
 
@@ -93,7 +93,7 @@ User files / URLs / prompt  -> Source Gateway / unit accounting
 | Option | Decision | Why / proof needed |
 |---|---|---|
 | Rebuild full Beautiful.ai SmartSlides engine | **No** | Public model docs, not private executable renderer; too much scope. Implement 4 families with existing Template V2 |
-| Adopt 12×12 grid schema directly into current DesignIR v1 | **No** | v1 contract too shallow and \`additionalProperties:false\`; add bounded adapter and versioned contract |
+| Adopt 12×12 grid schema directly into current DesignIR v1 | **No** | v1 contract too shallow and `additionalProperties:false`; add bounded adapter and versioned contract |
 | Keep one editor vs new Fabric/Excalidraw canvas | **Keep existing Konva editor** | Verified source already has selection, transforms, tables/text and undo; new canvas creates conflicting authority |
 | Import Crello Electron renderer | **No** | 2017 Electron, SSRF and query-credential risk; use current export runner |
 | Replace exporter with Beautiful.ai PptxGenJS fork | **Not yet** | Benchmark 30 native PPTX cases against existing runtime; vendor fork is derivative of Brent Ely's library |
@@ -119,16 +119,16 @@ Pin main and open PR heads. Trace the actual FastAPI v1 `PATCH /update` and `PAT
 ### Phase 1: SmartLayout in existing editor — first user-visible gain
 
 **Future P1 candidate source locations for an explicitly approved feature PR; NO code changes are authorized by P0:**
-- \`servers/nextjs/components/slide-editor/model/model.ts\` — owns existing updateComponentInUi/updateElementInUi and selection models; use as integration seam, do not replace.
-- \`servers/nextjs/components/slide-editor/surface/TemplateV2KonvaSlide.tsx\` — owns visual surface rendering, no second canvas.
-- \`servers/nextjs/components/slide-editor/surface/componentFrameBounds.ts\` and \`.../surface/alignmentGuides.ts\` — existing geometry helpers to test/reuse.
-- \`servers/nextjs/components/slide-editor/text/text-line-height.ts\` and \`.../text/template-v2-text.ts\` — existing text measurement/wrapping; inspect Arabic/diacritics before any alternative.
-- \`servers/nextjs/tests/template-v2-component-bounds.test.mjs\`, \`.../flow-layout-text-sizing.test.mjs\` — existing negative-control test homes.
+- `servers/nextjs/components/slide-editor/model/model.ts` — owns existing updateComponentInUi/updateElementInUi and selection models; use as integration seam, do not replace.
+- `servers/nextjs/components/slide-editor/surface/TemplateV2KonvaSlide.tsx` — owns visual surface rendering, no second canvas.
+- `servers/nextjs/components/slide-editor/surface/componentFrameBounds.ts` and `.../surface/alignmentGuides.ts` — existing geometry helpers to test/reuse.
+- `servers/nextjs/components/slide-editor/text/text-line-height.ts` and `.../text/template-v2-text.ts` — existing text measurement/wrapping; inspect Arabic/diacritics before any alternative.
+- `servers/nextjs/tests/template-v2-component-bounds.test.mjs`, `.../flow-layout-text-sizing.test.mjs` — existing negative-control test homes.
 
 **Candidate new modules ONLY after proving the existing Template V2 helper cannot meet the requirement** (not present APIs or approved write scope):
-- \`servers/nextjs/lib/gomri-smart-layout/types.ts\` — semantic role, typed nodes, diagnostic and candidate interfaces;
-- \`servers/nextjs/lib/gomri-smart-layout/constraints.ts\` — deterministic bounds/no-loss/no-overlap rules;
-- \`servers/nextjs/lib/gomri-smart-layout/compile.ts\` — four role layouts, pure input/output and no DOM mutation;
+- `servers/nextjs/lib/gomri-smart-layout/types.ts` — semantic role, typed nodes, diagnostic and candidate interfaces;
+- `servers/nextjs/lib/gomri-smart-layout/constraints.ts` — deterministic bounds/no-loss/no-overlap rules;
+- `servers/nextjs/lib/gomri-smart-layout/compile.ts` — four role layouts, pure input/output and no DOM mutation;
 - `servers/nextjs/tests/gomri-smart-layout.test.mjs` — **8 initial 16:9 synthetic fixture decks**, with separately numbered negative-control unit cases; expand to 30 deck fixtures only after P3.
 
 **Implementation grain (future and P0b-gated):** build one **non-persisting** headline-hero preview in existing Template V2/Konva, with proven in-memory role-to-element mapping. It must not trigger auto-save or introduce a persisted v2 scene schema. Compare a small existing helper with any proposed compiler. The three other families come after evidence and the P2 safe-write gate.
@@ -138,15 +138,15 @@ Pin main and open PR heads. Trace the actual FastAPI v1 `PATCH /update` and `PAT
 ### Phase 2: selection-scoped AI changes, revision checks and Undo
 
 **Future P2 code interfaces to trace and later modify only after a separate approved P2 PR:**
-- \`servers/nextjs/components/slide-editor/selection/transformSession.ts\` and \`.../model/model.ts\` for selected element paths;
-- \`servers/nextjs/app/(presentation-generator)/presentation/hooks/PresentationUndoRedo.ts\` and \`servers/nextjs/store/slices/undoRedoSlice.ts\` for current snapshots, while understanding their present limitations;
-- \`servers/nextjs/app/(presentation-generator)/presentation/hooks/useAutoSave.tsx\` and \`.../presentation/utils/autoSaveDiff.ts\` for snapshot/autosave conflicts;
+- `servers/nextjs/components/slide-editor/selection/transformSession.ts` and `.../model/model.ts` for selected element paths;
+- `servers/nextjs/app/(presentation-generator)/presentation/hooks/PresentationUndoRedo.ts` and `servers/nextjs/store/slices/undoRedoSlice.ts` for current snapshots, while understanding their present limitations;
+- `servers/nextjs/app/(presentation-generator)/presentation/hooks/useAutoSave.tsx` and `.../presentation/utils/autoSaveDiff.ts` for snapshot/autosave conflicts;
 - `servers/fastapi/api/v1/ppt/endpoints/presentation.py` — verified current human auto-save PATCH endpoints `/update` and `/slide_update`, not speculative v2 edit routes. Inspect identity/context and session filters explicitly.
-- \`contracts/v1/artifact-revision.schema.json\` for existing revision fields.
+- `contracts/v1/artifact-revision.schema.json` for existing revision fields.
 
 **New proposed files are CONDITIONAL on failed reuse tests and actual route/signature verification** (not evidence that new services exist):
-- \`servers/nextjs/lib/gomri-ai-edit/patch.ts\`: typed element patch and preview, no arbitrary HTML/deck rewrite.
-- \`servers/nextjs/lib/gomri-ai-edit/verify.ts\`: source/number preservation and no-unselected-change test.
+- `servers/nextjs/lib/gomri-ai-edit/patch.ts`: typed element patch and preview, no arbitrary HTML/deck rewrite.
+- `servers/nextjs/lib/gomri-ai-edit/verify.ts`: source/number preservation and no-unselected-change test.
 - `servers/fastapi/gomrey/slide_edit_transaction.py`: NOT DEFAULT. Prefer a minimal atomic revision/authorization update in the actual legacy `servers/fastapi/api/v1/ppt/endpoints/presentation.py` route if tests prove existing capability is absent.
 - `servers/nextjs/tests/gomri-ai-edit.test.mjs` and current `servers/fastapi/tests/unit/test_presentation_slide_update_api.py` when the fixture seam fits; create a new backend test home only if verified necessary.
 
@@ -159,11 +159,11 @@ Pin main and open PR heads. Trace the actual FastAPI v1 `PATCH /update` and `PAT
 
 ### Phase 3: native PowerPoint fidelity, claims and authoring journey
 
-**Existing:** \`servers/nextjs/lib/run-bundled-presentation-export.ts\`; \`servers/nextjs/lib/template-v2-json-to-html.ts\`; \`servers/fastapi/services/export_task_service.py\`; \`servers/fastapi/tests/integration/test_presentation_generation_flow.py\`; \`contracts/v1/narrative-ir.schema.json\`; source/citation contract tests. Verify path and test ownership first.
+**Existing:** `servers/nextjs/lib/run-bundled-presentation-export.ts`; `servers/nextjs/lib/template-v2-json-to-html.ts`; `servers/fastapi/services/export_task_service.py`; `servers/fastapi/tests/integration/test_presentation_generation_flow.py`; `contracts/v1/narrative-ir.schema.json`; source/citation contract tests. Verify path and test ownership first.
 
 **P0a notes finding:** `SlideModel.speaker_note`, the UI Slide type and browser notes controls already exist; the existing slide PATCH unit test exercises a note update. The **still unverified** links are native PPTX notes XML/relationships, import mapping and end-to-end authorization for requested presentation ID and export delivery. See [P0a notes/export map](evidence/P0A_EXPORT_NOTES_MAP.md).
 
-**Candidate from PR #88:** \`servers/nextjs/tests/export-fidelity.test.mjs\` and its source-target fixtures, plus RTL and contrast lint. These files are **not present on main until qualified/merged**. Do not duplicate or assume tests cover notes.
+**Candidate from PR #88:** `servers/nextjs/tests/export-fidelity.test.mjs` and its source-target fixtures, plus RTL and contrast lint. These files are **not present on main until qualified/merged**. Do not duplicate or assume tests cover notes.
 
 **Work (future P3):** first qualify the 8 canonical first-journey synthetic decks against native PPTX/RTL/notes output. **Only after this P3 eight-deck exit** expand to 30 for a broader regression sample. Use a bounded ZIP/XML reader and map exported objects to source component IDs. Compare public fork exporters only after rights and dependency admission.
 
@@ -188,7 +188,7 @@ Only after a qualified Windows first-release journey, optionally run 30 matched 
 - **Reuse now:** P00–P09 investments (provenance, gateway, jobs, IR, citations, claim validation) where real code and tests pass; only repair missing capabilities required for first journey.
 - **Make customer-visible:** P10 research/outline workflow + P11 creation compiler + selected P12 agent access, in the smaller Phase 0–3 path.
 - **Defer by explicit decision:** full P13 plugin marketplace, P14 enterprise collaboration/analytics, broad P15 arena expansion, cross-platform P16 GA until flagship decks pass.
-- **Keep existing \`docs/MASTER_PLAN.md\` and \`docs/ARCHITECTURE.md\` authoritative for recorded historical commitments;** this document is a proposed fast-track amendment. No silent overwrite, and no misleading rebrand where old Gomrey package/storage IDs still exist.
+- **Keep existing `docs/MASTER_PLAN.md` and `docs/ARCHITECTURE.md` authoritative for recorded historical commitments;** this document is a proposed fast-track amendment. No silent overwrite, and no misleading rebrand where old Gomrey package/storage IDs still exist.
 
 ## 9. Security and failure table
 
@@ -208,12 +208,12 @@ Only after a qualified Windows first-release journey, optionally run 30 matched 
 
 ## 10. EGM Goldfish review request and remaining unknowns
 
-**Reviewers must receive this document alone plus explicit source links and zero previous discussion; record each fresh-session model and provider.** Official EGM personas: \`zoom_out\`, \`comprehension\`, \`design_critic\`, \`structural\`, \`style\`, \`implementation_readiness\` and \`codebase_details\`. A self-review in the Elephant context **does not count** as Goldfish.
+**Reviewers must receive this document alone plus explicit source links and zero previous discussion; record each fresh-session model and provider.** Official EGM personas: `zoom_out`, `comprehension`, `design_critic`, `structural`, `style`, `implementation_readiness` and `codebase_details`. A self-review in the Elephant context **does not count** as Goldfish.
 
 Questions reviewers must challenge:
 1. Is a new typed SmartLayout compiler justified, or can one more bounded Template V2 helper meet G2?
 2. Which component IDs and revisions are truly stable in today's persisted model? Does auto-save overwrite proposed backend conflict semantics?
-3. What exact source/method contracts do \`model.ts\` and FastAPI v2 expose? Must Phase 2 adapt their current workflow before adding a transaction service?
+3. What exact source/method contracts do `model.ts` and FastAPI v2 expose? Must Phase 2 adapt their current workflow before adding a transaction service?
 4. Does the existing bundled exporter even accept source speaker notes? Which losses are impossible without a new export model?
 5. Is 30-deck × 4-format test scope appropriate for first user-visible slice, and how do we measure blind preference without expensive accounts?
 6. Is the plan self-contained, legally admissible, privacy-preserving and deployable at zero hidden cloud cost?
@@ -224,7 +224,7 @@ Questions reviewers must challenge:
 ## References and source provenance
 
 - Google EGM official project: https://github.com/google/elephant-goldfish-model ; local pinned EGM source was previously checked at 403d888, Apache-2.0.
-- Existing Gomri current: \`docs/MASTER_PLAN.md\`, \`docs/ARCHITECTURE.md\`, \`docs/template-v2.md\` on main @ 5f299a7.
+- Existing Gomri current: `docs/MASTER_PLAN.md`, `docs/ARCHITECTURE.md`, `docs/template-v2.md` on main @ 5f299a7.
 - PR #88 integration: https://github.com/TheHalfMoon/Gomri/pull/88 (NOT MERGED).
 - GPT Slides REA: PR #89; Beautiful.ai source REA: PR #90; VistaCreate source REA: PR #91; Craft Anything evidence REA: PR #92 (all DRAFT, NOT MERGED).
 - Beautiful.ai public official plugin: https://github.com/beautifulai/claude-plugin ; public PptxGenJS derivative: https://github.com/beautifulai/PptxGenJS
