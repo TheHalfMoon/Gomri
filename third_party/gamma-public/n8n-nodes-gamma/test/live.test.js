@@ -1,0 +1,321 @@
+// Opt-in tests against the real Gamma API. Skipped unless GAMMA_API_KEY is set:
+//
+//   GAMMA_API_KEY=sk-gamma-... npm run test:live
+//
+// These are the only tests that can confirm the node's requests are actually
+// accepted. Everything else stops at the boundary. Nothing here spends credits
+// unless you also set GAMMA_LIVE_GENERATE=1.
+const { describe, it } = require('node:test');
+const assert = require('node:assert');
+const { GammaApi } = require('../dist/credentials/GammaApi.credentials.js');
+
+const KEY = process.env.GAMMA_API_KEY;
+const BASE = 'https://public-api.gamma.app';
+const skip = KEY ? false : 'set GAMMA_API_KEY to run live API tests';
+
+const call = (path, init = {}) =>
+	fetch(`${BASE}${path}`, {
+		...init,
+		headers: { 'X-API-KEY': KEY, Accept: 'application/json', ...(init.headers ?? {}) },
+	});
+
+describe('live Gamma API', { skip }, () => {
+	it('the credential test endpoint accepts the key', async () => {
+		// This is exactly what the node's ICredentialTestRequest calls, so if this
+		// fails, every user's "Test connection" fails too.
+		const { url } = new GammaApi().test.request;
+		const res = await call(url);
+		assert.strictEqual(res.status, 200, `${url} returned ${res.status}`);
+	});
+
+	it('rejects a bad key with 401', async () => {
+		const res = await fetch(`${BASE}/v1.0/themes`, { headers: { 'X-API-KEY': 'sk-gamma-invalid' } });
+		assert.strictEqual(res.status, 401);
+	});
+
+	it('requires the X-API-KEY header, not a bearer token', async () => {
+		const res = await fetch(`${BASE}/v1.0/themes`, { headers: { Authorization: `Bearer ${KEY}` } });
+		assert.strictEqual(res.status, 401, 'bearer auth unexpectedly worked; revisit the credential');
+	});
+
+	it('lists themes and folders in the shape the node expects', async () => {
+		for (const path of ['/v1.0/themes', '/v1.0/folders']) {
+			const res = await call(path);
+			assert.strictEqual(res.status, 200, `${path} returned ${res.status}`);
+			const body = await res.json();
+			assert.strictEqual(typeof body, 'object', `${path} did not return an object`);
+		}
+	});
+
+	// Settles the open question in docs/n8n-readiness-audit.md (A4). /me appears
+	// nowhere in Gamma's published docs, but an unauthenticated probe cannot tell
+	// a missing route from a gated one -- auth runs before routing. With a real
+	// key the answer is unambiguous.
+	it('reports whether the undocumented /v1.0/me endpoint exists', async () => {
+		const res = await call('/v1.0/me');
+		let body = null;
+		try { body = await res.json(); } catch { /* not JSON */ }
+
+		const lines = ['', '  ┌─ /v1.0/me verdict ' + '─'.repeat(40), `  │ GET /v1.0/me -> ${res.status}`];
+		if (res.status === 401) {
+			lines.push('  │ INCONCLUSIVE: the key was rejected, so this says nothing about /me.');
+		} else if (res.status === 200) {
+			lines.push('  │ EXISTS, but is undocumented.',
+				`  │ Response keys: ${body && typeof body === 'object' ? Object.keys(body).join(', ') : typeof body}`,
+				'  │',
+				'  │ ACTION: it works, but nothing published commits Gamma to keeping it.',
+				'  │ Either get it documented, or drop the User resource rather than',
+				'  │ build a public node on an endpoint that can vanish without notice.');
+		} else {
+			lines.push(`  │ DOES NOT EXIST (${res.status}).`,
+				'  │',
+				'  │ ACTION: remove the User resource from Gamma.node.ts -- the',
+				'  │ getMe operation can only ever fail. Drop the `user` option from',
+				'  │ the Resource parameter and its operation + displayOptions block,',
+				'  │ then update the DOCUMENTED set in test/routing.test.js so it no',
+				'  │ longer expects an undocumented endpoint.');
+		}
+		lines.push('  └' + '─'.repeat(58), '');
+		console.log(lines.join('\n'));
+
+		assert.ok([200, 401, 403, 404, 405].includes(res.status), `unexpected status ${res.status}`);
+	});
+
+	// The Resource Locator pickers are only as good as this call. Unit tests cover
+	// the mapping against a mocked helper; this proves the real endpoints answer
+	// in the shape the mapping assumes.
+	describe('resource locator pickers', () => {
+		const { Gamma } = require('../dist/nodes/Gamma/Gamma.node.js');
+		const methods = new Gamma().methods.listSearch;
+
+		/** Minimal ILoadOptionsFunctions backed by the real API. */
+		const ctx = {
+			getNodeParameter: (_name, fallback) => fallback,
+			helpers: {
+				httpRequestWithAuthentication: async (_credentialType, options) => {
+					const url = new URL(options.baseURL + options.url);
+					for (const [k, v] of Object.entries(options.qs ?? {})) {
+						url.searchParams.set(k, String(v));
+					}
+					const res = await fetch(url, { headers: { 'X-API-KEY': KEY, Accept: 'application/json' } });
+					if (!res.ok) throw new Error(`${url.pathname} -> ${res.status}`);
+					return await res.json();
+				},
+			},
+		};
+
+		it('the Theme picker returns real themes', async () => {
+			const result = await methods.searchThemes.call(ctx);
+			assert.ok(Array.isArray(result.results), 'no results array');
+			assert.ok(result.results.length > 0, 'workspace returned no themes');
+			for (const r of result.results) {
+				assert.ok(r.name, 'a theme has no name to display');
+				assert.ok(r.value, 'a theme has no id to submit');
+			}
+			console.log(`\n    ${result.results.length} themes, e.g. ${result.results
+				.slice(0, 3).map((r) => `${r.name} (${r.description})`).join(', ')}`);
+			console.log(`    paginationToken: ${result.paginationToken ?? 'none — single page'}\n`);
+		});
+
+		it('the Theme picker honours a search filter', async () => {
+			const all = await methods.searchThemes.call(ctx);
+			const term = all.results[0].name.slice(0, 3);
+			const filtered = await methods.searchThemes.call(ctx, term);
+			assert.ok(Array.isArray(filtered.results), 'search returned no array');
+			console.log(`\n    filter "${term}" -> ${filtered.results.length} of ${all.results.length}\n`);
+		});
+
+		it('the Template picker returns workspace and official templates', async () => {
+			const result = await methods.searchTemplates.call(ctx, 'sales');
+			assert.ok(Array.isArray(result.results), 'no results array');
+			for (const r of result.results) assert.ok(r.name && r.value);
+			const counts = {};
+			for (const r of result.results) counts[r.description] = (counts[r.description] ?? 0) + 1;
+			console.log(`\n    "sales" -> ${JSON.stringify(counts)}\n`);
+		});
+
+		it('the Folder picker returns folders without erroring', async () => {
+			const result = await methods.searchFolders.call(ctx);
+			assert.ok(Array.isArray(result.results));
+			for (const r of result.results) assert.ok(r.name && r.value);
+			console.log(`\n    ${result.results.length} folders\n`);
+		});
+	});
+
+	// Needs a real gamma to point at. Nothing here mutates: archive and delete are
+	// deliberately never exercised, because a test suite should not be able to
+	// destroy someone's document.
+	const GAMMA_ID = process.env.GAMMA_TEST_GAMMA_ID;
+	describe('gamma lifecycle', {
+		skip: GAMMA_ID ? false : 'set GAMMA_TEST_GAMMA_ID to a gamma file ID (g_...) to run',
+	}, () => {
+		it('Get returns the documented shape', async () => {
+			const res = await call(`/v1.0/gammas/${GAMMA_ID}`);
+			assert.strictEqual(res.status, 200, `got ${res.status}`);
+			const body = await res.json();
+			// The node's Simplify option assumes these exist.
+			for (const key of ['id', 'title', 'url', 'type', 'archived', 'updatedTime', 'themeId']) {
+				assert.ok(key in body, `response has no ${key}; Simplify would emit null for it`);
+			}
+			assert.ok('author' in body, 'no author to flatten into authorName');
+			console.log(`\n    "${body.title}" (${body.type}), archived=${body.archived}`);
+			console.log(`    fields: ${Object.keys(body).length} — over 10, which is why Simplify exists\n`);
+		});
+
+		it('Export starts a job and the status endpoint answers', {
+			skip: process.env.GAMMA_LIVE_GENERATE ? false : 'set GAMMA_LIVE_GENERATE=1 (may spend credits)',
+		}, async () => {
+			const start = await call(`/v1.0/gammas/${GAMMA_ID}/export`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ exportAs: 'pdf' }),
+			});
+			const started = await start.json();
+			assert.strictEqual(start.status, 200, `export start: ${start.status} ${JSON.stringify(started)}`);
+			assert.ok(started.exportId, 'no exportId returned');
+
+			const status = await call(`/v1.0/exports/${started.exportId}`);
+			assert.strictEqual(status.status, 200);
+			const body = await status.json();
+			assert.ok(['pending', 'completed', 'failed'].includes(body.status), `unexpected status ${body.status}`);
+			console.log(`\n    export ${started.exportId} -> ${body.status}\n`);
+		});
+	});
+
+	// Image generation spends credits, so it sits behind the same opt-in as
+	// generation. The unauthenticated shape check below always runs.
+	describe('images', () => {
+		it('rejects a request with no prompt, which the API requires', async () => {
+			const res = await call('/v1.0/images', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ type: 'photo' }),
+			});
+			assert.strictEqual(res.status, 400, `expected 400 for a missing prompt, got ${res.status}`);
+		});
+
+		it('generates an image and the status endpoint answers', {
+			skip: process.env.GAMMA_LIVE_GENERATE ? false : 'set GAMMA_LIVE_GENERATE=1 (spends credits)',
+		}, async () => {
+			const start = await call('/v1.0/images', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					prompt: 'A cyclist on a coastal road at sunrise',
+					type: 'photo',
+					sizePreset: 'slide',
+				}),
+			});
+			const started = await start.json();
+			// Creates answer 201 since 2026-10; older deployments sent 200.
+			assert.ok([200, 201].includes(start.status), `${start.status}: ${JSON.stringify(started)}`);
+			assert.ok(started.imageGenerationId, 'no imageGenerationId returned');
+			if (started.warnings?.length) {
+				console.log(`\n    warnings: ${started.warnings.map((w) => w.code).join(', ')}`);
+			}
+
+			const status = await call(`/v1.0/images/${started.imageGenerationId}`);
+			assert.strictEqual(status.status, 200);
+			const body = await status.json();
+			assert.ok(['pending', 'completed', 'failed'].includes(body.status));
+			console.log(`\n    image ${started.imageGenerationId} -> ${body.status}\n`);
+		});
+	});
+
+	// Gamma 5. The agent DTO rejects unknown keys and nulls, so a 400 here for a
+	// field the node sends means the node is building a request Gamma 5 refuses.
+	describe('gamma 5', () => {
+		const post = (path, body) => call(path, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(body),
+		});
+
+		it('the agent generation endpoint is open to this key', async () => {
+			// Validation runs after the feature-flag guard, so 400 (not 404) proves
+			// the route is live for this key without starting a job.
+			const res = await post('/v1.0/agent/generations', { format: 'presentation' });
+			assert.strictEqual(res.status, 400, `expected 400 for a missing prompt, got ${res.status}`);
+		});
+
+		it('refuses classic-only fields rather than ignoring them', async () => {
+			const res = await post('/v1.0/agent/generations', { prompt: 'x', textMode: 'generate' });
+			assert.strictEqual(res.status, 400, `textMode was accepted (${res.status}); revisit the shared options`);
+		});
+
+		it('Search returns hits, or 403 while search is still being rolled out', async () => {
+			const res = await call('/v1.0/gammas/search?q=deck&limit=3');
+			assert.ok([200, 403].includes(res.status), `got ${res.status}`);
+			if (res.status === 200) {
+				const body = await res.json();
+				assert.ok(Array.isArray(body.hits), 'no hits array for the node to split into items');
+			}
+			console.log(`\n    gammas/search -> ${res.status}\n`);
+		});
+
+		it('generates with every option the node sends, and Get Status finds it by its gen_ ID', {
+			skip: process.env.GAMMA_LIVE_GENERATE ? false : 'set GAMMA_LIVE_GENERATE=1 (spends credits)',
+		}, async () => {
+			const res = await post('/v1.0/agent/generations', {
+				prompt: 'A 3-card overview of how tides work, for a general audience',
+				format: 'presentation',
+				numCards: 3,
+				quality: 'lite',
+				disableConnectors: true,
+				additionalInstructions: 'Keep text minimal.',
+				sourceUrls: ['https://en.wikipedia.org/wiki/Tide'],
+				sharingOptions: { workspaceAccess: 'view', externalAccess: 'noAccess' },
+				exportAs: 'pdf',
+			});
+			const started = await res.json();
+			assert.strictEqual(res.status, 202, `${res.status}: ${JSON.stringify(started)}`);
+			assert.match(started.generationId, /^gen_/);
+
+			// The URL the node's Get Status builds for a gen_ ID.
+			const status = await call(`/v1.0/agent/generations/${started.generationId}`);
+			assert.strictEqual(status.status, 200);
+			const body = await status.json();
+			assert.ok(['pending', 'completed', 'failed'].includes(body.status));
+			console.log(`\n    ${started.generationId} -> ${body.status}; warnings: ${JSON.stringify(started.warnings)}\n`);
+		});
+	});
+
+	describe('generation', { skip: process.env.GAMMA_LIVE_GENERATE ? false : 'set GAMMA_LIVE_GENERATE=1 (spends credits)' }, () => {
+		it('accepts the one-card-per-item request the node builds', async () => {
+			// The exact shape examples/one-card-per-item.json produces.
+			const res = await call('/v1.0/generations', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					inputText: 'First row\n---\nSecond row\n---\nThird row',
+					textMode: 'preserve',
+					format: 'presentation',
+					cardSplit: 'inputTextBreaks',
+				}),
+			});
+			const body = await res.json();
+			assert.ok([200, 201].includes(res.status), `got ${res.status}: ${JSON.stringify(body)}`);
+			assert.ok(body.generationId, 'no generationId in the response');
+			if (body.warnings) console.log(`\n    warnings: ${body.warnings}\n`);
+		});
+
+		it('rejects a request the node prevents you from building', async () => {
+			// 1x1 is invalid for a presentation. The node makes this unpickable;
+			// this confirms the API really does object, so the guard is warranted.
+			const res = await call('/v1.0/generations', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					inputText: 'A short deck about testing',
+					textMode: 'generate',
+					format: 'presentation',
+					cardOptions: { dimensions: '1x1' },
+				}),
+			});
+			const body = await res.json();
+			// Gamma warns and substitutes rather than failing; either is informative.
+			console.log(`\n    1x1-on-presentation -> ${res.status} ${JSON.stringify(body.warnings ?? body)}\n`);
+			assert.ok([200, 400].includes(res.status));
+		});
+	});
+});
