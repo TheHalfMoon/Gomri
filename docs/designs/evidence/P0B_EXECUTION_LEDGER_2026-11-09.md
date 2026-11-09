@@ -24,7 +24,7 @@ Each command was run through node --test from the isolated source, with per-file
 
 ### Initial setup failure, then repaired without modifying the original checkout
 
-The first A06 Arabic/RTL run produced **18 failures at setup time** because its esbuild bundle could not resolve the KaTeX dependency. This was a missing scratch dependency, not a verified product failure. Only already-installed local copies of esbuild, @esbuild/win32-x64 and katex (about 14 MB total) were copied into the separate scratch checkout. A04, A05 and A06 were rerun at the exact same SHA, returning 3/3, 3/3 and 18/18 passes. The original failed receipt and passing rerun should both be retained in scratch for audit.
+The first A06 Arabic/RTL run produced **18 failures at setup time** because its esbuild bundle could not resolve the KaTeX dependency. This was a missing scratch dependency, not a verified product failure. Only already-installed local copies of esbuild, @esbuild/win32-x64 and katex (about 14 MB total) were copied into the separate scratch checkout. A04, A05 and A06 were rerun at the exact same SHA, returning 3/3, 3/3 and 18/18 passes. **Receipt retention correction:** the first failure was observed in the terminal output but the same A06 JSON receipt path was **overwritten by the green rerun**. The initial full raw failure JSON is NOT retained; its key error, exit status and test count are accurately summarized here from the observed initial terminal output. Future runners must use distinct attempt IDs rather than overwrite receipts.
 
 ## Measured PPTX export/reimport qualification — P0B-A07
 
@@ -40,7 +40,7 @@ Fixture cases cover text fonts, alignment and bullets, tables, vectors, charts, 
 
 The bundled test's ZIP reader is a narrow central-directory inspection utility and is not established as a safe, complete parser for untrusted Office files. Pixel-level render, PowerPoint desktop editing and the cross-owner export authorization test are still pending.
 
-**Updated totals:** 9+4+9+3+3+18+15 = **61/61 passing tests across seven targeted groups**. The first missing-KaTeX setup failure and green retry are both represented in scratch evidence.
+**Updated totals:** 9+4+9+3+3+18+15 = **61/61 passing tests across seven targeted groups**. The green retry has a saved JSON receipt; the initial setup failure is summarized from observed console output because its receipt path was overwritten. This is an audit-trail limitation, not an additional passing test.
 
 ## Unrun/blocked cases — do not count as passes
 
