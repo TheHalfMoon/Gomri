@@ -1,0 +1,90 @@
+import { defineConfig } from 'vite';
+import { resolve } from 'path';
+import fs from 'fs';
+
+export default defineConfig({
+  define: {
+    'process.env.NODE_ENV': '"production"',
+  },
+  resolve: {
+    alias: {
+      'pptxjs-reference': resolve(__dirname, 'references/pptxjs/src/index.ts'),
+    },
+  },
+  server: {
+    fs: {
+      allow: ['..', ...(process.env.PDFJS_DIST_DIR ? [process.env.PDFJS_DIST_DIR] : [])],
+    },
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:8080',
+        changeOrigin: true,
+      },
+    },
+  },
+  plugins: [
+    {
+      name: 'serve-testdata',
+      configureServer(server) {
+        // List test files: scan cases/ or windows-cases/ subdirectories that have source.pptx
+        server.middlewares.use('/api/testdata-files', (req, res) => {
+          const url = new URL(req.url || '/', 'http://localhost');
+          const source = url.searchParams.get('source');
+          const subdir = source === 'windows' ? 'windows-cases' : 'cases';
+          const casesDir = resolve(__dirname, 'test/e2e/testdata', subdir);
+          if (!fs.existsSync(casesDir)) {
+            res.setHeader('Content-Type', 'application/json');
+            res.end('[]');
+            return;
+          }
+          const dirs = fs
+            .readdirSync(casesDir, { withFileTypes: true })
+            .filter((d) => d.isDirectory())
+            .map((d) => d.name)
+            .filter((name) => fs.existsSync(resolve(casesDir, name, 'source.pptx')))
+            .sort();
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify(dirs));
+        });
+
+        // Serve e2e/testdata at /testdata/* path
+        server.middlewares.use('/testdata', (req, res, next) => {
+          const filePath = resolve(__dirname, 'test/e2e/testdata', (req.url || '/').slice(1));
+          if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+            const ext = filePath.split('.').pop()?.toLowerCase();
+            const mimeTypes: Record<string, string> = {
+              png: 'image/png',
+              jpg: 'image/jpeg',
+              jpeg: 'image/jpeg',
+              pdf: 'application/pdf',
+              pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+              json: 'application/json',
+              xml: 'text/xml',
+            };
+            if (ext && mimeTypes[ext]) res.setHeader('Content-Type', mimeTypes[ext]);
+            const stream = fs.createReadStream(filePath);
+            stream.pipe(res);
+          } else {
+            next();
+          }
+        });
+      },
+    },
+  ],
+  build: {
+    lib: {
+      entry: resolve(__dirname, 'src/index.ts'),
+      name: 'PptxRenderer',
+      formats: ['es', 'cjs'],
+      fileName: (format) =>
+        format === 'es' ? 'aiden0z-pptx-renderer.es.js' : 'aiden0z-pptx-renderer.cjs',
+    },
+    rollupOptions: {
+      external: (id) =>
+        id === 'echarts' || id.startsWith('echarts/') || id === 'jszip' || id === 'pdfjs-dist',
+      output: {
+        globals: { echarts: 'echarts', jszip: 'JSZip', 'pdfjs-dist': 'pdfjsLib' },
+      },
+    },
+  },
+});
