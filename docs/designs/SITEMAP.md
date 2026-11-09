@@ -29,7 +29,7 @@ The design proposal is supplemented with a [complete implementation packet](../i
 - [Actual no-cost Alibaba/Cypress qualification and safety contract](../implementation/gomri/QUALITY_AND_LOCAL_REVIEW.md).
 - [Full Opus/OpenCode implementation handoff](../implementation/gomri/OPUS_HANDOFF.md) and [automated read-only packet validator](../implementation/gomri/scripts/validate_packet.py).
 
-**Validation outcome:** the committed validator executed against the planning branch and returned PASS, checking 26 Markdown/EGM docs, 59 relative links, eight specs and 15 donor rows. This is plan integrity only, not production CI or independent AI code review. **Execution GO = S00 isolated preflight only; P1/P2 production changes remain gated.**
+**Validation outcome:** the committed validator executed against the planning branch and returned PASS, checking 27 Markdown/EGM docs, 74 relative links, eight specs and 15 donor rows. This is plan integrity only, not production CI or independent AI code review. **Execution GO = S00 isolated preflight only; P1/P2 production changes remain gated.**
 
 ## Decision ledger
 
