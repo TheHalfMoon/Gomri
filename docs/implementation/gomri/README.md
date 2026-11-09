@@ -21,12 +21,12 @@ The [QA and zero-cost review contract](QUALITY_AND_LOCAL_REVIEW.md) includes Cyp
 - **NO_DUPLICATE_ENGINE:** keep existing Presenton-derived FastAPI, Next.js Template V2/Konva editor and bundled native export-core. Transplant the *smallest* required slice; do not copy a whole alternate editor or state management system.
 - **NO_COST:** no billable hosted model/API and no surprise credits. A free-labelled remote model may be zero-price but is **not offline/private**; default to deterministic tests and local model inference if an actual local model is installed, otherwise review must explicitly declare the network/provider dependency or use OCR delegation without an LLM.
 - **GATE:** a test or source inspection must return an explicit verified outcome; an unrun test, a skipped test, a model opinion or a prior-commit badge is not PASS.
-- **PSTACK:** use already-installed local \`ps-start\`, \`ps-spec\`, \`ps-build\`, \`ps-review\`, \`ps-doctor\`, \`ps-adr\`, \`ps-close\` and \`ps-dormammu\` skills. Source instructions live under the user's \`~/.agents/skills/ps-*\`. Adapt output locations to this packet, **do not overwrite Gomri's existing root \`CLAUDE.md\` or original \`docs/MASTER_PLAN.md\`**.
+- **PSTACK:** use already-installed local `ps-start`, `ps-spec`, `ps-build`, `ps-review`, `ps-doctor`, `ps-adr`, `ps-close` and `ps-dormammu` skills. Source instructions live under the user's `~/.agents/skills/ps-*`. Adapt output locations to this packet, **do not overwrite Gomri's existing root `CLAUDE.md` or original `docs/MASTER_PLAN.md`**.
 - **E2E:** genuine headed or headless browser test using an isolated test account and synthetic deck; not just Node contract tests or desktop screenshots. The repo already has Cypress dev dependency and component config, but its E2E runner/binary has **not been verified as available**, so actual browser tests are a separate gate.
 
 ## Authority and build-state hierarchy
 
-1. Actual main or exact PR #88 code; **main** was observed as \`5f299a7\`; PR #88 candidate \`d4362c6\` (both must be freshly checked).
+1. Actual main or exact PR #88 code; **main** was observed as `5f299a7`; PR #88 candidate `d4362c6` (both must be freshly checked).
 2. [EGM authoritative P0 execution contract](../../designs/GOMRI_EGM_P0_EXECUTION_CONTRACT_2026-11-09.md) and [mandatory isolated preflight](../../designs/GOMRI_EGM_P0B_ISOLATION_CONTRACT_2026-11-09.md).
 3. This implementation packet's phases and per-file boundaries, **only for the phase whose gate has been passed**.
 4. Donor source register and actual code content at SHA; research docs cannot override live source.
@@ -47,7 +47,7 @@ Massive stock catalogs, paid B2B white-label APIs, full social scheduling, unlim
 
 ## Expected artifact sequence
 
-\`S00 baseline/permissions -> S01 evidence compiler -> S02 four smart layouts -> S03 scoped edit -> S04 native PPTX/RTL/notes -> S05 isolated E2E/accessibility -> S06 hardening and draft release decision -> S07 optional multi-aspect/adaptive media.\`
+`S00 baseline/permissions -> S01 evidence compiler -> S02 four smart layouts -> S03 scoped edit -> S04 native PPTX/RTL/notes -> S05 isolated E2E/accessibility -> S06 hardening and draft release decision -> S07 optional multi-aspect/adaptive media.`
 
 Parallel source audits/design experiments may run, but **only one agent may author canonical scene model, persisted slide write route or export-core in a single dependency wave**.
 
