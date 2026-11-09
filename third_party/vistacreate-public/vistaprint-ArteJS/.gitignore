@@ -1,0 +1,14 @@
+/reports
+/node_modules
+/Arte.*
+*Resharper*
+/bin
+/dist
+/Obj
+/*.csproj
+/*.sln
+/*.suo
+/Dependencies
+/Pages
+*.user
+tests/dependencies

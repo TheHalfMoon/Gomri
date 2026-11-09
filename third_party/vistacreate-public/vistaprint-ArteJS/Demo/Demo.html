@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Rich text editor</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" href="demo.css" />
+    <link rel="stylesheet" href="arte.css" />
+    <link rel="stylesheet" href="toolbar.css" />
+<body>
+    <div class="configuration">
+        <h3>Configuration</h3>
+        <br />
+        <div class="editorConfiguration">
+            <h4>Editor Configuration</h4>
+            <label class="checkbox">
+                <input class="requireFocus" type="checkbox" value="focus">
+                Require Focus
+            </label>
+
+            <label class="checkbox">
+                <input class="editorIsPlainText" type="checkbox" value="plainText">
+                Editor is plainText
+            </label>
+
+            <div class="commandAttrTypeSelector">
+                Command Attribute Type
+                        <label class="radio">
+                            <input type="radio" name="attrType" value="className" />
+                            Class
+                        </label>
+                <label class="radio">
+                    <input type="radio" name="attrType" value="styleName" />
+                    Style
+                </label>
+                <label class="radio">
+                    <input type="radio" name="attrType" value="tagName" />
+                    Tag
+                </label>
+            </div>
+
+        </div>
+        <div class="divider"></div>
+        <div class="toolbarConfiguration">
+            <h4>Toolbar Configuration</h4>
+            <label class="checkbox">
+                <input class="requireEditorFocus" type="checkbox" value="focus">
+                Require Editor Focus
+            </label>
+        </div>
+    </div>
+
+
+    <div class="box" id="text_editor">
+        <h4>Editor and toolbar</h4>
+        <div class="toolbar"></div>
+        <div class="editor"></div>
+    </div>
+
+    <div class="box">
+        <h4>HTML Rendered</h4>
+        <div class="result"></div>
+    </div>
+
+    <div class="box">
+       <h4>Html Markup</h4>
+        <div class="resultHtml"></div>
+    </div>
+
+    <div class="box">
+        <h4>Various events raised by Arte</h4>
+        <div class="console" style="max-height: 200px; overflow: auto;"></div>
+    </div>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="scripts/json2.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="demo.js"></script>
+
+    <script src="../dist/rangy.js"></script>
+    <script src="../dist/arte.min.js"></script>
+
+</body>
+</html>

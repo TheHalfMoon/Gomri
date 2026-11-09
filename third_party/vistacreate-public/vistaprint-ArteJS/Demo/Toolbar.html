@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Rich text editor</title>
+    <link rel="stylesheet" href="demo.css" />
+    <link rel="stylesheet" href="toolbar.css" />
+    <link rel="stylesheet" href="arte.css" />
+</head>
+<body>
+    <div id="demo">
+        <!-- Markup to host the toolbar and the editor-->
+        <div class="toolbar"></div>
+        <div class="editor"></div>
+        <!--Dependencies-->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+        <script src="../dist/rangy.js"></script>
+        <script src="../dist/arte.min.js"></script>
+
+        <script type="text/javascript">
+            $(function () {
+                // List of buttons to show on the toolbar
+                var buttons = ["bold", "italic", "underline", "blockquote", "textAlignLeft", "textAlignCenter", "textAlignRight", "h1", "h2", "h3", "h4", "h5", "h6",
+                    "subscript", "superscript", "unorderedList", "orderedList", "undo", "redo", "fontSize", "fontFamily", "color", "backgroundColor", "insertLink"
+                ];
+
+                // Initialize the editor
+                $(".editor").Arte();
+
+                // Initialize the toolbar
+                $(".toolbar").ArteToolbar({
+                    buttons: buttons
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>

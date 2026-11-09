@@ -1,0 +1,14 @@
+{
+  "browser": true,
+  "globalstrict": false,
+  "quotmark": true,
+  "smarttabs": true,
+  "trailing": true,
+  "undef": true,
+  "unused": true,
+  "jquery": true,
+  "globals": {
+    "rangy": true,
+    "Arte": true
+  }
+}
