@@ -1,0 +1,130 @@
+{
+  "provenance": "2026-11-09 isolated Windows test receipts; source SHA d4362c6. First KaTeX failure log overwritten on retry.",
+  "test_cases": [
+    {
+      "stderr_excerpt": "",
+      "test_count": 9,
+      "exit_code": 0,
+      "stdout_tail": "âœ” every contract accepts its valid fixture (63.768ms)\nâœ” contracts reject invalid records with precise errors (45.8033ms)\nâœ” durable records carry tenant and workspace identity (39.6984ms)\nâœ” manifest lists every schema file exactly once (38.0996ms)\nâœ” validator implements the documented keyword subset (0.6814ms)\nâœ” narrative sections may carry citation locators and an evidence status (34.7456ms)\nâœ” a citation locator must carry the fields its source family requires (37.335ms)\nâœ” an unknown evidence status is rejected (32.2006ms)\nâœ” a narrative section may not carry an undeclared property (31.5434ms)\nâ„¹ tests 9\nâ„¹ suites 0\nâ„¹ pass 9\nâ„¹ fail 0\nâ„¹ cancelled 0\nâ„¹ skipped 0\nâ„¹ todo 0\nâ„¹ duration_ms 468.3535\n",
+      "case_id": "P0B-A01-contracts",
+      "files": {
+        "sha256": "cbf43c638080b2696d568af5fb83f04ee16b3945902c3440d90eed711a81a691",
+        "file": "scripts/contracts.test.mjs"
+      },
+      "elapsed_ms": 595,
+      "runtime_version": null,
+      "status": "PASS",
+      "source_sha": "d4362c6d968d2746d499630d8498d3111c98c90b"
+    },
+    {
+      "stderr_excerpt": "",
+      "test_count": 4,
+      "exit_code": 0,
+      "stdout_tail": "âœ” converts presentation UI edits into bundled layouts and merged variants (39.6434ms)\nâœ” fails when an original layout component cannot be mapped to merged_components (5.3ms)\nâœ” converts an exported template to the bundled default-template shape (49.2566ms)\nâœ” fails before writing output when a retained asset is missing (7.0849ms)\nâ„¹ tests 4\nâ„¹ suites 0\nâ„¹ pass 4\nâ„¹ fail 0\nâ„¹ cancelled 0\nâ„¹ skipped 0\nâ„¹ todo 0\nâ„¹ duration_ms 223.5129\n",
+      "case_id": "P0B-A02-template-converters",
+      "files": [
+        {
+          "sha256": "236fc8681fae863f21184759f4c38907c9b7fb0bc2d010d679b616504a6dcfc9",
+          "file": "scripts/convert-template.test.mjs"
+        },
+        {
+          "sha256": "7e5bc1df61edc7b276456524b3f7704bac98f77fcc676767e660364bc40115eb",
+          "file": "scripts/convert-presentation-template.test.mjs"
+        }
+      ],
+      "elapsed_ms": 329,
+      "runtime_version": null,
+      "status": "PASS",
+      "source_sha": "d4362c6d968d2746d499630d8498d3111c98c90b"
+    },
+    {
+      "stderr_excerpt": "",
+      "test_count": 9,
+      "exit_code": 0,
+      "stdout_tail": "âœ” compatibility alias matrix has unique canonical names (7.6627ms)\nâœ” runtime boundaries expose Gomrey canonical names and legacy fallbacks (6.6062ms)\nâœ” application versions stay aligned (31.3257ms)\nâœ” Docker and Electron use the same pinned presentation export (4.7561ms)\nâœ” presentation export sync preserves a mounted runtime root (13.1938ms)\nâœ” Gomrey-owned package identities are canonical (38.5599ms)\nâœ” backend and agent-facing identity use Gomrey (6.6451ms)\nâœ” Gomrey desktop does not poll donor application updates by default (3.519ms)\nâœ” legacy compatibility and donor provenance are preserved intentionally (7.0853ms)\nâ„¹ tests 9\nâ„¹ suites 0\nâ„¹ pass 9\nâ„¹ fail 0\nâ„¹ cancelled 0\nâ„¹ skipped 0\nâ„¹ todo 0\nâ„¹ duration_ms 228.803\n",
+      "case_id": "P0B-A03-main-metadata",
+      "files": [
+        {
+          "sha256": "0b14b3b9602c4aa9f07d5143ddaa48e7e7d71970272f8af7872f07cb2d2e4973",
+          "file": "scripts/package-metadata.test.mjs"
+        },
+        {
+          "sha256": "10d6c38240058b59437209fa5d0ceea63d9e1c2f69c29d8bb3a6d2440e85d750",
+          "file": "scripts/product-identity.test.mjs"
+        },
+        {
+          "sha256": "f5d681b7e7ab5bb36484b4a7a3e78c2e906e1c4f7fd0b1208dfd32fd78a08c66",
+          "file": "scripts/compatibility-aliases.test.mjs"
+        }
+      ],
+      "elapsed_ms": 330,
+      "runtime_version": null,
+      "status": "PASS",
+      "source_sha": "d4362c6d968d2746d499630d8498d3111c98c90b"
+    },
+    {
+      "stderr_excerpt": "",
+      "test_count": 3,
+      "exit_code": 0,
+      "stdout_tail": "âœ” whole-deck updates exclude the template theme (149.2284ms)\nâœ” template-theme hydration does not trigger a presentation update (1.0711ms)\nâœ” title, content and slide-order changes still trigger their save paths (0.4814ms)\nâ„¹ tests 3\nâ„¹ suites 0\nâ„¹ pass 3\nâ„¹ fail 0\nâ„¹ cancelled 0\nâ„¹ skipped 0\nâ„¹ todo 0\nâ„¹ duration_ms 310.3077\n",
+      "case_id": "P0B-A04-nextjs-autosave",
+      "files": {
+        "sha256": "379af979f8d779fd49f16cd45818dfbbe80dbd992e2a0dddf6d737d30df7135d",
+        "file": "tests/presentation-autosave.test.mjs"
+      },
+      "elapsed_ms": 419,
+      "runtime_version": null,
+      "status": "PASS",
+      "source_sha": "d4362c6d968d2746d499630d8498d3111c98c90b"
+    },
+    {
+      "stderr_excerpt": "",
+      "test_count": 3,
+      "exit_code": 0,
+      "stdout_tail": "âœ” localizes point-only vectors within an unpositioned component (171.3177ms)\nâœ” does not synthesize vector bounds from incomplete point pairs (0.7624ms)\nâœ” keeps vector points relative to a positioned ancestor (0.9451ms)\nâ„¹ tests 3\nâ„¹ suites 0\nâ„¹ pass 3\nâ„¹ fail 0\nâ„¹ cancelled 0\nâ„¹ skipped 0\nâ„¹ todo 0\nâ„¹ duration_ms 367.1893\n",
+      "case_id": "P0B-A05-template-v2-geometry",
+      "files": {
+        "sha256": "37510d9d34ee40acb5b27cb4a59ff0728d97431e52e0c2341ef31008649b927e",
+        "file": "tests/template-v2-component-bounds.test.mjs"
+      },
+      "elapsed_ms": 478,
+      "runtime_version": null,
+      "status": "PASS",
+      "source_sha": "d4362c6d968d2746d499630d8498d3111c98c90b"
+    },
+    {
+      "stderr_excerpt": "",
+      "test_count": 18,
+      "exit_code": 0,
+      "stdout_tail": "âœ” the script profile matches the contract for every case (1771.7588ms)\nâœ” the base direction matches the contract for every case (0.8897ms)\nâœ” the declared script ranges match the contract (1.7115ms)\nâœ” the base direction is resolved from the first strong character (0.4042ms)\nâœ” arabic-only: the element declares its base direction and an Arabic face (5.3552ms)\nâœ” english-only: the design font still leads and the text is verbatim (0.9643ms)\nâœ” mixed-arabic-english: one container, no inner dir, no run splitting (0.7643ms)\nâœ” arabic-with-latin-numerals: both numeral systems survive (0.6622ms)\nâœ” arabic-in-table-cell: the cell declares its own base direction (1.2963ms)\nâœ” arabic-plus-english-in-one-table-row: each cell resolves its own direction (0.4195ms)\nâœ” arabic-in-chart-label: the label text survives verbatim (2.8954ms)\nâœ” arabic-in-vector-shape: the text is classified, and the surface is not claimed (0.607ms)\nâœ” arabic-in-speaker-note: the note is classified, and the surface is not claimed (0.5615ms)\nâœ” long-arabic-with-diacritics: diacritics survive and no bidi marks are injected (0.466ms)\nâœ” the logical alignment replaces the physical one (0.3498ms)\nâœ” the font stack names an Arabic family after the design font (0.1589ms)\nâœ” the font stack leads with the portable families for right-to-left content (0.1199ms)\nâœ” the contract declares what the suite does not measure (0.1424ms)\nâ„¹ tests 18\nâ„¹ suites 0\nâ„¹ pass 18\nâ„¹ fail 0\nâ„¹ cancelled 0\nâ„¹ skipped 0\nâ„¹ todo 0\nâ„¹ duration_ms 1952.7834\n",
+      "case_id": "P0B-A06-arabic-rtl-contract",
+      "files": {
+        "sha256": "1f7431959677a33a088c28cdf02d1d992de97bc465f33c136d0805007897d949",
+        "file": "tests/arabic-rtl-qualification.test.mjs"
+      },
+      "elapsed_ms": 2071,
+      "runtime_version": null,
+      "status": "PASS",
+      "source_sha": "d4362c6d968d2746d499630d8498d3111c98c90b"
+    },
+    {
+      "stderr_excerpt": "",
+      "test_count": 15,
+      "exit_code": 0,
+      "stdout_tail": "âœ” the expectations are pinned to an export core version (23831.335ms)\nâœ” the expectations cover every committed deck (112.6602ms)\nâœ” the round trip preserves what it is expected to preserve: 01-text-runs-fonts (9480.7825ms)\nâœ” the round trip preserves what it is expected to preserve: 02-alignment-bullets (1613.7109ms)\nâœ” the round trip preserves what it is expected to preserve: 03-table (2572.6916ms)\nâœ” the round trip preserves what it is expected to preserve: 04-vectors (1697.9062ms)\nâœ” the round trip preserves what it is expected to preserve: 05-chart (2061.1442ms)\nâœ” the round trip preserves what it is expected to preserve: 06-fills-and-background (2559.9199ms)\nâœ” the round trip preserves what it is expected to preserve: 07-speaker-notes (2598.628ms)\nâœ” the round trip preserves what it is expected to preserve: 08-adversarial (2547.9649ms)\nâœ” a speaker note is written to the PPTX but is not re-imported (2894.2229ms)\nâœ” bullets are inlined as literal text rather than kept as bullets (2805.8773ms)\nâœ” right-to-left and emoji content survives the round trip (4200.4535ms)\nâœ” a chart keeps its package part and a table keeps its element (7347.8851ms)\nâœ” the harness reports an explicit reason when the runtime is absent (14.8814ms)\nâ„¹ tests 15\nâ„¹ suites 0\nâ„¹ pass 15\nâ„¹ fail 0\nâ„¹ cancelled 0\nâ„¹ skipped 0\nâ„¹ todo 0\nâ„¹ duration_ms 68409.1835\n",
+      "case_id": "P0B-A07-native-pptx-roundtrip",
+      "files": {
+        "sha256": "a31c9e743b13c50c7a3880ac3b493c24dffc938bd8226ad2abecbde4375049e3",
+        "file": "tests/export-fidelity.test.mjs"
+      },
+      "elapsed_ms": 68988,
+      "runtime_version": "1.0.34",
+      "status": "PASS",
+      "source_sha": "d4362c6d968d2746d499630d8498d3111c98c90b"
+    }
+  ],
+  "initial_A06_setup_failure": {
+    "raw_json_retained": false,
+    "observed_console": "FAIL exit=1 tests=18 passed=0; lib/math.ts Could not resolve katex"
+  }
+}
