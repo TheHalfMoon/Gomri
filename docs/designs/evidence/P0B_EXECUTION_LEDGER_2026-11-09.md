@@ -18,12 +18,29 @@ Each command was run through node --test from the isolated source, with per-file
 | P0B-A04-nextjs-autosave | servers/nextjs/tests/presentation-autosave.test.mjs | 3 | 0 | PASS |
 | P0B-A05-template-v2-geometry | servers/nextjs/tests/template-v2-component-bounds.test.mjs | 3 | 0 | PASS |
 | P0B-A06-arabic-rtl-contract | servers/nextjs/tests/arabic-rtl-qualification.test.mjs | 18 | 0 on retry | PASS |
+| P0B-A07-native-pptx-roundtrip | servers/nextjs/tests/export-fidelity.test.mjs | 15 | 0 | PASS — measured known losses |
 
-**Grand total: 46/46 passing tests in six groups.** These are selected deterministic unit/contract/markup tests, not full suites and not UI or native PowerPoint proof.
+**Grand total: 61/61 passing tests in seven groups**, including real JSON-to-PPTX-to-JSON export-fidelity tests. This is not a complete UI, cross-user security or perfect PowerPoint editability qualification.
 
 ### Initial setup failure, then repaired without modifying the original checkout
 
 The first A06 Arabic/RTL run produced **18 failures at setup time** because its esbuild bundle could not resolve the KaTeX dependency. This was a missing scratch dependency, not a verified product failure. Only already-installed local copies of esbuild, @esbuild/win32-x64 and katex (about 14 MB total) were copied into the separate scratch checkout. A04, A05 and A06 were rerun at the exact same SHA, returning 3/3, 3/3 and 18/18 passes. The original failed receipt and passing rerun should both be retained in scratch for audit.
+
+## Measured PPTX export/reimport qualification — P0B-A07
+
+Copied the already-installed, pinned **@presenton/export-core 1.0.34** runtime (~78 MB) into the isolated clone; no npm installation, network fetch, user profile or production data access. Ran system Node with the previously established scratch environment and process-level outbound guard from scratch Next.js:
+
+`node --test tests/export-fidelity.test.mjs`
+
+Actual result at **d4362c6**: **exit 0, 15 tests, 15 PASS, 0 FAIL, 0 SKIP, approximately 69 seconds**. Full stdout and source test SHA256 are recorded in local JSON receipt `P0B-A07-native-pptx-roundtrip.json`.
+
+Fixture cases cover text fonts, alignment and bullets, tables, vectors, charts, backgrounds, speaker notes, adversarial content and RTL/emoji; the harness performs actual PPTX generation and re-import rather than screenshots.
+
+**Critical interpretation of passing tests:** the observed expected behaviors explicitly include (1) a speaker note being **written into PPTX but not restored by PPTX→JSON reimport**, and (2) bullet content surviving only as **literal text instead of native bullet structures**. This is an acknowledged P3 roundtrip-fidelity limitation, not a native semantic preservation pass. A passing expectations harness is not an end-user-quality guarantee.
+
+The bundled test's ZIP reader is a narrow central-directory inspection utility and is not established as a safe, complete parser for untrusted Office files. Pixel-level render, PowerPoint desktop editing and the cross-owner export authorization test are still pending.
+
+**Updated totals:** 9+4+9+3+3+18+15 = **61/61 passing tests across seven targeted groups**. The first missing-KaTeX setup failure and green retry are both represented in scratch evidence.
 
 ## Unrun/blocked cases — do not count as passes
 
@@ -34,7 +51,7 @@ The first A06 Arabic/RTL run produced **18 failures at setup time** because its 
 | Full FastAPI pytest | BLOCKED | Disposable Python dependencies, backend environment, isolated DB and auth not yet qualified |
 | Owner A/B real slide PATCH negative tests | BLOCKED | Need synthetic session/DB and full API test isolation |
 | Stale two-client CAS, reorder, retry and Undo | BLOCKED | Need controlled concurrent database test and revision oracle |
-| Native PPTX and speaker note OOXML/reimport | BLOCKED | Need isolated bundled export runtime, notes fixture, secure XML parsing |
+| Native PPTX deterministic roundtrip | **15/15 PASS** in P0B-A07 | Current measured expectations explicitly show speaker notes **not re-imported** and bullet semantics **flattened to text**; live editor and untrusted PPTX parser untested |
 | Windows real browser/E2E | NOT RUN | Needs disposable browser/profile/storage |
 | GitHub exact-head CI and independent code review | NOT VERIFIED | Do not use historical CI claims as this run |
 | Full official Google EGM orchestration | NOT RUN | Prior independent reviewer sessions are not the official complete orchestrator |
@@ -43,7 +60,7 @@ Source inspection already confirmed actual FastAPI SessionAuthMiddleware and SQL
 
 ## Verdict
 
-**GO for the six isolated P0b-A local Node groups only. P0b overall remains CONDITIONAL/INCOMPLETE, P1 and P2 are still NO-GO.** Next safe step is an isolated backend test sandbox, with two synthetic owners, no shared database/queue/storage, test egress protection and cleanup receipts. A separate fresh Goldfish implementation-readiness review of actual P0b evidence is needed before permitting product code changes.
+**GO for the seven isolated P0b-A targeted Node groups only. P0b overall remains CONDITIONAL/INCOMPLETE, P1 and P2 are still NO-GO.** Next safe step is an isolated backend test sandbox, with two synthetic owners, no shared database/queue/storage, test egress protection and cleanup receipts. A separate fresh Goldfish implementation-readiness review of actual P0b evidence is needed before permitting product code changes.
 
 **No main merge, deployment, feature source edit, paid service or user data mutation occurred.**
 
