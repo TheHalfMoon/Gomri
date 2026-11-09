@@ -1,17 +1,19 @@
 # Gomri PStack Execution Context
 
-**IMPORTANT:** This file lives under \`docs/implementation/gomri/\` and is a scoped implementation-handoff context; it does **not overwrite** the existing root CLAUDE.md, AGENTS.md or docs/MASTER_PLAN.md.
+**IMPORTANT:** This file lives under `docs/implementation/gomri/` and is a scoped implementation-handoff context; it does **not overwrite** the existing root CLAUDE.md, AGENTS.md or docs/MASTER_PLAN.md.
 
-Read \`PRODUCT.md\`, \`ROADMAP.md\`, \`ROLES.md\`, \`SOURCE_ADMISSION.csv\`, \`QUALITY_AND_LOCAL_REVIEW.md\` and the current phase \`specs/XX-*.md\`. Then check the actual source checkout, exact source SHA, PR status and the [EGM P0 contracts](../../designs/GOMRI_EGM_P0_EXECUTION_CONTRACT_2026-11-09.md). No feature source writes until its gate passes.
+**PStack cwd:** Set the PStack planning-session working directory to docs/implementation/gomri; tools resolving ROADMAP, PRODUCT and specs use that cwd. Actual Git source changes belong in an independently checked-out Gomri repository worktree. Do not overwrite root CLAUDE.md or create duplicate root plans.
+
+Read `PRODUCT.md`, `ROADMAP.md`, `ROLES.md`, `SOURCE_ADMISSION.csv`, `QUALITY_AND_LOCAL_REVIEW.md` and the current phase `specs/XX-*.md`. Then check the actual source checkout, exact source SHA, PR status and the [EGM P0 contracts](../../designs/GOMRI_EGM_P0_EXECUTION_CONTRACT_2026-11-09.md). No feature source writes until its gate passes.
 
 ## Stack and authoritative surfaces
 
-- Windows local development; existing root package scripts and Next.js app in \`servers/nextjs\`.
-- Current Template V2/Konva slide editor in \`servers/nextjs/components/slide-editor\`.
-- Next.js autosave and presentation API client in \`servers/nextjs/app/(presentation-generator)\`.
-- FastAPI 3.11 backend in \`servers/fastapi\`, v1 slide PATCH and SQLAlchemy/owner middleware.
-- Bundled exporter \`presentation-export\` and \`@presenton/export-core\`.
-- Existing \`contracts/v1\` and Draft PR #88 sources, not all in main.
+- Windows local development; existing root package scripts and Next.js app in `servers/nextjs`.
+- Current Template V2/Konva slide editor in `servers/nextjs/components/slide-editor`.
+- Next.js autosave and presentation API client in `servers/nextjs/app/(presentation-generator)`.
+- FastAPI 3.11 backend in `servers/fastapi`, v1 slide PATCH and SQLAlchemy/owner middleware.
+- Bundled exporter `presentation-export` and `@presenton/export-core`.
+- Existing `contracts/v1` and Draft PR #88 sources, not all in main.
 - Tests: Node built-in tests, pytest (needs isolated Python 3.11 venv), Cypress (package present, browser binary qualification outstanding), OOXML parser/fixture checks.
 
 ## Standing constraints
@@ -27,11 +29,11 @@ Read \`PRODUCT.md\`, \`ROADMAP.md\`, \`ROLES.md\`, \`SOURCE_ADMISSION.csv\`, \`Q
 
 | Capability | Found | Fallback / missing |
 |---|---|---|
-| Agent workflow | \`ps-start\`, \`ps-build\`, \`ps-spec\`, \`ps-review\`, \`ps-doctor\`, \`ps-adr\`, \`ps-close\` and \`ps-dormammu\` under \`~/.agents/skills/\` | Markdown role instructions; OpenCode/Claude agent must actively load them |
-| Independent review | Alibaba \`ocr v1.13.6\` and \`ocr delegate preview/rule\` verified locally | Delegation prepares review scope, but a separate reviewer model/human must actually inspect code |
+| Agent workflow | `ps-start`, `ps-build`, `ps-spec`, `ps-review`, `ps-doctor`, `ps-adr`, `ps-close` and `ps-dormammu` under `~/.agents/skills/` | Markdown role instructions; OpenCode/Claude agent must actively load them |
+| Independent review | Alibaba `ocr v1.13.6` and `ocr delegate preview/rule` verified locally | Delegation prepares review scope, but a separate reviewer model/human must actually inspect code |
 | AI coding agent | OpenCode installed; Claude CLI installed | Free-labelled model may be remote, **not offline**; don't silently send private source |
-| Browser E2E | Cypress npm package and CLI present, \`cypress.config.ts\` component config | Cypress binary cache absent when checked; E2E not marked operational until verified |
-| Local native exporter | \`@presenton/export-core 1.0.34\` measured in previous P0b isolated test | Native notes reimport and bullet semantics known limited; S04 fixes |
+| Browser E2E | Cypress npm package and CLI present, `cypress.config.ts` component config | Cypress binary cache absent when checked; E2E not marked operational until verified |
+| Local native exporter | `@presenton/export-core 1.0.34` measured in previous P0b isolated test | Native notes reimport and bullet semantics known limited; S04 fixes |
 | Python backend | Bare Python 3.11.15 | FastAPI/SQLModel/SQLAlchemy/aioSQLite missing, no isolated venv; S00 admission required |
 | EGM review | Independent fresh Goldfish critiques exist in PR #93 | Full official staged EGM reviewer orchestrator not completed |
 | Security tests | Middleware/ORM owner SELECT protection observed in source | Real authenticated two-owner PATCH and concurrency tests still NOT RUN |
