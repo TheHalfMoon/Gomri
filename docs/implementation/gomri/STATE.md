@@ -18,7 +18,7 @@ Only **S00 read-only preflight, offline environment qualification and disposable
 
 1. Run `/ps-resume` and `/ps-doctor` from this directory; map verified local providers and missing capabilities.
 2. Recheck active source Git SHA / PR #88 head, existing active worktrees and free disk without mutating user files.
-3. Create a **new disposable test checkout** and Python 3.11 test-only venv from audited offline dependencies if present; if not, report exact missing wheels and a no-cost, consent-based dependency-admission route.
+3. Create a **new disposable test checkout** and Python 3.11 test-only venv from audited offline dependencies if present; if not, use the S00 bounded official-PyPI wheel admission with explicit allowlist, hashes and disk cap; if unqualified, list the missing wheels and BLOCKED cause.
 4. Create real authenticated owner A/B SQLAlchemy negative tests on isolated SQLite; trace cross-client autosave/CAS, Undo, export revocation; preserve unique attempt receipts.
 5. Qualify Cypress binary and test runner in a separate scratch environment without Cypress Cloud or real profiles.
 6. Run a **fresh independent /ps-review** on evidence and blocker resolutions. If GO, open narrowly scoped S01/S02 draft feature PRs and retain S03 persisted writes behind S00 safety gate.
