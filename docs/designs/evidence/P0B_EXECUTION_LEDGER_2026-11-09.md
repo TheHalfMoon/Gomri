@@ -58,6 +58,14 @@ The bundled test's ZIP reader is a narrow central-directory inspection utility a
 
 Source inspection already confirmed actual FastAPI SessionAuthMiddleware and SQLAlchemy owner-filtering SELECT hook, as documented in P0a route map. This is a **real existing protection**; no foreign-owner vulnerability has been proven. Browser auto-save tests passing do not prove server atomic CAS. SlideModel and the UI have speaker_note fields, but native editable PPTX notes remain unqualified.
 
+## Backend environment admission check — P0B-B1 remains BLOCKED
+
+Additional **read-only** Windows toolchain inspection found: the source backend pyproject requires **Python >=3.11,<3.12** with FastAPI, SQLModel, SQLAlchemy, aiosqlite, pytest and other packages. There is a locally installed bare Python **3.11.15**, but it has **none of pytest, fastapi, sqlmodel, sqlalchemy, aiosqlite or uvicorn** available. The Windows Python 3.14.7 has pytest but lacks FastAPI/SQLModel/SQLAlchemy/aiosqlite and is outside the declared backend version range. No isolated backend virtual environment was present. A local uv cache directory exists, but its top-level layout does not demonstrate a complete compatible offline dependency set.
+
+**Decision:** no dependency install, network download, live DB attachment or improper Python 3.14 substitution. Real SessionAuthMiddleware + AsyncSession owner-scoped test **cannot safely run yet** under the specified isolated backend configuration. P0B-B1 is **BLOCKED ENVIRONMENT**, not a passing test and not evidence of a security vulnerability.
+
+Next admitted action requires building a disposable Python 3.11 test environment exclusively from audited local offline wheels or a user-approved no-cost dependency path, verifying temporary SQLite/database and account isolation, then executing the single B1 query. Do not install into the normal user's Python or mutate the existing desktop data.
+
 ## Verdict
 
 **GO for the seven isolated P0b-A targeted Node groups only. P0b overall remains CONDITIONAL/INCOMPLETE, P1 and P2 are still NO-GO.** Next safe step is an isolated backend test sandbox, with two synthetic owners, no shared database/queue/storage, test egress protection and cleanup receipts. A separate fresh Goldfish implementation-readiness review of actual P0b evidence is needed before permitting product code changes.
