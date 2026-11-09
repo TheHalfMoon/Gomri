@@ -87,9 +87,9 @@ Static analysis does not run any downloaded source. The vendor-org code packages
 
 ## 7. Related deep REA reports
 
-- [GPT Slides](GPT_SLIDES_ENGINE_DEEP_REA_2026-11-09.md) — pre-existing research PR #89.
-- [Beautiful.ai](BEAUTIFUL_AI_ENGINE_SOURCE_REA_2026-11-09.md) — source research PR #90.
-- [VistaCreate](VISTACREATE_SOURCE_ENGINE_REA_2026-11-09.md) — source research PR #91.
+- [GPT Slides](https://github.com/TheHalfMoon/Gomri/blob/research/chatgpt-slides-rea-20261109/docs/research/GPT_SLIDES_ENGINE_DEEP_REA_2026-11-09.md) — pre-existing research PR #89.
+- [Beautiful.ai](https://github.com/TheHalfMoon/Gomri/blob/research/beautiful-ai-engine-source-rea-20261109/docs/research/BEAUTIFUL_AI_ENGINE_SOURCE_REA_2026-11-09.md) — source research PR #90.
+- [VistaCreate](https://github.com/TheHalfMoon/Gomri/blob/research/vistacreate-source-rea-20261109/docs/research/VISTACREATE_SOURCE_ENGINE_REA_2026-11-09.md) — source research PR #91.
 - [Gamma research branch](https://github.com/TheHalfMoon/Gomri/tree/research/gamma5-source-rea-20261109).
 - [Gomri prior code integration candidate PR #88](https://github.com/TheHalfMoon/Gomri/pull/88).
 
