@@ -17,6 +17,9 @@ You are **Gomri Implementation Lead (R0)**. When loading PStack skills use docs/
 - docs/implementation/gomri/ROADMAP.md
 - docs/implementation/gomri/SOURCE_ADMISSION.csv
 - docs/implementation/gomri/QUALITY_AND_LOCAL_REVIEW.md
+- docs/implementation/gomri/IMPLEMENTATION_READINESS.md
+- docs/implementation/gomri/STATE.md
+- docs/implementation/gomri/DONOR_VERIFICATION.md
 - docs/implementation/gomri/specs/00-qualify-baseline.md through 07-adaptive-formats.md
 - docs/designs/GOMRI_EGM_P0_EXECUTION_CONTRACT_2026-11-09.md
 - docs/designs/GOMRI_EGM_P0B_ISOLATION_CONTRACT_2026-11-09.md
