@@ -129,11 +129,11 @@ On disposable test infrastructure, run full FastAPI/Next.js/root tests, TypeScri
 - \`servers/nextjs/lib/gomri-smart-layout/types.ts\` — semantic role, typed nodes, diagnostic and candidate interfaces;
 - \`servers/nextjs/lib/gomri-smart-layout/constraints.ts\` — deterministic bounds/no-loss/no-overlap rules;
 - \`servers/nextjs/lib/gomri-smart-layout/compile.ts\` — four role layouts, pure input/output and no DOM mutation;
-- \`servers/nextjs/tests/gomri-smart-layout.test.mjs\` — 30 deterministic fixtures, malformed cell/incomplete item/long Arabic cases.
+- `servers/nextjs/tests/gomri-smart-layout.test.mjs` — **8 initial 16:9 synthetic fixture decks**, with separately numbered negative-control unit cases; expand to 30 deck fixtures only after P3.
 
-**Implementation grain:** start with a preview-only `headline-hero` spike using existing Template V2/Konva, with no persisted metadata or schema migration. If reusable helper is insufficient, propose a small typed compiler. The other three families follow measured value and P2 safety checks, not before.
+**Implementation grain (future and P0b-gated):** build one **non-persisting** headline-hero preview in existing Template V2/Konva, with proven in-memory role-to-element mapping. It must not trigger auto-save or introduce a persisted v2 scene schema. Compare a small existing helper with any proposed compiler. The three other families come after evidence and the P2 safe-write gate.
 
-**Gate P1:** eight 16:9 synthetic fixtures with visual and no-silent-loss checks. **No canonical save** before P2. Negative controls must detect dropped components/citations, chart mutation, unsafe geometry and illegible Arabic.
+**Gate P1 (future):** 8 synthetic 16:9 decks with **only** in-memory geometry/render checks: no dropped component IDs, claims or charts, no clipping, RTL readable. No native PPTX or PR #88 export tests required for P1 *preview*. No canonical save before P2.
 
 ### Phase 2: selection-scoped AI changes, revision checks and Undo
 
@@ -141,28 +141,30 @@ On disposable test infrastructure, run full FastAPI/Next.js/root tests, TypeScri
 - \`servers/nextjs/components/slide-editor/selection/transformSession.ts\` and \`.../model/model.ts\` for selected element paths;
 - \`servers/nextjs/app/(presentation-generator)/presentation/hooks/PresentationUndoRedo.ts\` and \`servers/nextjs/store/slices/undoRedoSlice.ts\` for current snapshots, while understanding their present limitations;
 - \`servers/nextjs/app/(presentation-generator)/presentation/hooks/useAutoSave.tsx\` and \`.../presentation/utils/autoSaveDiff.ts\` for snapshot/autosave conflicts;
-- \`servers/fastapi/api/v2/ppt/endpoints/presentation.py\` for existing write route (inspect exact signature);
+- `servers/fastapi/api/v1/ppt/endpoints/presentation.py` — verified current human auto-save PATCH endpoints `/update` and `/slide_update`, not speculative v2 edit routes. Inspect identity/context and session filters explicitly.
 - \`contracts/v1/artifact-revision.schema.json\` for existing revision fields.
 
 **New proposed files are CONDITIONAL on failed reuse tests and actual route/signature verification** (not evidence that new services exist):
 - \`servers/nextjs/lib/gomri-ai-edit/patch.ts\`: typed element patch and preview, no arbitrary HTML/deck rewrite.
 - \`servers/nextjs/lib/gomri-ai-edit/verify.ts\`: source/number preservation and no-unselected-change test.
 - `servers/fastapi/gomrey/slide_edit_transaction.py`: NOT DEFAULT. Prefer a minimal atomic revision/authorization update in the actual legacy `servers/fastapi/api/v1/ppt/endpoints/presentation.py` route if tests prove existing capability is absent.
-- \`servers/nextjs/tests/gomri-ai-edit.test.mjs\` and \`servers/fastapi/tests/test_gomrey_slide_edit_transaction.py\` (NEW).
+- `servers/nextjs/tests/gomri-ai-edit.test.mjs` and current `servers/fastapi/tests/unit/test_presentation_slide_update_api.py` when the fixture seam fits; create a new backend test home only if verified necessary.
 
 **Ninerr donor rule:** inspect the owner's exact MCP/history code and source notices; adapt only the already-qualified target selection and undo transaction slice. Do not import a second editor or make an agent bypass user API permission checks.
 
-**Gate P2:** exactly one of two same-revision writers commits; other conflicts; cross-owner/forged actor denied; idempotent retry one effect; autosave cannot bypass CAS; preview/render failure never commits; Undo appends monotonic revision N+2 with previous content digest.
+**Gate P2 (blocked until P0b and reviewed repair):** one atomic revision/content update per authorized request; stale second writer conflicts, foreign actor/tenant denied, retry idempotent, human auto-save and reorder cannot bypass CAS, render failure writes nothing, revoke blocks export delivery, and Undo appends revision N+2 with earlier content.
 
 ### Phase 3: native PowerPoint fidelity, claims and authoring journey
 
 **Existing:** \`servers/nextjs/lib/run-bundled-presentation-export.ts\`; \`servers/nextjs/lib/template-v2-json-to-html.ts\`; \`servers/fastapi/services/export_task_service.py\`; \`servers/fastapi/tests/integration/test_presentation_generation_flow.py\`; \`contracts/v1/narrative-ir.schema.json\`; source/citation contract tests. Verify path and test ownership first.
 
+**P0a prerequisite for speaker notes and downloads:** identify the canonical notes field, its create/read/update path, exporter field/OOXML notes relationships, and import mapping. Each missing link is UNKNOWN rather than assumed working. Map export permissions at enqueue, execution and **download delivery** before any P3 claim.
+
 **Candidate from PR #88:** \`servers/nextjs/tests/export-fidelity.test.mjs\` and its source-target fixtures, plus RTL and contrast lint. These files are **not present on main until qualified/merged**. Do not duplicate or assume tests cover notes.
 
 **Work:** qualify 8 frozen first-journey decks, then expand to 30 after P2. Validate numerical/text/chart/table/notes expectations in actual OOXML with safe bounded ZIP/XML parsing, and explicit source component ID to reimport object ID mapping. Compare public fork exporters only after rights/dependency admission.
 
-**Gate P3:** zero silent supported-object loss; versioned loss receipts enumerate every unsupported fallback and target format; hostile ZIP/external relationships rejected; native PPTX and Arabic RTL validated on actual output. Complete sourced-outline -> edit -> PPTX journey before parity claims.
+**Gate P3 (blocked):** zero silent supported-object loss; per-component and per-export-format versioned fallback receipts; bounded ZIP/XML and external relationships; verified native text/chart/table/**speaker-notes** ID mapping, RTL and citations, and delivery-time owner/role authorization including revoked access. Complete source -> outline -> scoped edit -> editable PPTX with true artifacts before release.
 
 ### Phase 4: constrained responsive variants, then image/animation (post-P3)
 
@@ -174,9 +176,9 @@ Object Grabber, complex Lottie, MP4/GIF and marketing format ecosystem stay outs
 
 ### Phase 5: competitive arena, release decision and support
 
-Run 30 matched prompts against Gomri baseline and latest qualified candidate; when legitimate authorized competitor access exists, run a **separate** blinded Gamma/Beautiful.ai comparison with plan, date and sample metadata. Panel rates composition, reading order, narrative, source support, RTL and native PPTX editability. Record confidence intervals and dissent. Local snapshots/exports must contain synthetic materials only. Gate Windows real desktop, exact-head CI, test skip inventory, E2E and rollback, provenance/rights and zero paid/secret calls.
+Only after a qualified Windows first-release journey, optionally run 30 matched *synthetic* prompts comparing Gomri baseline with candidate. External Gamma/Beautiful.ai comparisons depend on separately authorized access; missing competitor accounts or paid credits **cannot block** the first release. Local first-release acceptance is exact-head CI and test skip inventory, E2E and rollback on Windows, provenance/rights, native PPTX quality and no unapproved provider charges.
 
-**Gate P5:** human review + exact source identity + regression suite + performance and privacy evidence. Product “better than Gamma” remains a **hypothesis** unless matched external tests actually support it.
+**Gate P5 (future, optional):** blinded external comparison with dated source, plan and test sample. This is not a P0–P3 delivery gate; “better than Gamma” remains a hypothesis until a measured comparison.
 
 ## 8. Legacy P00–P16 mapping
 
@@ -214,7 +216,7 @@ Questions reviewers must challenge:
 6. Is the plan self-contained, legally admissible, privacy-preserving and deployable at zero hidden cloud cost?
 7. Are reviewers being asked to certify interfaces that are only guessed from filenames?
 
-**Goldfish initial status:** two independent fresh-session reviews returned CONDITIONAL (reports linked in section 0). The official five-stage EGM orchestrator and implementation/codebase auditor have **not** fully passed. Only P0 is eligible for controlled implementation planning; human approval remains pending.
+**Goldfish current status:** three independent fresh-session model critiques (initial Zoom Out, Design Critic, post-fix Zoom Out) returned CONDITIONAL; the full official five-stage EGM orchestration and implementation-readiness approval are incomplete. This **P0a/P0b-only** v3 supersedes earlier contradictory P1 permissions.
 
 ## References and source provenance
 
