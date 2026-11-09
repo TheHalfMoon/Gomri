@@ -8,7 +8,7 @@ An independent detached Git clone was created under D:\Gomri-Research\EGM\P0B-20
 
 A process-specific child-environment allowlist used disposable TEMP/TMP/HOME/APPDATA/APP_DATA_DIRECTORY and an unused SQLite DATABASE_URL pointing to the isolated runtime directory. No model API keys were inherited. A Node process-level outbound guard rejected remote net.Socket.connect and fetch, plus a dummy localhost HTTP(S) proxy. **This was a best-effort guard, not a Windows firewall or full OS egress sandbox.** It is suitable for the selected reviewed tests only; full FastAPI/E2E groups require stronger isolation.
 
-Each command was run through node --test from the isolated source, with per-file SHA256, exit, elapsed, stdout/stderr in locally saved JSON receipts.
+Each command was run through node --test from the isolated source, with per-file SHA256, exit and elapsed time. **Seven sanitized receipt records are now committed in [the evidence JSON](P0B_RECEIPTS_SANITIZED_2026-11-09.json)**; they include per-test outputs and digest fields. The raw disposable scratch files were removed after upload, so the original full raw logs are no longer stored on the Windows PC.
 
 | Case | Actual test file(s) | Tests | Exit | Result |
 |---|---|---:|---:|---|
@@ -32,7 +32,7 @@ Copied the already-installed, pinned **@presenton/export-core 1.0.34** runtime (
 
 `node --test tests/export-fidelity.test.mjs`
 
-Actual result at **d4362c6**: **exit 0, 15 tests, 15 PASS, 0 FAIL, 0 SKIP, approximately 69 seconds**. Full stdout and source test SHA256 are recorded in local JSON receipt `P0B-A07-native-pptx-roundtrip.json`.
+Actual result at **d4362c6**: **exit 0, 15 tests, 15 PASS, 0 FAIL, 0 SKIP, approximately 69 seconds**. Sanitized stdout excerpts, exits and source file SHA256 are recorded in committed evidence JSON `P0B-A07-native-pptx-roundtrip.json`.
 
 Fixture cases cover text fonts, alignment and bullets, tables, vectors, charts, backgrounds, speaker notes, adversarial content and RTL/emoji; the harness performs actual PPTX generation and re-import rather than screenshots.
 
@@ -40,7 +40,7 @@ Fixture cases cover text fonts, alignment and bullets, tables, vectors, charts, 
 
 The bundled test's ZIP reader is a narrow central-directory inspection utility and is not established as a safe, complete parser for untrusted Office files. Pixel-level render, PowerPoint desktop editing and the cross-owner export authorization test are still pending.
 
-**Updated totals:** 9+4+9+3+3+18+15 = **61/61 passing tests across seven targeted groups**. The green retry has a saved JSON receipt; the initial setup failure is summarized from observed console output because its receipt path was overwritten. This is an audit-trail limitation, not an additional passing test.
+**Updated totals:** 9+4+9+3+3+18+15 = **61/61 passing tests across seven targeted groups**. The green retry has a sanitized repository JSON receipt; the initial setup failure is summarized from observed console output because the original receipt was overwritten. This is an audit-trail limitation, not an additional passing test.
 
 ## Unrun/blocked cases — do not count as passes
 
@@ -65,6 +65,12 @@ Additional **read-only** Windows toolchain inspection found: the source backend 
 **Decision:** no dependency install, network download, live DB attachment or improper Python 3.14 substitution. Real SessionAuthMiddleware + AsyncSession owner-scoped test **cannot safely run yet** under the specified isolated backend configuration. P0B-B1 is **BLOCKED ENVIRONMENT**, not a passing test and not evidence of a security vulnerability.
 
 Next admitted action requires building a disposable Python 3.11 test environment exclusively from audited local offline wheels or a user-approved no-cost dependency path, verifying temporary SQLite/database and account isolation, then executing the single B1 query. Do not install into the normal user's Python or mutate the existing desktop data.
+
+## Cleanup and evidence preservation
+
+After [the seven sanitized receipts](P0B_RECEIPTS_SANITIZED_2026-11-09.json) were committed, the specifically created directory `D:\Gomri-Research\EGM\P0B-20261109` was deleted, with no test-owned Node/git/Python process running. D: free space rose from **5.10 GB** to **5.73 GB** (approximately 0.63 GB recovered). The existing user checkout was verified **clean, 0 modified paths**, still at `d4362c6d968d2746d499630d8498d3111c98c90b`. Only the intentionally created test scratch was deleted; user project files were not touched.
+
+The repository now retains a sanitized, inspectable evidence bundle rather than the full original console logs. The first missing-KaTeX failure's original complete JSON receipt was overwritten before upload and cannot be recovered from the remaining evidence. This is transparently recorded, not described as two preserved raw receipts.
 
 ## Verdict
 
