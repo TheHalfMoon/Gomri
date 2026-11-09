@@ -4,17 +4,17 @@
 
 ## Local runner admission (observed 2026-11-09)
 
-- Gomri's Next.js \`package.json\` has \`cypress ^15.18.1\`. Windows \`servers/nextjs/node_modules/cypress/package.json\` and \`.bin/cypress.cmd\` exist.
-- Existing \`servers/nextjs/cypress.config.ts\` configures component tests (Next/Webpack) only; an E2E suite directory was **not found** at the inspected commit.
-- \`%LOCALAPPDATA%/Cypress/Cache\` was absent. This means the Cypress **CLI exists** but a runnable browser binary is **not verified**.
-- A Playwright browser cache exists, but \`@playwright/test\`/\`playwright\` were absent in the inspected Next.js dependency tree. Do not claim ready Playwright E2E.
+- Gomri's Next.js `package.json` has `cypress ^15.18.1`. Windows `servers/nextjs/node_modules/cypress/package.json` and `.bin/cypress.cmd` exist.
+- Existing `servers/nextjs/cypress.config.ts` configures component tests (Next/Webpack) only; an E2E suite directory was **not found** at the inspected commit.
+- `%LOCALAPPDATA%/Cypress/Cache` was absent. This means the Cypress **CLI exists** but a runnable browser binary is **not verified**.
+- A Playwright browser cache exists, but `@playwright/test`/`playwright` were absent in the inspected Next.js dependency tree. Do not claim ready Playwright E2E.
 - Existing FastAPI integration and Next.js Node tests are useful regression checks, but not UI E2E.
 
 ## First builder task: qualify the existing Cypress runner, $0
 
-Verify \`cypress.cmd --version\`, binary cache and test browser availability in a temporary environment. Prefer adding Cypress E2E test configuration to the **already installed Cypress** instead of installing a second full test platform. If the official free Cypress binary needs downloading, verify its source/checksum, require adequate disk and use test-only cache; free software download is not a paid inference API. Do not auto-contact Cypress Cloud or send recordings without explicit approval.
+Verify `cypress.cmd --version`, binary cache and test browser availability in a temporary environment. Prefer adding Cypress E2E test configuration to the **already installed Cypress** instead of installing a second full test platform. If the official free Cypress binary needs downloading, verify its source/checksum, require adequate disk and use test-only cache; free software download is not a paid inference API. Do not auto-contact Cypress Cloud or send recordings without explicit approval.
 
-Create a new \`servers/nextjs/cypress.config.e2e.ts\` or equivalent scoped config, and \`servers/nextjs/cypress/e2e/*.cy.ts\` with test-only fixtures. Keep the component config unchanged. Use explicit localhost target ports, isolated browser profile and synthetic owners A/B. Do not use the user's signed-in Vivaldi session.
+Create a new `servers/nextjs/cypress.config.e2e.ts` or equivalent scoped config, and `servers/nextjs/cypress/e2e/*.cy.ts` with test-only fixtures. Keep the component config unchanged. Use explicit localhost target ports, isolated browser profile and synthetic owners A/B. Do not use the user's signed-in Vivaldi session.
 
 ## Mandatory real-browser user journeys
 
