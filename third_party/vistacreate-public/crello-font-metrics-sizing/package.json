@@ -1,0 +1,27 @@
+{
+    "name": "font-metrics-sizing",
+    "version": "1.0.5",
+    "description": "node module for font vertical metrics cross-platform normalization",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "font",
+        "vertical",
+        "metrics",
+        "sizing",
+        "cross",
+        "platform"
+    ],
+    "author": "crello",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/crello/font-metrics-sizing.git"
+    },
+    "dependencies": {
+        "fonttools": "git+https://github.com/crello/node-fonttools.git#v1.0.12",
+        "xml2js": "0.4.19"
+    }
+}

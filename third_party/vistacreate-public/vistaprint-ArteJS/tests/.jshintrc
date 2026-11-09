@@ -1,0 +1,19 @@
+{
+  "browser": true,
+  "globalstrict": false,
+  "quotmark": true,
+  "smarttabs": true,
+  "trailing": true,
+  "undef": true,
+  "unused": true,
+  "jquery": true,
+  "globals": {
+    "rangy": true,
+    "Arte": true,
+    "QUnit": true,
+    "unitTestHelper": true,
+    "TEST_ELEMENT_SELECTOR": true,
+    "TEST_ELEMENT_ID": true,
+    "ok": true
+  }
+}
