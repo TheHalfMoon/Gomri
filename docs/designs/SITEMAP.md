@@ -19,6 +19,18 @@
 | [Post-fix Goldfish Zoom Out](reviews/2026-11-09/goldfish-postfix-zoom-out.md) | Independent second pass CONDITIONAL; drove explicit P0 split |
 | [Implementation Readiness v3](reviews/2026-11-09/goldfish-implementation-readiness-v3.md) | Independent review: P0a GO; P0b CONDITIONAL; P1/P2 NO-GO; did not review v4 or execute tests |
 
+## Ready-to-implement PStack packet — NEW
+
+The design proposal is supplemented with a [complete implementation packet](../implementation/gomri/README.md) and [verified handoff/readiness report](../implementation/gomri/IMPLEMENTATION_READINESS.md), containing:
+
+- [Owner/role map R0–R10](../implementation/gomri/ROLES.md) and [S00–S07 phase roadmap](../implementation/gomri/ROADMAP.md).
+- [15-row source admission register](../implementation/gomri/SOURCE_ADMISSION.csv) and [five verified donor pins/licenses](../implementation/gomri/DONOR_VERIFICATION.md).
+- [S00 first execution spec](../implementation/gomri/specs/00-qualify-baseline.md), [PStack state](../implementation/gomri/STATE.md), all phase specs and ADR decisions.
+- [Actual no-cost Alibaba/Cypress qualification and safety contract](../implementation/gomri/QUALITY_AND_LOCAL_REVIEW.md).
+- [Full Opus/OpenCode implementation handoff](../implementation/gomri/OPUS_HANDOFF.md) and [automated read-only packet validator](../implementation/gomri/scripts/validate_packet.py).
+
+**Validation outcome:** the committed validator executed against the planning branch and returned PASS, checking 26 Markdown/EGM docs, 59 relative links, eight specs and 15 donor rows. This is plan integrity only, not production CI or independent AI code review. **Execution GO = S00 isolated preflight only; P1/P2 production changes remain gated.**
+
 ## Decision ledger
 
 **Allowed now:** P0a read-only source/contract refinement. **Conditionally allowed next:** additional P0b scratch-only suite execution **after test-specific isolation preflight**. Seven reviewed bounded Node/PPTX groups actually ran and passed; remaining backend/security/Windows E2E groups need additional preflight. **Not allowed:** production feature-source writes, new agent save endpoints, SmartLayout persistence, user-data mutation, merges, releases, or announcing competitor superiority.
