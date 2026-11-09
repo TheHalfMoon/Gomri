@@ -13,7 +13,7 @@
 
 ## Public Beautiful.ai repositories intentionally not copied
 
-- https://github.com/beautifulai/beautifulai-docs — public hosted OpenAPI specification for a 9-operation generation/list/template/export API. No clear repository LICENSE was detected; inspect the published contract but do not bulk copy unlicensed implementation/source.
+- https://github.com/beautifulai/beautifulai-docs — public hosted OpenAPI specification for a 10-operation generation/list/template/export API. No clear repository LICENSE was detected; inspect the published contract but do not bulk copy unlicensed implementation/source.
 - https://github.com/beautifulai/qa-eng-interview — public 2025 test exercise (Cypress). README mentions Anthropic use for an example slide-generation test; no explicit public license detected. This is **not evidence** the whole Beautiful.ai 3.0 generator uses Anthropic exclusively.
 - OpenAI/Claude/Beautiful.ai MCP servers: publicly documented endpoints require authorized OAuth or API keys. A public endpoint is **not the backend's source code** and cannot be silently substituted into Gomri's no-cost local engine.
 
