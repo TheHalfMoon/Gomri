@@ -1,0 +1,65 @@
+{
+  "name": "@gammatech/n8n-nodes-gamma",
+  "version": "0.6.1",
+  "description": "n8n community node for Gamma - Create AI-powered presentations, documents, and websites",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "gamma",
+    "ai",
+    "presentations",
+    "documents"
+  ],
+  "license": "MIT",
+  "homepage": "https://gamma.app",
+  "author": {
+    "name": "Gamma",
+    "email": "adam.harris@gamma.app",
+    "url": "https://gamma.app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gamma-app/n8n-nodes-gamma.git"
+  },
+  "engines": {
+    "node": ">=22.22"
+  },
+  "scripts": {
+    "build": "n8n-node build && cp nodes/Gamma/Gamma.node.json dist/nodes/Gamma/",
+    "test": "npm run build && node --test",
+    "test:live": "npm run build && node --test test/live.test.js",
+    "sync:enums": "node scripts/sync-api-enums.mjs",
+    "sync:enums:check": "node scripts/sync-api-enums.mjs --check",
+    "dev": "tsc --watch",
+    "dev:n8n": "n8n-node dev",
+    "format": "prettier nodes credentials --write",
+    "lint": "n8n-node lint",
+    "lint:fix": "n8n-node lint --fix",
+    "prepublishOnly": "npm run build && npm run lint"
+  },
+  "files": [
+    "dist",
+    "examples",
+    "LICENSE"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/GammaApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/Gamma/Gamma.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@n8n/node-cli": "^0.47.2",
+    "prettier": "^3.9.6",
+    "typescript": "^5.9.3"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  },
+  "bugs": {
+    "url": "https://github.com/gamma-app/n8n-nodes-gamma/issues"
+  }
+}
