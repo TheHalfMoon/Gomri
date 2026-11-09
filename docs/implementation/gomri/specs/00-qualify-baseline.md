@@ -17,13 +17,13 @@
 - New branch/working tree under a **fresh temporary directory**, independent from C:\Users\Shehr\Gomrey. Pin exact commit by `git rev-parse HEAD` after checkout.
 - Temporary Python 3.11 venv and SQLite DB under that scratch folder; per-run randomly generated synthetic tenant A/B, APP_DATA_DIRECTORY, exports, queues, browser profile and ports.
 - Do not inherit provider keys, real cookies, DB credentials or user media. Set/no-telemetry and egress guards per [EGM isolation contract](../../../designs/GOMRI_EGM_P0B_ISOLATION_CONTRACT_2026-11-09.md). Process-level Node hooks are **not** a full OS sandbox. Test the egress rule with a negative control.
-- Do NOT connect to user's existing PostgreSQL/MySQL/desktop database. Python wheelhouse must be pinned/checksummed and free; prefer local cache. If unavailable, explicitly arrange a separate dependency-admission PR; no surprise pip install or paid compute.
+- Do NOT connect to the existing desktop DB. **Offline-first dependency admission:** use locally cached/checksummed wheels when possible. If missing, a bounded, no-cost **official PyPI wheel-download step** may be proposed/performed in a separate disposable dependency-preflight process after recording expected package names, disk budget, exact official domains, TLS, SHA256 and allowed egress. It must not send project files or user data, run arbitrary model APIs or install into system Python. Only install inspected wheels into the isolated Python 3.11 venv; unsupported/source-build-only wheels or unexpected download scripts must be marked BLOCKED.
 
 ## Executable sequence
 
 1. `/ps-doctor`: record actual Python executable, node, git, disk free, Cypress/Playwright binary, Alibaba OCR and available local model. Capture **versions**, not secrets.
 2. `git clone --no-hardlinks --no-checkout <owner repo> <scratch>` or equivalent isolated worktree with independent build paths; detach exact #88 SHA. Assert original checkout `git status --porcelain` unchanged.
-3. `py -3.11 -m venv <scratch>\.venv` if interpreter available. Audit complete lock/resolution and install only checksum-pinned wheels into that venv using `--no-index --find-links <audited_wheelhouse>`. If the wheelhouse is missing, record BLOCKED and pause only backend group; do **not** use Python 3.14.
+3. `py -3.11 -m venv <scratch>\.venv` after interpreter check. Resolve a **minimal pinned backend-test requirements set** (FastAPI/SQLModel/SQLAlchemy/aiosqlite/pytest and actual route imports). Prefer cached wheelhouse. If missing, preflight official PyPI-only free wheel downloads with strict package and size allowlist, compare SHA256, record wheel/version provenance, and then install **offline into only the temp venv** with `--no-index --find-links <audited_wheelhouse>`. If packages require arbitrary build scripts or cannot be trusted/isolated, record BLOCKED. Never use global Python 3.14 for the backend.
 4. Run EGM P0b preflight and write manifest: dependency SHA, temp storage locations (redacted), random two owners, auth enabled, separate DB basename, loopback ports, provider egress and teardown guarantee. Negative control must prove host egress blocked where required; don't change global firewall or Windows Defender.
 5. Existing selected unit/contract suites and native PPTX tests at current head: rerun only if source head changed or environment newly qualified. Record all errors, no overwritten retry artifacts; receipt filenames carry `attempt-N`.
 6. Real backend tests with SQLAlchemy/SQLite, not fake session: A reads/writes own slide (success); A tries B's slide with known valid UUID (403/404, no B content mutation); forged actor/workspace rejected; auth-disabled desktop documented separately.
@@ -40,7 +40,7 @@
 - **S00-A05:** Zero paid compute/model calls; original checkout unchanged; scratch teardown verified.
 - **S00-A06:** R8 independently reviews the route-level evidence and identifies whether deeper ORM checks actually deny foreign owner.
 
-**Exit decision:** GO for P1 **preview only** may be granted based on source/geometry/test safety even if S03 CAS requires repair, but **no persisted user/agent writes** until successful S03 safety gate. A missing A/B test is BLOCKED, not authorization to implement. New dependency downloads or security failures require separate scoped approval/repair.
+**Exit decision:** GO for P1 **preview only** may be granted based on source/geometry/test safety even if S03 CAS requires repair, but **no persisted user/agent writes** until successful S03 safety gate. A missing A/B test remains BLOCKED, not authorization. Free package downloads require a **recorded official-source allowlist, checksums, disk cap and separate preflight receipt**; any unsafe/unknown dependency or security failure requires separate scoped review before proceeding.
 
 ## Out of scope
 
