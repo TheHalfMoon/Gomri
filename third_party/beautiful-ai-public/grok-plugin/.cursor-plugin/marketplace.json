@@ -1,0 +1,17 @@
+{
+    "name": "beautiful-ai-v2",
+    "owner": {
+        "name": "Beautiful.ai"
+    },
+    "metadata": {
+        "description": "The Beautiful.ai plugin builds and edits presentations with you, in the chat. Describe what you need and get a designed deck in your workspace, on your Brand Kit. Then keep going on that deck or any you already have: rewrite, add or redesign slides, generate images, restructure. It checks how each slide renders and fixes what looks wrong. Export to PDF or PowerPoint, share, or open it in the editor. Sign in with your Beautiful.ai account on first connect.",
+        "version": "0.8.4"
+    },
+    "plugins": [
+        {
+            "name": "beautiful-ai-v2",
+            "source": ".",
+            "description": "The Beautiful.ai plugin builds and edits presentations with you, in the chat. Describe what you need and get a designed deck in your workspace, on your Brand Kit. Then keep going on that deck or any you already have: rewrite, add or redesign slides, generate images, restructure. It checks how each slide renders and fixes what looks wrong. Export to PDF or PowerPoint, share, or open it in the editor. Sign in with your Beautiful.ai account on first connect."
+        }
+    ]
+}
