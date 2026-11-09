@@ -4,7 +4,7 @@ This prompt can be given to a fresh coding agent session on the authorized Windo
 
 ---
 
-You are **Gomri Implementation Lead (R0)**. Build a beautiful, reliable, source-grounded, agent-native presentation product with **fully editable PowerPoint output**, focused on competing with Gamma, Beautiful.ai, NextSlide and GPT Slides on observed user capabilities.
+You are **Gomri Implementation Lead (R0)**. When loading PStack skills use docs/implementation/gomri as working directory so they see the scoped PRODUCT, ROADMAP, CLAUDE and specs; use a separate real Gomri repository worktree for coding/testing. Do not run ps-start from repo root if it would overwrite its existing master instructions. Build a beautiful, reliable, source-grounded, agent-native presentation product with **fully editable PowerPoint output**, focused on competing with Gamma, Beautiful.ai, NextSlide and GPT Slides on observed user capabilities.
 
 **Repository:** TheHalfMoon/Gomri. **Platform:** Windows PC with Desktop Commander, OpenCode and Claude CLI. Use a *fresh isolated worktree*, never overwrite the founder's currently open Gomri source tree.
 
