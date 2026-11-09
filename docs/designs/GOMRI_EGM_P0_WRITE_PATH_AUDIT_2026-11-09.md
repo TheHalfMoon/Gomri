@@ -2,6 +2,20 @@
 
 **Date:** 2026-11-09. **Inspected source:** TheHalfMoon/Gomri main @ 5f299a7a6174ad3a1180f827778db5f4400a4d71. **Status:** READ-ONLY SOURCE INSPECTION. This report is a prerequisite for any new AI slide-edit transaction; it is not a completed security test or proof of exploitation. No production code changed.
 
+## Source correction from P0a extended inspection (2026-11-09)
+
+**Do not interpret missing owner comparison in the slide handler as a proven security gap.** Further direct inspection found actual defenses already present in main:
+
+- services/database.py installs a SQLAlchemy Session do_orm_execute SELECT hook applying with_loader_criteria on SlideModel and other owner-scoped models when get_current_owner_id() is set; new owned rows are stamped with owner_id.
+- api/middlewares.py SessionAuthMiddleware requires authenticated API access except specifically public paths, resolves JWT/API principal, and sets current owner ID in ContextVar for the request. api/main.py installs this middleware. The deliberate DISABLE_AUTH desktop single-user mode bypasses this context, so its threat model differs.
+- tests/unit/test_owner_isolation.py already checks ORM SELECT owner isolation for presentations/templates, not this precise slide PATCH endpoint. tests/unit/test_presentation_slide_update_api.py tests changing speaker_note and UUID/presentation checks with FakeAsyncSession.
+- models/sql/slide.py and the browser Slide type already define speaker_note. The remaining unknown is PPTX notes OOXML/reimport, not whether Gomri models notes.
+- Next.js app/api/export-presentation/route.ts authenticates and moves exports under per-user paths; app/api/export-presentation/file/route.ts checks authentication, user directory ownership, realpath containment and traversal. These are **real existing controls**. Further tests should validate presentation ID access, revocation and unexpected runtime modes, not presume exports are unauthenticated.
+
+**Revised risk statement:** cross-owner write bypass is **UNVERIFIED**, with concrete source-level protection, and needs an isolated authenticated end-to-end test. A separate concurrency/atomic revision-CAS gap remains **not demonstrated to be solved by the existing request contract**; run two-client tests before claiming last-write-wins. No live exploit or security incident was observed.
+
+See [verified P0a route map](evidence/P0A_ROUTE_SYMBOL_MATRIX.md), [export notes map](evidence/P0A_EXPORT_NOTES_MAP.md), and [PR heads](evidence/P0A_PR_BASELINE.md).
+
 ## 1. Verified current flow and concrete source paths
 
 1. \`servers/nextjs/app/(presentation-generator)/presentation/hooks/useAutoSave.tsx\` maintains a locally acknowledged snapshot, serializes network saves with a per-hook \`isSavingRef\`, debounces edits, and differentiates structural deck changes vs changed slides. It records local history via \`addToHistory\`.
