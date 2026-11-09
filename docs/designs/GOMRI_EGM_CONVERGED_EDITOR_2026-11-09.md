@@ -1,6 +1,26 @@
 # Gomri: EGM Elephant Design Draft — A Reliable, Editable, Source-Grounded Presentation Engine
 
-**Status:** PROPOSED / NOT APPROVED FOR IMPLEMENTATION. **Date:** 2026-11-09. **Design method:** Google Elephant-Goldfish Model (EGM); this is the Elephant-context design, prior to independent Goldfish verdict. **Repository:** TheHalfMoon/Gomri. **Base:** main at 5f299a7a6174ad3a1180f827778db5f4400a4d71. **Do not treat PR #88–#92 as merged.**
+**Status:** EGM REVISED v2 — **P0 SOURCE/NEGATIVE-TEST WORK ONLY; PRODUCTION AI AND LAYOUT WRITES NOT APPROVED**. 2026-11-09. Google EGM adapted to independent OpenCode Goldfish fresh sessions (not official orchestrator); main at 5f299a7, PR #88–#92 are unmerged.
+
+## 0. Independent Goldfish findings and binding resolutions
+
+Two actual independent Goldfish reviews returned **CONDITIONAL**, not READY. See [Zoom Out](reviews/2026-11-09/goldfish-zoom-out.md), [Design Critic](reviews/2026-11-09/goldfish-design-critic.md) and the independently verified [P0 source write-path audit](GOMRI_EGM_P0_WRITE_PATH_AUDIT_2026-11-09.md). Full official EGM review orchestration, source-code reviewer and human approval are outstanding.
+
+| Finding | Required smallest repair and gate |
+|---|---|
+| Z1/F1: imagined backend and non-atomic CAS | Trace actual legacy v1 PATCH, owner/session filters and auto-save. Server derives principal/workspace/proposal hash and target IDs; **one atomic conditional compare-and-update of content plus revision**. No automatic new service |
+| Z2: compiler before reuse proof | First one **non-persisting headline-hero preview** in existing Template V2; define v1/semantic-role mapping; add a compiler only after helper reuse fails |
+| Z3: benchmark bloat | **8 synthetic 16:9 decks** for first journey; 30 decks and 4 aspect profiles only after qualified native export |
+| Z4: PR #88 dependency | If #88 fails, safe baseline preview work may proceed from main; no source-grounded product-readiness claim |
+| Z5: invented metrics | Establish measured baseline first; no arbitrary 98%/95% target or unmeasured 60% designer preference |
+| F2: actor/tenant spoofing | Bind identity to server session; check owner/workspace at commit and **export delivery**, including revoked role |
+| F3: autosave bypass | Human autosave, AI edit and Undo must use consistent revision/CAS policy; legacy versionless PATCH cannot bypass |
+| F4: Undo mutates history | Undo appends new revision N+2 with old content, never rewrites N; stale writers conflict |
+| F5: unsafe ordering | Until P2 is proved, SmartLayout is **preview only**, never written to canonical slides |
+| F6: silent loss hidden by % | **Zero silent loss** and a complete versioned per-component/per-export-format loss receipt |
+| F7: OOXML unsafe/missing ID | Bounded ZIP/XML parsing, external relationship rejection and explicit mapping to original component IDs |
+
+**Binding gate:** only P0 read-only code tracing and controlled negative tests may proceed. Phase 1 preview code cannot save, Phase 2 canonical writes cannot begin before ownership, concurrency and idempotency are verified. The detailed later phases below are **conditional directions**, subordinate to these decisions.
 
 ## 1. Problem and user outcome
 
@@ -25,7 +45,7 @@ Gomri's original October 5 master plan describes a large agent-first knowledge a
 
 ## 3. Goals and measurable acceptance
 
-**G1.** 30 approved synthetic deck fixtures including medical-policy-style evidence narratives, finance charts, comparative tables, timeline/diagram slides, Arabic/English mixed-script typography and long titles. Each fixture has a frozen input hash, expected semantic data, font set, data rights and known export loss inventory.
+**G1.** Begin with 8 frozen synthetic 16:9 fixtures covering citations, charts, tables, Arabic/English bidi, long headlines, rights and numeric claims; expand to 30 only after one qualified native PPTX journey. Record exact semantic expectations and hashes.
 
 **G2.** Four initial SmartLayout families, not 73 template clones: \`headline-hero\`, \`stat-chart\`, \`comparison\`, \`timeline-process\`. These must reuse the existing Template V2 scene/editor, preserve stable IDs and provide explicit fit errors, not rasterized thumbnails pretending to be elements.
 
@@ -39,7 +59,7 @@ Gomri's original October 5 master plan describes a large agent-first knowledge a
 
 **G7.** Release gate includes Windows real-app UI smoke, clean builds, exact-head CI, independent review and published limitations; do not merge a PR based on a research document or stale earlier test.
 
-**Benchmark targets for design evaluation, NOT present facts:** at least 98% of slides without unintended clipping/overlap on frozen fixtures; at least 95% supported native elements retained through PPTX/reimport; at least 60% blind designer preference over incumbent Gomri output on the same 30 prompts. Hard gates (data, permissions, unauthorized network) have zero-tolerance.
+**Quality metrics remain UNCALIBRATED** until a current-head baseline is measured. Zero silent loss of supported content is absolute, not a 95% goal. Blind designer preference and 30-deck corpus are later optional calibrated studies, not a release gate before lawful access.
 
 ## 4. Non-goals for first release
 
@@ -74,7 +94,7 @@ User files / URLs / prompt  -> Source Gateway / unit accounting
 
 **No-loss semantics:** A layout attempt returns \`{candidate, diagnostics, lossReceipt}\` conceptually. For hard violation (dropped data, unapproved citation mutation, invalid grid cell, unreadable min font), return a typed error and keep previous canonical slide unchanged. Unsupported interactive content remains stored with a declared export fallback.
 
-**Concurrency:** UI spinner/agent edit mark is not a lock. A server-side commit compares \`baseRevision\`, \`workspaceId\`, \`actor\`, \`operationId\`, \`targetElementIds\`, \`proposalHash\` and authorized sources at commit time, returns conflict without mutation if stale or permission changed. Actual endpoint paths and handler signatures must be discovered before implementation; none are claimed to exist today.
+**Concurrency:** UI spinner/agent edit mark is not a lock. A server-side commit must authenticate principal/tenant/workspace from server-held session context, recompute the proposed hash and target IDs, and atomically compare the persisted revision while writing the new canonical content/revision in one transaction. Stale state returns 409/412 without mutation. Neither the legacy v1 save route nor the browser autosave currently demonstrates this behavior; see P0 audit.
 
 ## 6. Decisions after competitor REA (Elephant critique)
 
@@ -96,9 +116,9 @@ User files / URLs / prompt  -> Source Gateway / unit accounting
 
 **Read only first:** inspect PR #88 changed-file list and compare HEAD to main. Run full FastAPI pytest suite, Next.js node tests, root tests, TypeScript and production build with pinned export-core; Windows screenshot/manual journey; inspect CI and any skipped failures. Do not merge if any required check has failed or not run. Inspect security and original source notices in PR #88; no "all green" from a prior head.
 
-**Artifacts to add only:** \`docs/designs/gomri-egm-execution-ledger-20261109.md\` (NEW); \`docs/designs/gomri-egm-qualification-matrix-20261109.csv\` (NEW). Cite exact commit SHA, command, OS, exit code, input fixture hashes, skipped tests and artifacts. PR #88 is **not** an assumption.
+**P0-only artifacts:** execution ledger and qualification matrix (NEW), a verified v1 route/identity map (NEW), and negative-control test cases for existing owner, revision, idempotency and autosave conflict behavior. The existing [P0 source audit](GOMRI_EGM_P0_WRITE_PATH_AUDIT_2026-11-09.md) is the starting code evidence. Record every exact head, command, test exit and skip.
 
-**Gate P0:** actual current-HEAD reproducible build and a complete 1-deck user journey, or explicit NOT READY + named blockers. Before this gate, no new layout primitives in the product.
+**Gate P0:** current-head reproducible build, exact v1 write-path/ownership trace, two-client stale-write and foreign-owner negative tests, and one editable deck journey OR explicit NOT READY with blockers. If #88 fails, safe main-only preview experiments may continue, but sourced-generation readiness is blocked.
 
 ### Phase 1: SmartLayout in existing editor — first user-visible gain
 
@@ -109,15 +129,15 @@ User files / URLs / prompt  -> Source Gateway / unit accounting
 - \`servers/nextjs/components/slide-editor/text/text-line-height.ts\` and \`.../text/template-v2-text.ts\` — existing text measurement/wrapping; inspect Arabic/diacritics before any alternative.
 - \`servers/nextjs/tests/template-v2-component-bounds.test.mjs\`, \`.../flow-layout-text-sizing.test.mjs\` — existing negative-control test homes.
 
-**New proposed bounded files** (names may be adjusted after interface discovery; not existing API claims):
+**Candidate new modules ONLY after proving the existing Template V2 helper cannot meet the requirement** (not present APIs or approved write scope):
 - \`servers/nextjs/lib/gomri-smart-layout/types.ts\` — semantic role, typed nodes, diagnostic and candidate interfaces;
 - \`servers/nextjs/lib/gomri-smart-layout/constraints.ts\` — deterministic bounds/no-loss/no-overlap rules;
 - \`servers/nextjs/lib/gomri-smart-layout/compile.ts\` — four role layouts, pure input/output and no DOM mutation;
 - \`servers/nextjs/tests/gomri-smart-layout.test.mjs\` — 30 deterministic fixtures, malformed cell/incomplete item/long Arabic cases.
 
-**Implementation grain:** start with \`headline-hero\` then \`stat-chart\`, \`comparison\`, \`timeline-process\`; each can be disabled by a feature flag and falls back to current proven editor rendering. No new database table unless unavoidable. A slide supports both manual freeform override and later smart reflow, but reflow must present the diff before it overwrites intentional user positioning.
+**Implementation grain:** start with a preview-only `headline-hero` spike using existing Template V2/Konva, with no persisted metadata or schema migration. If reusable helper is insufficient, propose a small typed compiler. The other three families follow measured value and P2 safety checks, not before.
 
-**Gate P1:** deterministic candidates and readable UI output with zero missing semantic/citation nodes across 30 fixtures; negative controls fail when a cell is dropped, chart number changes, component moves outside bounds or font falls under readable threshold.
+**Gate P1:** eight 16:9 synthetic fixtures with visual and no-silent-loss checks. **No canonical save** before P2. Negative controls must detect dropped components/citations, chart mutation, unsafe geometry and illegible Arabic.
 
 ### Phase 2: selection-scoped AI changes, revision checks and Undo
 
@@ -128,15 +148,15 @@ User files / URLs / prompt  -> Source Gateway / unit accounting
 - \`servers/fastapi/api/v2/ppt/endpoints/presentation.py\` for existing write route (inspect exact signature);
 - \`contracts/v1/artifact-revision.schema.json\` for existing revision fields.
 
-**New proposed files** (write boundaries, not proof of current APIs):
+**New proposed files are CONDITIONAL on failed reuse tests and actual route/signature verification** (not evidence that new services exist):
 - \`servers/nextjs/lib/gomri-ai-edit/patch.ts\`: typed element patch and preview, no arbitrary HTML/deck rewrite.
 - \`servers/nextjs/lib/gomri-ai-edit/verify.ts\`: source/number preservation and no-unselected-change test.
-- \`servers/fastapi/gomrey/slide_edit_transaction.py\`: proposal/commit and idempotency service only if existing infrastructure lacks one, with write-time authorization.
+- `servers/fastapi/gomrey/slide_edit_transaction.py`: NOT DEFAULT. Prefer a minimal atomic revision/authorization update in the actual legacy `servers/fastapi/api/v1/ppt/endpoints/presentation.py` route if tests prove existing capability is absent.
 - \`servers/nextjs/tests/gomri-ai-edit.test.mjs\` and \`servers/fastapi/tests/test_gomrey_slide_edit_transaction.py\` (NEW).
 
 **Ninerr donor rule:** inspect the owner's exact MCP/history code and source notices; adapt only the already-qualified target selection and undo transaction slice. Do not import a second editor or make an agent bypass user API permission checks.
 
-**Gate P2:** stale revision -> conflict, revoked role -> deny, duplicate operationId -> one effect, selected element edit does not modify sibling content, renderer failure -> prior state retained, Undo restores exact previous canonical revision. No direct free-model tool call can write to a deck outside these gates.
+**Gate P2:** exactly one of two same-revision writers commits; other conflicts; cross-owner/forged actor denied; idempotent retry one effect; autosave cannot bypass CAS; preview/render failure never commits; Undo appends monotonic revision N+2 with previous content digest.
 
 ### Phase 3: native PowerPoint fidelity, claims and authoring journey
 
@@ -144,17 +164,17 @@ User files / URLs / prompt  -> Source Gateway / unit accounting
 
 **Candidate from PR #88:** \`servers/nextjs/tests/export-fidelity.test.mjs\` and its source-target fixtures, plus RTL and contrast lint. These files are **not present on main until qualified/merged**. Do not duplicate or assume tests cover notes.
 
-**Work:** freeze 30 synthetic decks with exact numerical/text/chart/table/notes expectations. Generate with existing export-core, parse PPTX OOXML with a safe zip reader, re-import and measure native editability; compare against Beautiful.ai's public PptxGenJS derivative and upstream PptxGenJS in an isolated evaluator. Only admit specific changes demonstrated better on current fixtures, original notices included. Run Arabic+Latin paragraph/bullet/tabular content and speaker-note assertions. Produce a typed loss receipt for browser-only features.
+**Work:** qualify 8 frozen first-journey decks, then expand to 30 after P2. Validate numerical/text/chart/table/notes expectations in actual OOXML with safe bounded ZIP/XML parsing, and explicit source component ID to reimport object ID mapping. Compare public fork exporters only after rights/dependency admission.
 
-**Gate P3:** no unsupported native-object claim without XML evidence; clear inventory of remaining notes/bullet/shape/chart losses; product journey prompt -> approved outline -> four-family slides -> scoped edit -> native PPTX tested. Unmet hard gate means not release-ready.
+**Gate P3:** zero silent supported-object loss; versioned loss receipts enumerate every unsupported fallback and target format; hostile ZIP/external relationships rejected; native PPTX and Arabic RTL validated on actual output. Complete sourced-outline -> edit -> PPTX journey before parity claims.
 
 ### Phase 4: constrained responsive variants, then image/animation (post-P3)
 
-**New proposed files:** \`servers/nextjs/lib/gomri-smart-layout/format-profiles.ts\` and \`servers/nextjs/tests/gomri-responsive-variants.test.mjs\`. Start 16:9, 4:3, 1:1, 9:16 only. Derive layout from semantic roles and preserved source graph, not copying/rasterizing entire slides. Apply only if variants preserve text/claims, chart datasets, citations and font shaping; fallback to manual review where impossible.
+**Later candidate files, not current production scope:** `servers/nextjs/lib/gomri-smart-layout/format-profiles.ts` and `servers/nextjs/tests/gomri-responsive-variants.test.mjs`. Multi-format work follows P3 and baseline capacity checks.
 
 Object Grabber, complex Lottie, MP4/GIF and marketing format ecosystem stay outside the first-release promise. A separate design/rights review is required for model weights or image licenses.
 
-**Gate P4:** 30 decks × 4 profiles, no hard integrity loss; each unsupported visual behavior is visible in preview/receipt.
+**Gate P4 (future):** 30 decks across four profiles only after P3, no data/claim loss and explicit per-target downgrade receipts. Not a first-release prerequisite.
 
 ### Phase 5: competitive arena, release decision and support
 
@@ -198,7 +218,7 @@ Questions reviewers must challenge:
 6. Is the plan self-contained, legally admissible, privacy-preserving and deployable at zero hidden cloud cost?
 7. Are reviewers being asked to certify interfaces that are only guessed from filenames?
 
-**No Goldfish verdict is claimed by this Elephant draft.** Review should produce blocking/major/minor findings with exact file/source references and verification status, resolve critical items, then declare GO/CONDITIONAL/NO-GO for specific implementation grains.
+**Goldfish initial status:** two independent fresh-session reviews returned CONDITIONAL (reports linked in section 0). The official five-stage EGM orchestrator and implementation/codebase auditor have **not** fully passed. Only P0 is eligible for controlled implementation planning; human approval remains pending.
 
 ## References and source provenance
 
