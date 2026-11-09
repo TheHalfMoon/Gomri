@@ -6,6 +6,15 @@
 
 **PStack working-directory rule:** The PStack artifact root for these skills is this folder, `docs/implementation/gomri/`. When invoking skills that look for `PRODUCT.md`, `ROADMAP.md`, `CLAUDE.md` or `specs/`, launch the PStack planning session **with this folder as cwd** (or explicitly point it at these files). The Git repository root remains `TheHalfMoon/Gomri`, and all source edits happen on a separate git worktree at that root. Do **not** run `/ps-start` from the repo root if it would overwrite the existing root product instructions.
 
+## Start here
+
+- [Implementation readiness and verified QA](IMPLEMENTATION_READINESS.md) — what is ready to hand off versus blocked in execution.
+- [Opus / OpenCode full handoff](OPUS_HANDOFF.md) — executable agent role and phase instructions.
+- [Current PStack state](STATE.md) — S00 status, exact unresolved blockers and next step.
+- [Source pin and license verification](DONOR_VERIFICATION.md) — actual checked SHA and repository license metadata.
+- [Packet integrity checker](scripts/validate_packet.py) — local stdlib-only Markdown/link/role/source-ledger validator.
+- [PStack context glossary](CONTEXT.md) and [architecture decisions](docs/adr/0001-one-editor-copy-first.md).
+
 ## The three governing files
 
 1. [ROADMAP.md](ROADMAP.md) — dependency ordered phases, owner role, success test, no-go and delivery artifact.
