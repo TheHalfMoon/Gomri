@@ -35,6 +35,18 @@ py -3.14 docs/implementation/gomri/scripts/validate_packet.py `
 
 Validation uses **no network, third-party Python dependency or product app/DB interaction**. It is a structural contract checker, not proof features are implemented.
 
+## Latest full packet revalidation after handoff additions
+
+The same committed Python stdlib validator was **re-run successfully** at planning head `d0e20e9b37911835439b489f72d1394893bc96c8`, after the source/ADR/state/readiness/handoff documents were added and linked. Actual results:
+
+- **23 packet Markdown files** and **27 documents** including EGM references inspected.
+- **74 internal Markdown references** checked.
+- **15 donor admission rows**, eight phase specs and R0–R10 declarations checked.
+- **0 reported structural errors; exit 0 PASS**.
+- Original active Gomri source worktree remained **clean** at `d4362c6d968d2746d499630d8498d3111c98c90b`.
+
+The earlier table documents an earlier valid validation snapshot (22/26/59 at `0245c900`); **this later pass supersedes it as the latest complete packet check**. This does not substitute for backend, security, export or browser test results.
+
 ## Donor verification
 
 The five pinned donor commits in [DONOR_VERIFICATION.md](DONOR_VERIFICATION.md) were each confirmed addressable using GitHub REST through the authorized local CLI; their current repository license metadata returned Apache-2.0 for owner-controlled Ninerr and Skilit and MIT for Beautiful.ai PptxGenJS, Crello font metrics and Gamma n8n nodes. **File-level pinned license/NOTICE, assets, fonts, model weights and transitive dependency audits remain separate per-import gates**. No proprietary competitor engine source is claimed acquired.
