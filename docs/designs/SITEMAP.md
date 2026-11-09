@@ -11,7 +11,9 @@
 | [P0a route, owner and symbol matrix](evidence/P0A_ROUTE_SYMBOL_MATRIX.md) | **SOURCE REVIEW DONE**, actual routes and existing auth/ORM policies identified; tests NOT RUN |
 | [P0a PPTX, speaker notes and export map](evidence/P0A_EXPORT_NOTES_MAP.md) | speaker_note exists; PPTX notes/reimport and permission-at-delivery test NOT RUN |
 | [P0a PR exact-head ledger](evidence/P0A_PR_BASELINE.md) | PRs #88–#92 all open/Draft with pinned SHAs; CI not assumed passed |
-| [P0b actual Windows test execution](evidence/P0B_EXECUTION_LEDGER_2026-11-09.md) | **61/61 PASS** across 7 targeted groups at PR #88 exact SHA; note written to PPTX but not re-imported; bullet semantics flattened; full FastAPI/E2E not run |
+| [P0b actual Windows test execution](evidence/P0B_EXECUTION_LEDGER_2026-11-09.md) | **61/61 PASS** across seven targeted groups; notes not reimported, bullet semantics flattened; backend/E2E not run |
+| [Sanitized per-test JSON receipts](evidence/P0B_RECEIPTS_SANITIZED_2026-11-09.json) | Seven exact-head test receipts preserved before deletion of disposable Windows clone; initial KaTeX setup failure receipt overwritten (not claimed preserved) |
+| [Goldfish on executed P0b evidence](reviews/2026-11-09/goldfish-p0b-observed-evidence.md) | Independent GO for bounded seven groups; overall P0b incomplete; P1/P2 NO-GO |
 | [Goldfish Zoom Out](reviews/2026-11-09/goldfish-zoom-out.md) | Independent early review CONDITIONAL |
 | [Goldfish Design Critic](reviews/2026-11-09/goldfish-design-critic.md) | Independent early review CONDITIONAL |
 | [Post-fix Goldfish Zoom Out](reviews/2026-11-09/goldfish-postfix-zoom-out.md) | Independent second pass CONDITIONAL; drove explicit P0 split |
