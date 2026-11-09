@@ -1,0 +1,20 @@
+{
+    "name": "beautiful-ai-v2",
+    "description": "The Beautiful.ai plugin builds and edits presentations with you, in the chat. Describe what you need and get a designed deck in your workspace, on your Brand Kit. Then keep going on that deck or any you already have: rewrite, add or redesign slides, generate images, restructure. It checks how each slide renders and fixes what looks wrong. Export to PDF or PowerPoint, share, or open it in the editor. Sign in with your Beautiful.ai account on first connect.",
+    "author": {
+        "name": "Beautiful.ai",
+        "url": "https://www.beautiful.ai"
+    },
+    "homepage": "https://www.beautiful.ai",
+    "repository": "https://github.com/beautifulai/grok-plugin",
+    "license": "Apache-2.0",
+    "keywords": [
+        "beautiful.ai",
+        "beautiful ai",
+        "beautiful.ai presentations",
+        "beautiful.ai slides"
+    ],
+    "logo": "./assets/logo.png",
+    "version": "0.8.4",
+    "mcpServers": "mcp.json"
+}
