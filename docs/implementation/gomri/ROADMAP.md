@@ -1,6 +1,6 @@
 # Gomri — PStack ROADMAP (Copy-First)
 
-**Status:** PLAN READY TO HAND OFF, production execution gates not yet passed. **Base:** main \`5f299a7\` and PR #88 \`d4362c6\` observed 2026-11-09; recheck before building. **Release thesis:** one trusted 8–12-slide source-grounded, editable presentation; not a clone of every competitor.
+**Status:** PLAN READY TO HAND OFF, production execution gates not yet passed. **Base:** main `5f299a7` and PR #88 `d4362c6` observed 2026-11-09; recheck before building. **Release thesis:** one trusted 8–12-slide source-grounded, editable presentation; not a clone of every competitor.
 
 ## Phase ledger
 
@@ -31,17 +31,17 @@
 - No model provider required in CI. Hosted AI may be optional explicit opt-in; factual validation must be deterministic.
 
 ### S02 — accessible four-family layouts
-- First a preview-only headline hero using existing \`TemplateV2KonvaSlide\` and \`model.ts\` helpers. Only after that shows value, add \`stat-chart\`, \`comparison\`, \`timeline-process\`.
+- First a preview-only headline hero using existing `TemplateV2KonvaSlide` and `model.ts` helpers. Only after that shows value, add `stat-chart`, `comparison`, `timeline-process`.
 - Use Skilit reference pattern metadata behind adapter; do not import its database or make a second scene model.
 - UI preview without save triggers. After S03, add controlled apply with revision/Undo.
 
 ### S03 — safe object edits
-- Map \`Ninerr\` history/MCP authorization into current Gomri scene and persisted FastAPI route. Source code may be bounded-copied from pinned owner SHA.
+- Map `Ninerr` history/MCP authorization into current Gomri scene and persisted FastAPI route. Source code may be bounded-copied from pinned owner SHA.
 - Require server-resolved actor/workspace, slide ID and selected element IDs, allowlisted edit op, before/after proposal and source claim invariant.
 - CAS/idempotency across human auto-save, AI edits and deck reorder; a local snapshot is not a database transaction.
 
 ### S04 — PowerPoint that stays editable
-- Keep \`@presenton/export-core\` version-pinned; first fix P0b-measured notes reimport and bullet semantics or implement exact component downgrade receipts.
+- Keep `@presenton/export-core` version-pinned; first fix P0b-measured notes reimport and bullet semantics or implement exact component downgrade receipts.
 - Benchmark public Beautiful.ai PptxGenJS fork only with the 8 synthetic fixtures. Copy bounded code only when it proves native PPTX improvement and licenses/NOTICE are retained.
 - OOXML zip and external relationship hardening; stage 30 fixtures only after first 8 pass.
 
@@ -52,7 +52,7 @@
 
 ### S06 — release gate
 - Alibaba Open Code Review **Delegation Mode** is mandatory for diff/rule extraction; a reviewer model in a distinct context must *actually review* to count as AI review. No default remote OCR-managed billable provider.
-- pstack \`/ps-review\` panel, independent security pass, negative controls, Windows binary test, licensing/NOTICE/SBOM, rollbacks, signed/unsigned user guidance, all at exact HEAD.
+- pstack `/ps-review` panel, independent security pass, negative controls, Windows binary test, licensing/NOTICE/SBOM, rollbacks, signed/unsigned user guidance, all at exact HEAD.
 - Ready for user/human merge review only when no open BLOCKER/MAJOR findings and exact-head CI fully green. **No silent merge**.
 
 ### S07 — optional post-release
@@ -61,7 +61,7 @@
 
 ## Critical-path test order
 
-\`\`\`text
+```text
 S00 temporary Python env
   -> real owner A/B denied/allowed UPDATE tests
   -> stale concurrent writer conflict proof
@@ -73,15 +73,15 @@ S03 controlled atomic patch and Undo
 S04 OOXML native object, notes and bullet fidelity
 S05 Cypress real browser & Arabic/RTL visual QA
 S06 independent Alibaba OCR + PStack reviews + Windows release gate
-\`\`\`
+```
 
 A failing foreign-owner test is a **security investigation**, not proof of exploitable access until route/ORM guards are measured. Never disable global Windows Defender/firewall or run against the live user's profiles for convenience.
 
 ## Milestone tracking contract
 
 Each phase ledger entry must record:
-\`state\` (PLANNED/IN_PROGRESS/FAILED/BLOCKED/TESTED/REVIEWED/MERGE_READY/MERGED),
-\`base_sha\`, \`branch/pr\`, \`donor\` and imported paths, \`scope whitelist\`,
-\`red_test\`, \`green_test\`, \`CI_url\`, \`e2e_screenshot\`, \`OCR_review_id\`,
-\`NOTICE\`, \`release_blockers\`, \`rollback\`.
+`state` (PLANNED/IN_PROGRESS/FAILED/BLOCKED/TESTED/REVIEWED/MERGE_READY/MERGED),
+`base_sha`, `branch/pr`, `donor` and imported paths, `scope whitelist`,
+`red_test`, `green_test`, `CI_url`, `e2e_screenshot`, `OCR_review_id`,
+`NOTICE`, `release_blockers`, `rollback`.
 No line is marked DONE without artifacts and a reviewed commit.
