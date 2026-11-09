@@ -1,26 +1,18 @@
-# Gomri: EGM Elephant Design Draft — A Reliable, Editable, Source-Grounded Presentation Engine
+# Gomri: EGM Converged Plan v3 — An Editable, Evidence-Grounded Presentation Engine
 
-**Status:** EGM REVISED v2 — **P0 SOURCE/NEGATIVE-TEST WORK ONLY; PRODUCTION AI AND LAYOUT WRITES NOT APPROVED**. 2026-11-09. Google EGM adapted to independent OpenCode Goldfish fresh sessions (not official orchestrator); main at 5f299a7, PR #88–#92 are unmerged.
+**Status:** CONDITIONAL — **P0a/P0b ONLY; P1 preview and P2 production writes NOT AUTHORIZED**. Date: 2026-11-09. Main baseline `5f299a7`. Independent EGM-role reviews were performed in fresh OpenCode sessions; the full official EGM orchestrator and implementation-readiness certification are incomplete. PRs #88–#92 remain unmerged.
 
-## 0. Independent Goldfish findings and binding resolutions
+## 0. EGM verdict, controlling contract and review log
 
-Two actual independent Goldfish reviews returned **CONDITIONAL**, not READY. See [Zoom Out](reviews/2026-11-09/goldfish-zoom-out.md), [Design Critic](reviews/2026-11-09/goldfish-design-critic.md) and the independently verified [P0 source write-path audit](GOMRI_EGM_P0_WRITE_PATH_AUDIT_2026-11-09.md). Full official EGM review orchestration, source-code reviewer and human approval are outstanding.
+**Controlling document:** [P0 execution contract](GOMRI_EGM_P0_EXECUTION_CONTRACT_2026-11-09.md), which overrides any ambiguous permissions below. [P0 source audit](GOMRI_EGM_P0_WRITE_PATH_AUDIT_2026-11-09.md) traces current v1 PATCH/autosave. Initial independent [Zoom Out](reviews/2026-11-09/goldfish-zoom-out.md) and [Design Critic](reviews/2026-11-09/goldfish-design-critic.md) reviewers returned **CONDITIONAL**. A [second post-fix Zoom Out](reviews/2026-11-09/goldfish-postfix-zoom-out.md) also returned **CONDITIONAL** and identified P0 scope conflicts, a missing speaker-notes mapping, and 8/30 fixture drift.
 
-| Finding | Required smallest repair and gate |
-|---|---|
-| Z1/F1: imagined backend and non-atomic CAS | Trace actual legacy v1 PATCH, owner/session filters and auto-save. Server derives principal/workspace/proposal hash and target IDs; **one atomic conditional compare-and-update of content plus revision**. No automatic new service |
-| Z2: compiler before reuse proof | First one **non-persisting headline-hero preview** in existing Template V2; define v1/semantic-role mapping; add a compiler only after helper reuse fails |
-| Z3: benchmark bloat | **8 synthetic 16:9 decks** for first journey; 30 decks and 4 aspect profiles only after qualified native export |
-| Z4: PR #88 dependency | If #88 fails, safe baseline preview work may proceed from main; no source-grounded product-readiness claim |
-| Z5: invented metrics | Establish measured baseline first; no arbitrary 98%/95% target or unmeasured 60% designer preference |
-| F2: actor/tenant spoofing | Bind identity to server session; check owner/workspace at commit and **export delivery**, including revoked role |
-| F3: autosave bypass | Human autosave, AI edit and Undo must use consistent revision/CAS policy; legacy versionless PATCH cannot bypass |
-| F4: Undo mutates history | Undo appends new revision N+2 with old content, never rewrites N; stale writers conflict |
-| F5: unsafe ordering | Until P2 is proved, SmartLayout is **preview only**, never written to canonical slides |
-| F6: silent loss hidden by % | **Zero silent loss** and a complete versioned per-component/per-export-format loss receipt |
-| F7: OOXML unsafe/missing ID | Bounded ZIP/XML parsing, external relationship rejection and explicit mapping to original component IDs |
+**Allowed:** P0a read-only source/route/ownership/export tracing, then P0b builds and safety tests on disposable synthetic data and isolated infrastructure. These phases can document failure and return NOT READY. They never change canonical user documents, production code or `main`.
 
-**Binding gate:** only P0 read-only code tracing and controlled negative tests may proceed. Phase 1 preview code cannot save, Phase 2 canonical writes cannot begin before ownership, concurrency and idempotency are verified. The detailed later phases below are **conditional directions**, subordinate to these decisions.
+**Not yet allowed:** P1 non-persisting `headline-hero` preview, P2 persisted SmartLayout/AI edits, P3 native export changes, P4 multi-format, P5 competitor experiments. P1 may be proposed only *after* P0b has real evidence and a fresh scoped implementation decision, with exactly eight 16:9 fixture decks. P1 local geometry checks **do not require P3 export support**.
+
+**Hard decisions:** keep one existing Konva/Template V2 editor. Do not create an alternative canvas, DesignIR v2, transaction microservice or SmartLayout compiler until measured reuse fails. P2 must use authenticated server identities and atomic revision CAS across human and agent writes; Undo appends a new revision, not overwrites history. P3 must trace speaker-note source-to-export identity, verify download authorization after role revocation, and disclose all unsupported object losses individually. No arbitrary 95% retention or competitor-parity claim is a safety gate.
+
+**Verdict now: NOT READY for production AI/layout writes.** Full official EGM review workflow remains incomplete. P0a and P0b evidence is required before further work.
 
 ## 1. Problem and user outcome
 
@@ -112,13 +104,17 @@ User files / URLs / prompt  -> Source Gateway / unit accounting
 
 ## 7. Detailed Implementation Plan
 
-### Phase 0: exact-head baseline and source admission — **blocking**
+### Phase 0a — read-only code and contract discovery
 
-**Read only first:** inspect PR #88 changed-file list and compare HEAD to main. Run full FastAPI pytest suite, Next.js node tests, root tests, TypeScript and production build with pinned export-core; Windows screenshot/manual journey; inspect CI and any skipped failures. Do not merge if any required check has failed or not run. Inspect security and original source notices in PR #88; no "all green" from a prior head.
+Pin main and open PR heads. Trace the actual FastAPI v1 `PATCH /update` and `PATCH /slide_update` handlers, session/tenant/owner filters, payload types and store, client autosave history, speaker notes, export relationships and download authorization. Produce the P0a route/symbol matrix, notes/export map and PR baseline described in the [contract](GOMRI_EGM_P0_EXECUTION_CONTRACT_2026-11-09.md). **No installs, builds, runtime tests, UI work or source-code changes.** This existing read-only P0 audit is a starting point; it does not prove missing global authorization.
 
-**P0-only artifacts:** execution ledger and qualification matrix (NEW), a verified v1 route/identity map (NEW), and negative-control test cases for existing owner, revision, idempotency and autosave conflict behavior. The existing [P0 source audit](GOMRI_EGM_P0_WRITE_PATH_AUDIT_2026-11-09.md) is the starting code evidence. Record every exact head, command, test exit and skip.
+**P0a exit:** source-verified route/symbol/owner/export map with named unknowns, and an isolated-test recipe.
 
-**Gate P0:** current-head reproducible build, exact v1 write-path/ownership trace, two-client stale-write and foreign-owner negative tests, and one editable deck journey OR explicit NOT READY with blockers. If #88 fails, safe main-only preview experiments may continue, but sourced-generation readiness is blocked.
+### Phase 0b — isolated synthetic qualification
+
+On disposable test infrastructure, run full FastAPI/Next.js/root tests, TypeScript and production build with pinned export-core; compare PR #88 exact head with main; run foreign-owner write denial, two-client stale conflict, reorder concurrency, idempotency, role revocation at export retrieval, speaker-note roundtrip and Windows E2E smoke. Record commands, exact commits, runtime and fixture hashes, exit status, skips, screenshots and costs. **No live-user-data mutation, deployment, product feature code or automatic merge.**
+
+**P0b exit:** honest pass/fail/blocked outcomes and per-grain GO/CONDITIONAL/NO-GO. An unsafe negative test is a P2 repair blocker. If PR #88 is blocked, main-only **P0b baseline tests** may continue; P1 does not auto-start.
 
 ### Phase 1: SmartLayout in existing editor — first user-visible gain
 
