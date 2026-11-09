@@ -4,11 +4,24 @@
 
 This contract replaces any conflicting permission or timing sentence in the [converged EGM plan](GOMRI_EGM_CONVERGED_EDITOR_2026-11-09.md). It responds to the [post-fix Goldfish Zoom Out](reviews/2026-11-09/goldfish-postfix-zoom-out.md), which again said **CONDITIONAL / P0 only**. This is an EGM-inspired independently reviewed plan, **not full official EGM certification**. No changes to running Gomri or canonical user content are authorized by this document.
 
+## v4 verification and isolation addendum
+
+**P0a source evidence files now exist:**
+- [P0a route/symbol/owner matrix](evidence/P0A_ROUTE_SYMBOL_MATRIX.md).
+- [P0a speaker-notes/export map](evidence/P0A_EXPORT_NOTES_MAP.md).
+- [P0a exact PR head baseline](evidence/P0A_PR_BASELINE.md).
+
+**Source correction:** FastAPI has an actual authentication middleware that sets a user/owner ContextVar and a SQLAlchemy owner-filtering SELECT hook covering SlideModel. This supports authenticated owner isolation in the code path; it does not by itself establish an executed cross-owner PATCH denial test. The dedicated authenticated A/B write check remains a P0b test. Existing SlideModel and the UI type also have speaker_note; native PPTX preservation remains untested. The Next.js export/download routes already authenticate and constrain output paths; verify end-to-end requested-presentation access and revocation rather than asserting no protection.
+
+**P0b may not run until the [disposable environment and permissions contract](GOMRI_EGM_P0B_ISOLATION_CONTRACT_2026-11-09.md) passes preflight.** Explicitly separate scratch source worktree, temp database, two synthetic identities, storage/queues, ports, provider credentials/egress and cleanup. Missing isolation means BLOCKED, never permission to attach to the user's existing app. P1 preview code is **not** part of P0b.
+
+**Independent Goldfish Implementation Readiness on v3** returned P0a GO, P0b CONDITIONAL, P1/P2 NO-GO; report at [Implementation Readiness v3](reviews/2026-11-09/goldfish-implementation-readiness-v3.md). It did not inspect this addendum or run tests; v4 remains Draft until an additional independently reviewed implementation gate.
+
 ## A. Definitions and prohibited work
 
 **P0a — Read-only code/contract discovery.** Inspect source, metadata, routes, database models, existing tests, issue/PR status, real schema and exporter call graphs. Write only research/evidence documents in the planning branch. No code modification, schema migration, dependency install, product build, UI experiment or runtime write test is in P0a.
 
-**P0b — Isolated baseline qualification.** On disposable synthetic test data and a disposable/isolated database, run existing test/build/smoke commands and controlled negative tests. The only permitted writes are to disposable test fixtures/artifacts and test infrastructure, never real user presentations or production data. No shipping feature code, persisted SmartLayout, agent edit endpoint, feature activation, deployment, main merge, payment or cloud/model expenditure. If required isolated test DB, runtime or access is unavailable, mark the particular check **BLOCKED**, not PASS.
+**P0b — Isolated baseline qualification, gated by the separate isolation contract.** On disposable synthetic test data and a disposable/isolated database, run existing test/build/smoke commands and controlled negative tests. The only permitted writes are to disposable test fixtures/artifacts and test infrastructure, never real user presentations or production data. No shipping feature code, persisted SmartLayout, agent edit endpoint, feature activation, deployment, main merge, payment or cloud/model expenditure. If required isolated test DB, runtime or access is unavailable, mark the particular check **BLOCKED**, not PASS.
 
 **P1 — Preview-only layout experiment (not P0).** May begin *only after* P0b evidence and an explicit per-grain design decision. It is not authorized by P0a/P0b. One 16:9 \`headline-hero\` fixture in existing Template V2 without persistence/auto-save; no new schema or engine before a small-helper comparison. Visual/geometry tests belong to P1 and should not depend on P3 exporter fixes.
 
@@ -40,7 +53,7 @@ This contract replaces any conflicting permission or timing sentence in the [con
 
 \`docs/designs/evidence/P0A_PR_BASELINE.md\` — current main/PR #88 exact commits, CI status and test coverage from actual records. Include fallback to main for P1 *only after* a separate decision.
 
-**P0a exit:** each write route and export route is traced sufficiently to design actual isolation/negative tests; all unknowns are named. Code inspection is not a test pass.
+**P0a preliminary outputs:** all three specified evidence documents now exist, with source verification and remaining unknowns named. Independent acceptance remains open. Code inspection is not a runtime test pass.
 
 ## C. P0b isolated qualification: scope, outcomes, failure criteria
 
@@ -58,7 +71,7 @@ Use an isolated account/tenant/workspace pair and disposable local database (or 
 | P0B-PR88-01 | Run root/Next.js/FastAPI/TypeScript/build/export-fidelity at exact PR #88 head | Exact exits, skips, failure evidence; no assumed all-green | Candidate NOT READY if required check fails |
 | P0B-UI-01 | Full synthetic 8–12 slide journey on isolated Windows app | Record actual screenshots and native editable export | NOT READY if blocked/unverified |
 
-**These are planned tests, NOT executed passes.** Test failures are evidence: do not "fix" by broad refactoring or silently changing application code during P0b. An appropriate next engineering PR would add minimal failing negative-control fixtures and a separate scoped repair.
+**These are planned tests, NOT executed passes.** Before each test, meet all preflight conditions in the [P0b isolation contract](GOMRI_EGM_P0B_ISOLATION_CONTRACT_2026-11-09.md). Test failures are evidence: do not "fix" by broad refactoring or silently changing application code during P0b. An appropriate next engineering PR would add minimal failing negative-control fixtures and a separate scoped repair.
 
 **P0b exit:** runnable case receipts + authenticated test isolation + a precise **GO / CONDITIONAL / NO-GO** per implementation grain. It is acceptable to conclude **NOT READY**. No P1 work may begin simply because a test script was launched.
 
