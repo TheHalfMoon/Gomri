@@ -6,20 +6,20 @@
 
 | Tool / code | Verified now | Not yet verified |
 |---|---|---|
-| PStack skills | \`ps-start\`, \`ps-spec\`, \`ps-build\`, \`ps-review\`, \`ps-doctor\`, \`ps-adr\`, \`ps-close\`, \`ps-dormammu\` under Windows \`~/.agents/skills/\` | Actual agent invocation and availability of fresh subagent model contexts |
-| Alibaba OCR | \`ocr v1.13.6\` installed; **\`ocr delegate preview\` executed successfully** on Gomri PR #88 diff | Full independent LLM review and fix verification; OCR Delegation alone does not review code |
-| OCR preview result | From \`origin/main\` to PR #88 \`HEAD d4362c6\`: **223 changed files, 96 reviewable, 127 excluded**, 41,132 insertions/125 deletions reported by CLI | Why all excluded files may or may not matter for license/source/NOTICE; inspect manually, never claim the tool reviewed all 223 |
-| OCR rules | **\`ocr delegate rule\` executed successfully** for FastAPI update route and Konva slide model: two rule groups, schema v1 | Whether the rules detected any actual bug (they are configuration, not findings) |
-| Cypress | Local Cypress npm package ^15.18.1, CLI present, existing component-only \`cypress.config.ts\` | Browser binary cache and actual local E2E run; no \`cypress/e2e\` suite verified |
+| PStack skills | `ps-start`, `ps-spec`, `ps-build`, `ps-review`, `ps-doctor`, `ps-adr`, `ps-close`, `ps-dormammu` under Windows `~/.agents/skills/` | Actual agent invocation and availability of fresh subagent model contexts |
+| Alibaba OCR | `ocr v1.13.6` installed; **`ocr delegate preview` executed successfully** on Gomri PR #88 diff | Full independent LLM review and fix verification; OCR Delegation alone does not review code |
+| OCR preview result | From `origin/main` to PR #88 `HEAD d4362c6`: **223 changed files, 96 reviewable, 127 excluded**, 41,132 insertions/125 deletions reported by CLI | Why all excluded files may or may not matter for license/source/NOTICE; inspect manually, never claim the tool reviewed all 223 |
+| OCR rules | **`ocr delegate rule` executed successfully** for FastAPI update route and Konva slide model: two rule groups, schema v1 | Whether the rules detected any actual bug (they are configuration, not findings) |
+| Cypress | Local Cypress npm package ^15.18.1, CLI present, existing component-only `cypress.config.ts` | Browser binary cache and actual local E2E run; no `cypress/e2e` suite verified |
 | Python | Windows Python 3.11.15 present | No isolated backend wheelhouse/venv with SQLModel/FastAPI/etc; owner A/B integration still blocked |
-| Native PowerPoint | \`@presenton/export-core@1.0.34\` existing; 15 real export/reimport tests from PR #88 green | Speaker-note reimport and native bullet semantics specifically **fail semantic preservation** under current expected behavior; real Windows editor E2E not qualified |
+| Native PowerPoint | `@presenton/export-core@1.0.34` existing; 15 real export/reimport tests from PR #88 green | Speaker-note reimport and native bullet semantics specifically **fail semantic preservation** under current expected behavior; real Windows editor E2E not qualified |
 | D: free space | About 6 GB available during this planning inspection | Full build/Chrome/Cypress binary/install requirement; remeasure before dependency admission |
 
 ## B. Local-review-first execution (no OCR API key)
 
 Review runs only after source/test gates are green at the *same SHA*. Run in the feature worktree; do not change original active Gomri checkout.
 
-\`\`\`powershell
+```powershell
 # Exact SHA and cleanliness before review:
 git rev-parse HEAD
 git status --porcelain
@@ -32,36 +32,36 @@ ocr delegate rule 'servers/fastapi/api/v1/ppt/endpoints/presentation.py' 'server
 # IMPORTANT: manually inspect excluded_files for source/license/NOTICE/security.
 # Pass the selected diff, rule groups and relevant full files to a distinct reviewer.
 # Only a returned finding report with exact file/line evidence counts as a review.
-\`\`\`
+```
 
 The CLI was actually tested on the currently checked-out Gomri source, but it **did not** run a model. The large PR #88 diff includes code, docs, research JSON and source history; triage exclusions. A default selector may exclude Markdown documentation like SOURCE_LEDGER and a donor NOTICE, which are **mandatory manual provenance review** even if not selected by the code-review CLI.
 
 ### Two allowed review paths
 
-**Path 1 — fully local/private, $0** (preferred): on the Windows PC, confirm a locally installed, reachable code-capable model in a model runtime using \`ocr\` supported provider configuration or a host agent with OCI Delegation. Test a tiny fixture with no secrets, freeze model/revision, record actual endpoint restricted to loopback, verify no egress, then run independent review.
+**Path 1 — fully local/private, $0** (preferred): on the Windows PC, confirm a locally installed, reachable code-capable model in a model runtime using `ocr` supported provider configuration or a host agent with OCI Delegation. Test a tiny fixture with no secrets, freeze model/revision, record actual endpoint restricted to loopback, verify no egress, then run independent review.
 
 **Path 2 — free-labelled hosted model, explicitly consented:** host OpenCode uses its own no-charge model to inspect delegated diff/rules, with source egress/policy accounted for. This is **not "offline/local inference"**, even when the CLI runs locally. Never auto-upload a private repository or real health-related data simply because a provider is advertised free.
 
-**If neither path is verified:** OCR Delegation produces only deterministic file/rule selection; use a human/authorized separate source auditor and mark \`AI_REVIEW_NOT_RUN\`. Do not call it a completed AI review.
+**If neither path is verified:** OCR Delegation produces only deterministic file/rule selection; use a human/authorized separate source auditor and mark `AI_REVIEW_NOT_RUN`. Do not call it a completed AI review.
 
 A review finding is actionable only with severity, repo-relative file/line or exact diff hunk, reproduction, tests that detect it, proposed smallest repair, and acceptance disposition. Tool reports alone cannot approve their own code.
 
 ## C. E2E runner procedure
 
-1. \`cd servers/nextjs\`, verify installed Cypress CLI and version. **Verify actual binary** only against a user-authorized isolated test cache; current Cypress binary cache was absent when inspected.
+1. `cd servers/nextjs`, verify installed Cypress CLI and version. **Verify actual binary** only against a user-authorized isolated test cache; current Cypress binary cache was absent when inspected.
 2. Before any binary download, run disk preflight and verify official license/checksum/source. No Cypress Cloud recording or paid integration.
-3. Start Next.js + FastAPI on two temporary loopback ports, temporary SQLite/user storage, two test accounts and no API keys. If impossible due missing backend dependencies, mark \`E2E_BLOCKED\`; do not use the logged-in Vivaldi browser.
-4. Add \`cypress.config.e2e.ts\` and \`cypress/e2e/\` test files behind an isolated feature PR. Preserve existing component config. Use data-testid, role/name selectors, stable test fixtures, and deterministic mock provider data.
+3. Start Next.js + FastAPI on two temporary loopback ports, temporary SQLite/user storage, two test accounts and no API keys. If impossible due missing backend dependencies, mark `E2E_BLOCKED`; do not use the logged-in Vivaldi browser.
+4. Add `cypress.config.e2e.ts` and `cypress/e2e/` test files behind an isolated feature PR. Preserve existing component config. Use data-testid, role/name selectors, stable test fixtures, and deterministic mock provider data.
 5. Run [12 E2E journeys](specs/05-e2e-browser.md), including concurrent editing and revoked export access; retain screenshot/video logs and a separate native OOXML audit.
 6. After testing, remove only temp-owned fixture database, user profile and ports; verify original checkout unmodified.
 
-A Node unit test that checks \`aria-label\` attribute or a screenshot of a marketing page is not a real browser end-to-end pass.
+A Node unit test that checks `aria-label` attribute or a screenshot of a marketing page is not a real browser end-to-end pass.
 
 ## D. No-silent-loss and unit/integration negative controls
 
 | Gate | Minimal negative control that MUST fail old/unsafe behavior |
 |---|---|
-| Source facts | Wrong unit/value or citation ID in slide fails \`assert_exportable\` |
+| Source facts | Wrong unit/value or citation ID in slide fails `assert_exportable` |
 | Layout | Remove source component or move text beyond canvas -> test catches it, not just screenshot diff |
 | Access | A with valid B slide UUID -> 403/404 and B DB digest identical |
 | Concurrency | Two same-base-revision writers -> stale conflict, no last-write-wins |
@@ -91,7 +91,7 @@ A Node unit test that checks \`aria-label\` attribute or a screenshot of a marke
 
 ## F. Reproducibility receipt
 
-\`\`\`json
+```json
 {
   "phase": "S03",
   "candidate_sha": "<actual HEAD>",
@@ -109,6 +109,6 @@ A Node unit test that checks \`aria-label\` attribute or a screenshot of a marke
   "no_paid_network": "VERIFIED|UNVERIFIED",
   "rollback": "<feature flag or commit>"
 }
-\`\`\`
+```
 
 **Stop if any artifact is missing for the claimed PASS**. Reports under PR #93 are design/test evidence; updating them does not itself change app functionality.
