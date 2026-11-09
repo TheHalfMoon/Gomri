@@ -4,6 +4,8 @@
 
 **Product:** Gomri is an agent-native, evidence-grounded, editable slide authoring product. The milestone is **one excellent source -> outline -> native editable 8–12-slide deck -> selected AI edit -> native PPTX workflow**. Do not expand into a generic design/marketing suite before that journey works.
 
+**PStack working-directory rule:** The PStack artifact root for these skills is this folder, `docs/implementation/gomri/`. When invoking skills that look for `PRODUCT.md`, `ROADMAP.md`, `CLAUDE.md` or `specs/`, launch the PStack planning session **with this folder as cwd** (or explicitly point it at these files). The Git repository root remains `TheHalfMoon/Gomri`, and all source edits happen on a separate git worktree at that root. Do **not** run `/ps-start` from the repo root if it would overwrite the existing root product instructions.
+
 ## The three governing files
 
 1. [ROADMAP.md](ROADMAP.md) — dependency ordered phases, owner role, success test, no-go and delivery artifact.
