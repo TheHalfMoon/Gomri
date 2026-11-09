@@ -1,14 +1,14 @@
 # Gomri: EGM Converged Plan v3 — An Editable, Evidence-Grounded Presentation Engine
 
-**Status:** CONDITIONAL — **P0a/P0b ONLY; P1 preview and P2 production writes NOT AUTHORIZED**. Date: 2026-11-09. Main baseline `5f299a7`. Independent EGM-role reviews were performed in fresh OpenCode sessions; the full official EGM orchestrator and implementation-readiness certification are incomplete. PRs #88–#92 remain unmerged.
+**Status:** EGM REVISED v4 — **P0a source inspection COMPLETE pending independent acceptance; P0b CONDITIONAL on isolation preflight; P1/P2 NO-GO**. 2026-11-09, main at `5f299a7`, PRs #88–#92 unmerged. Independent Google EGM-role review sessions were used through OpenCode, not the full official orchestrator. This is a Draft plan, not released product code.
 
 ## 0. EGM verdict, controlling contract and review log
 
-**Controlling document:** [P0 execution contract](GOMRI_EGM_P0_EXECUTION_CONTRACT_2026-11-09.md), which overrides any ambiguous permissions below. [P0 source audit](GOMRI_EGM_P0_WRITE_PATH_AUDIT_2026-11-09.md) traces current v1 PATCH/autosave. Initial independent [Zoom Out](reviews/2026-11-09/goldfish-zoom-out.md) and [Design Critic](reviews/2026-11-09/goldfish-design-critic.md) reviewers returned **CONDITIONAL**. A [second post-fix Zoom Out](reviews/2026-11-09/goldfish-postfix-zoom-out.md) also returned **CONDITIONAL** and identified P0 scope conflicts, a missing speaker-notes mapping, and 8/30 fixture drift.
+**Controlling document:** [P0 execution contract](GOMRI_EGM_P0_EXECUTION_CONTRACT_2026-11-09.md), which overrides any ambiguous permissions below; P0b additionally requires the [isolation and permission matrix](GOMRI_EGM_P0B_ISOLATION_CONTRACT_2026-11-09.md) before any test run. [P0 source audit](GOMRI_EGM_P0_WRITE_PATH_AUDIT_2026-11-09.md) traces current v1 PATCH/autosave. Initial independent [Zoom Out](reviews/2026-11-09/goldfish-zoom-out.md) and [Design Critic](reviews/2026-11-09/goldfish-design-critic.md) reviewers returned **CONDITIONAL**. A [second post-fix Zoom Out](reviews/2026-11-09/goldfish-postfix-zoom-out.md) also returned **CONDITIONAL** and identified P0 scope conflicts, a missing speaker-notes mapping, and 8/30 fixture drift.
 
-**Allowed:** P0a read-only source/route/ownership/export tracing, then P0b builds and safety tests on disposable synthetic data and isolated infrastructure. These phases can document failure and return NOT READY. They never change canonical user documents, production code or `main`.
+**Allowed:** P0a source/route/ownership/export tracing and planning branch documentation (already produced: [route map](evidence/P0A_ROUTE_SYMBOL_MATRIX.md), [notes/export map](evidence/P0A_EXPORT_NOTES_MAP.md), [PR baseline](evidence/P0A_PR_BASELINE.md)); then P0b exact-head builds and negative tests **only after** a disposable worktree/DB/queue/storage/identity/provider/egress preflight passes. P0a does not execute app tests; P0b writes only disposable test data, never user documents or deployed code.
 
-**Not yet allowed:** P1 non-persisting `headline-hero` preview, P2 persisted SmartLayout/AI edits, P3 native export changes, P4 multi-format, P5 competitor experiments. P1 may be proposed only *after* P0b has real evidence and a fresh scoped implementation decision, with exactly eight 16:9 fixture decks. P1 local geometry checks **do not require P3 export support**.
+**Not yet allowed:** P1 **source-code changes even for previews**, P2 persistent user/agent edit endpoints, P3 export changes, P4 responsive variants or P5 competitor benchmarking. Their sections below are *future design*, not a grant to edit files. After P0b passes, a separate scoped decision may authorize a one-layout P1 preview, with exactly eight 16:9 synthetic decks and no persisted document writes.
 
 **Hard decisions:** keep one existing Konva/Template V2 editor. Do not create an alternative canvas, DesignIR v2, transaction microservice or SmartLayout compiler until measured reuse fails. P2 must use authenticated server identities and atomic revision CAS across human and agent writes; Undo appends a new revision, not overwrites history. P3 must trace speaker-note source-to-export identity, verify download authorization after role revocation, and disclose all unsupported object losses individually. No arbitrary 95% retention or competitor-parity claim is a safety gate.
 
@@ -112,13 +112,13 @@ Pin main and open PR heads. Trace the actual FastAPI v1 `PATCH /update` and `PAT
 
 ### Phase 0b — isolated synthetic qualification
 
-On disposable test infrastructure, run full FastAPI/Next.js/root tests, TypeScript and production build with pinned export-core; compare PR #88 exact head with main; run foreign-owner write denial, two-client stale conflict, reorder concurrency, idempotency, role revocation at export retrieval, speaker-note roundtrip and Windows E2E smoke. Record commands, exact commits, runtime and fixture hashes, exit status, skips, screenshots and costs. **No live-user-data mutation, deployment, product feature code or automatic merge.**
+**P0b preflight:** enforce the [isolation contract](GOMRI_EGM_P0B_ISOLATION_CONTRACT_2026-11-09.md) before any command that can write. Use a detached disposable source copy, fresh synthetic A/B owners, isolated SQLite/database/storage/queues, loopback test ports, absent remote provider keys and controlled egress. If isolation or disk capacity cannot be established, mark affected groups BLOCKED. **Then**, only in that environment, run exact-head FastAPI/Next.js/root tests, TS/production build, PR #88 comparison, foreign-owner PATCH, stale two-client conflicts, reordering, idempotency, notes and export access tests, and Windows E2E. Log complete command, exact SHA, fixture hash, exit, skips and cleanup receipts. No production app edits or automatic merge.
 
 **P0b exit:** honest pass/fail/blocked outcomes and per-grain GO/CONDITIONAL/NO-GO. An unsafe negative test is a P2 repair blocker. If PR #88 is blocked, main-only **P0b baseline tests** may continue; P1 does not auto-start.
 
 ### Phase 1: SmartLayout in existing editor — first user-visible gain
 
-**Existing files to inspect and, only after interface discovery, change in a feature PR:**
+**Future P1 candidate source locations for an explicitly approved feature PR; NO code changes are authorized by P0:**
 - \`servers/nextjs/components/slide-editor/model/model.ts\` — owns existing updateComponentInUi/updateElementInUi and selection models; use as integration seam, do not replace.
 - \`servers/nextjs/components/slide-editor/surface/TemplateV2KonvaSlide.tsx\` — owns visual surface rendering, no second canvas.
 - \`servers/nextjs/components/slide-editor/surface/componentFrameBounds.ts\` and \`.../surface/alignmentGuides.ts\` — existing geometry helpers to test/reuse.
@@ -137,7 +137,7 @@ On disposable test infrastructure, run full FastAPI/Next.js/root tests, TypeScri
 
 ### Phase 2: selection-scoped AI changes, revision checks and Undo
 
-**Existing files to inspect and minimally extend:**
+**Future P2 code interfaces to trace and later modify only after a separate approved P2 PR:**
 - \`servers/nextjs/components/slide-editor/selection/transformSession.ts\` and \`.../model/model.ts\` for selected element paths;
 - \`servers/nextjs/app/(presentation-generator)/presentation/hooks/PresentationUndoRedo.ts\` and \`servers/nextjs/store/slices/undoRedoSlice.ts\` for current snapshots, while understanding their present limitations;
 - \`servers/nextjs/app/(presentation-generator)/presentation/hooks/useAutoSave.tsx\` and \`.../presentation/utils/autoSaveDiff.ts\` for snapshot/autosave conflicts;
@@ -154,15 +154,18 @@ On disposable test infrastructure, run full FastAPI/Next.js/root tests, TypeScri
 
 **Gate P2 (blocked until P0b and reviewed repair):** one atomic revision/content update per authorized request; stale second writer conflicts, foreign actor/tenant denied, retry idempotent, human auto-save and reorder cannot bypass CAS, render failure writes nothing, revoke blocks export delivery, and Undo appends revision N+2 with earlier content.
 
+
+**P2 data/transaction contract must be designed and proven before implementation:** Define schema ID/version and migration strategy; canonical content digest algorithm; actor and tenant binding from server session; target-element derivation; idempotency scope `(principal, artifact, operation_id)`; one atomic database compare-and-swap of `(artifact_id, revision)` and content; 409/412 conflict response; new-revision Undo semantics; revoked export retrieval; and test oracle for every control. No new persisted DesignIR field or slide_edit_transaction.py is authorized by P0.
+
 ### Phase 3: native PowerPoint fidelity, claims and authoring journey
 
 **Existing:** \`servers/nextjs/lib/run-bundled-presentation-export.ts\`; \`servers/nextjs/lib/template-v2-json-to-html.ts\`; \`servers/fastapi/services/export_task_service.py\`; \`servers/fastapi/tests/integration/test_presentation_generation_flow.py\`; \`contracts/v1/narrative-ir.schema.json\`; source/citation contract tests. Verify path and test ownership first.
 
-**P0a prerequisite for speaker notes and downloads:** identify the canonical notes field, its create/read/update path, exporter field/OOXML notes relationships, and import mapping. Each missing link is UNKNOWN rather than assumed working. Map export permissions at enqueue, execution and **download delivery** before any P3 claim.
+**P0a notes finding:** `SlideModel.speaker_note`, the UI Slide type and browser notes controls already exist; the existing slide PATCH unit test exercises a note update. The **still unverified** links are native PPTX notes XML/relationships, import mapping and end-to-end authorization for requested presentation ID and export delivery. See [P0a notes/export map](evidence/P0A_EXPORT_NOTES_MAP.md).
 
 **Candidate from PR #88:** \`servers/nextjs/tests/export-fidelity.test.mjs\` and its source-target fixtures, plus RTL and contrast lint. These files are **not present on main until qualified/merged**. Do not duplicate or assume tests cover notes.
 
-**Work:** qualify 8 frozen first-journey decks, then expand to 30 after P2. Validate numerical/text/chart/table/notes expectations in actual OOXML with safe bounded ZIP/XML parsing, and explicit source component ID to reimport object ID mapping. Compare public fork exporters only after rights/dependency admission.
+**Work (future P3):** first qualify the 8 canonical first-journey synthetic decks against native PPTX/RTL/notes output. **Only after this P3 eight-deck exit** expand to 30 for a broader regression sample. Use a bounded ZIP/XML reader and map exported objects to source component IDs. Compare public fork exporters only after rights and dependency admission.
 
 **Gate P3 (blocked):** zero silent supported-object loss; per-component and per-export-format versioned fallback receipts; bounded ZIP/XML and external relationships; verified native text/chart/table/**speaker-notes** ID mapping, RTL and citations, and delivery-time owner/role authorization including revoked access. Complete source -> outline -> scoped edit -> editable PPTX with true artifacts before release.
 
